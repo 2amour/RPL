@@ -6,36 +6,32 @@ note
 
 class
 	TANGENT_BUG_SIGNALER
-	
+
 create
 	make
 
 feature{NONE} -- Private methods
-	--clear_all
-		-- Clear All states
---	do
---		go_to_goal := False
---		follow_wall := False
---		leave_wall := False
---		at_goal := False
---		in_danger := False
---		unreachable_goal := False
---	end
-
+	state: TANGENT_BUG_STATE
 
 feature --Initialization
 	make
 		-- Init to go_to_goal
 	do
-		set_go_to_goal
+		create state.make_with_state ({TANGENT_BUG_STATE}.go_to_goal)
 	end
 
 feature --Accesors
 
-	set_go_to_goal
-		-- Set state
+	get_state: TANGENT_BUG_STATE
 	do
+		Result := state
+	end
 
+	set_state ( new_state: TANGENT_BUG_STATE)
+	do
+		state := new_state
+	ensure
+		state_set: state = new_state
 	end
 
 end
