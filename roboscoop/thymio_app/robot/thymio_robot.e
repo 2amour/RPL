@@ -30,8 +30,8 @@ feature {NONE} -- Initialization
 			create buttons_leds.make_with_topic ({THYMIO_TOPICS}.buttons_leds)
 			create circle_leds.make_with_topic ({THYMIO_TOPICS}.circle_leds)
 
-			-- Initialize behaviors.
-			create wander_behavior.make_with_attributes (odometry_signaler, range_sensors, ground_sensors, diff_drive, sound_player)
+			-- Initialize behaviours.
+			create target_behaviour.make_with_attributes (odometry_signaler, diff_drive, buttons_leds, circle_leds, top_leds)
 		end
 
 feature -- Constants
@@ -44,18 +44,18 @@ feature -- Constants
 
 feature -- Access
 
-	start_discovering
-			-- Start wandering around.
+	move_to (x: REAL_64; y: REAL_64)
+			-- Start moving towards the target.
 		do
-			start_behavior (wander_behavior)
-			light_up_leds (top_leds, buttons_leds, circle_leds)
+			set_target (x, y, target_behaviour)
+			start_behaviour (target_behaviour)
 		end
 
-	stop_discovering
-			-- Stop wandering around.
+	stop_moving
+
+			-- Stop moving towards the target.
 		do
-			stop_behavior (wander_behavior)
-			light_down_leds (top_leds, buttons_leds, circle_leds)
+			stop_behaviour (target_behaviour)
 		end
 
 feature {NONE} -- Robot parts
@@ -84,43 +84,29 @@ feature {NONE} -- Robot parts
 	circle_leds: separate THYMIO_CIRCLE_LEDS
 			-- 8 Orange LEDS around the buttons.
 
-feature {NONE} -- Behaviors
+feature {NONE} -- Implementation
 
-	wander_behavior: separate WANDER_BEHAVIOUR
-			-- Wandering around, avoiding obstacles.
+	target_behaviour: separate TARGET_BEHAVIOUR
+			-- Move towards the target.
 
-	start_behavior (b: separate BEHAVIOUR)
+	set_target (x: REAL_64; y: REAL_64; t_behaviour: separate TARGET_BEHAVIOUR)
+			-- Set t_behaviour's target.
+		do
+			t_behaviour.set_target (x, y)
+		end
+
+	start_behaviour (b: separate BEHAVIOUR)
 			-- Launch `b'.
 		do
 			b.start
 			io.put_string ("Behaviour started%N")
 		end
 
-	stop_behavior (b: separate BEHAVIOUR)
+	stop_behaviour (b: separate BEHAVIOUR)
 			-- Terminate `b'.
 		do
 			b.stop
 			synchronize (b)
 			io.put_string ("Behaviour requested for a stop%N")
-		end
-
-	light_up_leds (top: separate THYMIO_TOP_LEDS;
-					buttons: separate THYMIO_BUTTONS_LEDS;
-					circle: separate THYMIO_CIRCLE_LEDS)
-			-- Turn on some LED lights.
-		do
-			top.set_to_blue
-			buttons.set_leds_brightness (<<0,32,0,32>>)
-			circle.set_leds_brightness (<<0,32,0,32,0,32,0,32>>)
-		end
-
-	light_down_leds (top: separate THYMIO_TOP_LEDS;
-					buttons: separate THYMIO_BUTTONS_LEDS;
-					circle: separate THYMIO_CIRCLE_LEDS)
-			-- Turn on some LED lights.
-		do
-			top.set_to_red
-			buttons.set_leds_brightness (<<32,0,32,0>>)
-			circle.set_leds_brightness (<<32,0,32,0,32,0,32,0>>)
 		end
 end
