@@ -19,6 +19,7 @@
 			<cluster name="signaler" location=".\signaler\"/>
 			<cluster name="control" location=".\control\"/>
 			<cluster name="io" location=".\io\"/>
+			<cluster name="util" location=".\util\"/>
 		</cluster>
 	</target>
 </system>
