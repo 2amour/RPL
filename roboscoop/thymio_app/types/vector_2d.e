@@ -10,7 +10,16 @@ class
 inherit
 	ABSTRACT_2D
 create
-	make, make_with_coordinates, make_from_vector_3d_msg
+	make, make_with_coordinates, make_from_vector_3d_msg, make_from_points
+
+feature
+
+	make_from_points(p1, p2: separate POINT_2D)
+			-- Make a vector from points
+		do
+			x := p1.get_x - p2.get_x
+			y := p1.get_y - p2.get_y
+		end
 
 feature -- Access
 
@@ -61,5 +70,6 @@ feature -- Access
 	do
 		Result := other.get_x * x + other.get_y * y
 	end
+
 
 end
