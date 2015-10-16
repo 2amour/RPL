@@ -38,6 +38,10 @@ feature {NONE} -- Initialization
 
 			create goal.make_with_coordinates (x_goal, y_goal)
 			file.close
+
+			debug
+				io.put_string ("x_goal: " + goal.get_x.out + ", y_goal: " + goal.get_y.out + "%N")
+			end
 		end
 
 feature {NONE} --Initialization

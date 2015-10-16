@@ -37,6 +37,10 @@ feature {NONE} -- Initialization
 				end
 			end
 			file.close
+
+			debug
+				io.put_string ("p: " + Kp.out + ", i: " + Ki.out + ", d: " + Kd.out + "%N")
+			end
 		end
 
 feature {NONE} --Initialization

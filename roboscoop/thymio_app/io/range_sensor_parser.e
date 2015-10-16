@@ -45,6 +45,14 @@ feature {NONE} -- Initialization
 			end
 
 			file.close
+
+
+			debug
+				across transforms as t
+				loop
+					io.put_string ("x= " + t.item.x.out + ", y= " + t.item.y.out + ", phi = " + t.item.phi.out + "%N")
+				end
+			end
 		end
 
 feature {NONE} --Initialization
