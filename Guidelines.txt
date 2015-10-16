@@ -1,0 +1,33 @@
+Style Guidelines
+----------------
+
+feature {WHO} -- <Feature group>
+
+	function (arguments: TYPE; argument_number_two: TYPE2): TYPE
+			-- Coment
+		do
+			function_behaviour
+		end
+
+
+x := a + b*c
+
+class.foo (a, b)
+
+Conventions
+-----------
+
+> Use a TODO comment when something is unfinished. ie. (--TODO - Change hardcoded values)
+
+> Fill 'note' comments for every new class.
+
+> Follow the Eiffel feature group convention. ie. Separate feature clauses for the following groups:
+
+	> Initialization -> Creation procedures.
+	> Access -> General queries.
+	> Status report -> Boolean-valued queries.
+	> Status setting -> (?)
+	> Element change -> (?)
+	> Implementation -> Selectively exported or secret features.
+
+  More information on https://docs.eiffel.com/book/method/et-dynamic-structure-execution-model#Information_hiding_and_the_call_rule

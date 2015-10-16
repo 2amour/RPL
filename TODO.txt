@@ -1,0 +1,11 @@
+> Differential drive controller que englobe PID para poder llamarlo desde los 'update_velocity' de cada STATE.
+
+> Cambiar clases para que sigan los 'style_guidelines'.
+
+> Agregar los parsers para todos los tipos de parametros.
+
+> Redactar el README.txt.
+
+> Calibrar el robot.
+
+> Hacer que stop signal funcione.
