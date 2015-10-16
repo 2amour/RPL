@@ -29,7 +29,7 @@ feature --Initialization
 	do
 		create goal.make_with_coordinates (g.get_x, g.get_y)
 		init_states
-		state := go_to_goal
+		set_follow_wall
 		create intial_point_wall.make
 	end
 
@@ -49,30 +49,45 @@ feature -- Access
 			-- Set at goal state.
 		do
 			state := at_goal
+			debug
+				io.put_string ("At Goal %N")
+			end
 		end
 
 	set_follow_wall
 			-- Set follow wall state.
 		do
 			state := follow_wall
+			debug
+				io.put_string ("Follow Wall %N")
+			end
 		end
 
 	set_leave_wall
 			-- Set to leave wall state.
 		do
 			state := leave_wall
+			debug
+				io.put_string ("Leave Wall %N")
+			end
 		end
 
 	set_go_to_goal
 			-- Set to go to goal state.
 		do
 			state := go_to_goal
+			debug
+				io.put_string ("Go to Goal %N")
+			end
 		end
 
 	set_unreachable_goal
 			-- Set to unreachable goal state.
 		do
 			state := unreachable_goal
+			debug
+				io.put_string ("Unreachable Wall %N")
+			end
 		end
 
 	set_goal (g: POINT_2D)

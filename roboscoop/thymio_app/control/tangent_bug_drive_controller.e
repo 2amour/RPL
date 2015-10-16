@@ -21,7 +21,7 @@ feature -- Initialization
 feature {TANGENT_BUG_BEHAVIOUR}
 	update_velocity(tangent_bug_sig: separate TANGENT_BUG_SIGNALER; o_sig: separate ODOMETRY_SIGNALER; r_sig: separate THYMIO_RANGE_GROUP;
 					g_sig: separate LIFTABLE; s_sig: separate STOP_SIGNALER;
-					drive: separate DIFFERENTIAL_DRIVE; leds: separate RGB_COLOR_ACTUATOR)
+					drive: separate DIFFERENTIAL_DRIVE)
 	do
 			if s_sig.is_stop_requested then
 				drive.stop

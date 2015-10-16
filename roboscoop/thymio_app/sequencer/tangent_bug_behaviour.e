@@ -86,7 +86,8 @@ feature {NONE} -- Implementation
 			-- Start behaviour controllers.
 		do
 			a.repeat_until_stop_requested (
-				agent a.update_velocity (tangent_bug_signaler, odometry_sig, range_group, ground_group, stop_signaler, diff_drive, top_face_leds))
+				agent a.update_velocity (tangent_bug_signaler, odometry_sig, range_group, ground_group, stop_signaler, diff_drive))
+
 			b.repeat_until_stop_requested (
 				agent b.update_leds (tangent_bug_signaler, stop_signaler, top_face_leds))
 
