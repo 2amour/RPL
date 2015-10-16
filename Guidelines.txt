@@ -4,7 +4,7 @@ Style Guidelines
 feature {WHO} -- <Feature group>
 
 	function (arguments: TYPE; argument_number_two: TYPE2): TYPE
-			-- Coment
+			-- Coment preceded with a whitespace and ended with a dot.
 		do
 			function_behaviour
 		end
