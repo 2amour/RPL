@@ -1,7 +1,21 @@
 Style Guidelines
 ----------------
 
-feature {WHO} -- <Feature group>
+Example class
+-------------
+
+note
+	description: "Description ended with dot."
+	author: "Author Name"
+	date: "dd.mm.yyyy"
+
+class
+	CLASS_NAME
+
+create
+	make_with_attributes
+
+feature {WHO} -- Feature group
 
 	function (arguments: TYPE; argument_number_two: TYPE2): TYPE
 			-- Coment preceded with a whitespace and ended with a dot.
@@ -9,13 +23,26 @@ feature {WHO} -- <Feature group>
 			function_behaviour
 		end
 
+feature {WHO} -- Feature group
+
+	function (arguments: TYPE; argument_number_two: TYPE2): TYPE
+			-- Coment preceded with a whitespace and ended with a dot.
+		do
+			function_behaviour
+		end
+end
+
+*NOTE: White spaces and white lines shown in the previous example are required as well.
+
+Other style conventions
+-----------------------
 
 x := a + b*c
 
 class.foo (a, b)
 
-Conventions
------------
+Programming conventions
+-----------------------
 
 > Use a TODO comment when something is unfinished. ie. (--TODO - Change hardcoded values)
 
