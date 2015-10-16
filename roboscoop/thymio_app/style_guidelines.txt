@@ -1,0 +1,16 @@
+Style Guidelines
+
+
+feature {WHO} -- Comments
+
+	function (arguments: TYPE; argument_number_two: TYPE2): TYPE
+			-- Coment
+		do
+			function_behaviour
+		end
+
+
+x := a + b*c
+
+class.foo (a, b)
+
