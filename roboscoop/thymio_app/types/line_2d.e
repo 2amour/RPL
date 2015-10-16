@@ -29,9 +29,9 @@ feature -- Initializations
 	end
 
 feature --Accesors
-	get_vector: POINT_2D
+	get_vector: VECTOR_2D
 		-- Get Vector formed by the line
 	do
-		Result := create {POINT_2D}.make_with_coordinates (p_1.get_x - p_2.get_x, p_1.get_y - p_2.get_y)
+		Result := create {VECTOR_2D}.make_with_coordinates (p_1.get_x - p_2.get_x, p_1.get_y - p_2.get_y)
 	end
 end

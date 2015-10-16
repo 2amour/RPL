@@ -12,7 +12,7 @@ inherit
 create
 	make, make_with_coordinates, make_from_vector_3d_msg
 
-feature -- Accesors
+feature -- Access
 
 	get_unitary: VECTOR_2D
 		-- get unitary vector in the direction of original vector
@@ -44,10 +44,22 @@ feature -- Accesors
 		Result := create {VECTOR_2D}.make_with_coordinates (y, -x)
 	end
 
-	dot(other_line: VECTOR_2D): REAL_64
-		-- dot product between lines
+	get_scaled (scalar: REAL_64): VECTOR_2D
+		-- get original vector scaled by `scalar'
 	do
-		Result := other_line.get_x * x + other_line.get_y * y
+		Result := create {VECTOR_2D}.make_with_coordinates (x*scalar, y*scalar)
+	end
+
+	add (other: VECTOR_2D): VECTOR_2D
+		-- The result vector is the addition between the original vector and `other'
+	do
+		Result := create {VECTOR_2D}.make_with_coordinates (x + other.get_x, y + other.get_y)
+	end
+
+	dot(other: VECTOR_2D): REAL_64
+		-- dot product between vectors
+	do
+		Result := other.get_x * x + other.get_y * y
 	end
 
 end

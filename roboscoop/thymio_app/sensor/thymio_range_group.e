@@ -193,10 +193,28 @@ feature -- Access.
 		end
 
 	follow_wall_orientation (a_desired_distance_from_wall: REAL_64): REAL_64
-			-- <Precursor>
+			-- Get the orientation the robot should head in order to reach the desired distance from the wall
+		local
+			a: POINT_2D
+			b: POINT_2D
+			v_wall:  VECTOR_2D
+			v_robot: VECTOR_2D
+			current_distance: REAL_64
+			v_theta: VECTOR_2D
 		do
-			-- TODO.
-			Result := 0.0
+			-- Works just for walls on the left!
+
+			create v_wall.make_with_coordinates (1, 1)
+			a := transforms[1].project_to_parent (create {POINT_2D}.make_with_coordinates (0, sensors[1].range))
+			b := transforms[2].project_to_parent (create {POINT_2D}.make_with_coordinates (0, sensors[2].range))
+
+			v_wall := (create {LINE_2D}.make_with_points (a, b)).get_vector.get_unitary
+			v_robot := v_wall.get_perpendicular
+
+			current_distance := {DOUBLE_MATH}.dabs (v_robot.dot (create {VECTOR_2D}.make_with_coordinates (b.get_x, b.get_y)))
+
+			v_theta := v_wall.get_scaled (a_desired_distance_from_wall).add (v_robot.get_scaled (current_distance - a_desired_distance_from_wall))
+			Result := v_theta.get_angle
 		end
 
 end
