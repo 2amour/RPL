@@ -10,13 +10,14 @@ inherit
 	FILE_PARSER
 
 create
-	make
+	make_with_path
 
 feature {NONE} -- Initialization
 
-	make
+	make_with_path (path: STRING)
 			-- Initialization for `Current'.
 		do
+			file_path := path
 			create file.make_open_read (file_path)
 
 			file.read_word file.read_double Kp := file.last_double
@@ -27,11 +28,6 @@ feature {NONE} -- Initialization
 
 			file.close
 		end
-
-feature {NONE} -- Constants
-
-	file_path: STRING = "io/target_constants.txt"
-		-- File path in system.
 
 feature -- Access
 

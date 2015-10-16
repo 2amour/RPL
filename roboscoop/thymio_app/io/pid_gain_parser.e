@@ -11,13 +11,14 @@ inherit
 	--ARGUMENTS
 
 create
-	make
+	make_with_path
 
 feature {NONE} -- Initialization
 
-	make
+	make_with_path (path: STRING)
 			-- Initialization for `Current'.
 		do
+			file_path := path
 			create file.make_open_read (file_path)
 
 			from file.start;
@@ -43,9 +44,6 @@ feature {NONE} -- Initialization
 			end
 		end
 
-feature {NONE} --Initialization
-	file_path: STRING = "pid_gains.txt"
-		-- File path in system.
 feature -- Access
 	Kp, Ki, Kd: REAL_64
 end

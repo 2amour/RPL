@@ -26,7 +26,7 @@ feature
 		-- make with goal
 	do
 		create math
-		create pid_parser.make
+		create pid_parser.make_with_path ("pid_gains.txt")
 		create time_handler.start (0.0)
 		create speed_controller.make
 		goal := g

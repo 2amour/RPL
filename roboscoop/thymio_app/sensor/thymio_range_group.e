@@ -42,10 +42,10 @@ feature {NONE} -- Initialization.
 	register_transforms
 			-- Register Thymio sensor offsets
 		local
-			data: RANGE_SENSOR_PARSER
+			data_parser: RANGE_SENSOR_PARSER
 		do
-			create data.make
-			create transforms.make_from_array (data.transforms)
+			create data_parser.make_with_path ("sensor_coordinates.txt")
+			create transforms.make_from_array (data_parser.transforms)
 		end
 
 feature -- Access.

@@ -9,16 +9,17 @@ class
 inherit
 	FILE_PARSER
 create
-	make
+	make_with_path
 
 feature {NONE} -- Initialization
 
-	make
+	make_with_path (path: STRING)
 			-- Initialization for `Current'.
 		local
 			x_goal: REAL_64
 			y_goal: REAL_64
 		do
+			file_path := path
 			create file.make_open_read (file_path)
 
 			from file.start;
@@ -44,9 +45,6 @@ feature {NONE} -- Initialization
 			end
 		end
 
-feature {NONE} --Initialization
-	file_path: STRING = "goal.txt"
-		-- File path in system.
 feature -- Access
 	goal: POINT_2D
 end

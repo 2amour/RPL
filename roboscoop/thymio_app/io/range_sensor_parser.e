@@ -11,11 +11,11 @@ inherit
 	--ARGUMENTS
 
 create
-	make
+	make_with_path
 
 feature {NONE} -- Initialization
 
-	make
+	make_with_path (path: STRING)
 			-- Initialization for `Current'.
 		local
 			x: REAL_64
@@ -26,6 +26,7 @@ feature {NONE} -- Initialization
 		do
 			create transform.make
 			create transforms.make_filled (transform, 1, 7)
+			file_path := path
 			create file.make_open_read (file_path)
 			i := 1
 			from file.start
@@ -55,9 +56,6 @@ feature {NONE} -- Initialization
 			end
 		end
 
-feature {NONE} --Initialization
-	file_path: STRING = "./sensor_coordinates.txt"
-		-- File path in system.
 feature -- Access
 	transforms: ARRAY[TRANSFORM_2D]
 

@@ -8,7 +8,7 @@ deferred class
 
 feature {NONE} -- Initialization
 
-	make
+	make_with_path (path: STRING)
 			-- Create current
 		deferred
 		end
@@ -16,5 +16,6 @@ feature {NONE} -- Initialization
 feature {NONE} -- Implementation
 
 	file: PLAIN_TEXT_FILE
+	file_path: STRING
 
 end
