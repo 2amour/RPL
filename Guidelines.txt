@@ -30,4 +30,6 @@ Conventions
 	> Element change -> (?)
 	> Implementation -> Selectively exported or secret features.
 
-  More information on https://docs.eiffel.com/book/method/et-dynamic-structure-execution-model#Information_hiding_and_the_call_rule
+  	*More information on https://docs.eiffel.com/book/method/et-dynamic-structure-execution-model#Information_hiding_and_the_call_rule
+
+	*It is also desired that the feature groups appear in the previous order.
