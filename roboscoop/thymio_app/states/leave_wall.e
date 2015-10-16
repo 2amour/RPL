@@ -38,21 +38,21 @@ feature
 	do
 	end
 
-	update_state(t_sig: TANGENT_BUG_SIGNALER; o_sig: separate ODOMETRY_SIGNALER; r_sig: separate THYMIO_RANGE_GROUP)
+	update_state(t_sig: separate TANGENT_BUG_SIGNALER; o_sig: separate ODOMETRY_SIGNALER; r_sig: separate THYMIO_RANGE_GROUP)
 	local
 		new_state: TANGENT_BUG_STATE
 		current_point: POINT_2D
 	do
-		if r_sig.is_obstacle_in_front then
-			create new_state.make_with_state ({TANGENT_BUG_STATE}.follow_wall)
-			t_sig.set_state (new_state)
-		else
-			create current_point.make_with_coordinates (o_sig.x, o_sig.y)
-			if t_sig.get_goal.get_euclidean_distance (current_point) < t_sig.get_d_min then
-				create new_state.make_with_state ({TANGENT_BUG_STATE}.go_to_goal)
-				t_sig.set_state (new_state)
-			end
-		end
+		--if r_sig.is_obstacle_in_front then
+		--	create new_state.make_with_state ({TANGENT_BUG_STATE}.follow_wall)
+		--	t_sig.set_state (new_state)
+		--else
+		--	create current_point.make_with_coordinates (o_sig.x, o_sig.y)
+		--	if t_sig.get_goal.get_euclidean_distance (current_point) < t_sig.get_d_min then
+		--		create new_state.make_with_state ({TANGENT_BUG_STATE}.go_to_goal)
+		--		t_sig.set_state (new_state)
+		--	end
+		--end
 	end
 
 end

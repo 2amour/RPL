@@ -12,19 +12,38 @@ create
 
 feature{NONE} -- Private Attributes
 
-	state: TANGENT_BUG_STATE
+	goal: POINT_2D
 	d_min: REAL_64
 	intial_point_wall: POINT_2D
-	goal: POINT_2D
+
+
+	state: STATE
+	at_goal: AT_GOAL
+	follow_wall: FOLLOW_WALL
+	go_to_goal: GO_TO_GOAL
+	leave_wall: LEAVE_WALL
+	unreachable_goal: UNREACHABLE_GOAL
 
 feature --Initialization
-	make_with_goal(g: POINT_2D)
+	make_with_goal(g: separate POINT_2D)
 		-- Init to go_to_goal with goal
 	do
 		create goal.make_with_coordinates (g.get_x, g.get_y)
-		create state.make_with_state ({TANGENT_BUG_STATE}.go_to_goal)
+		init_states
+		state := go_to_goal
 		create intial_point_wall.make
 	end
+
+	init_states
+		-- initialize states
+	do
+		create at_goal
+		create follow_wall.make_with_v_leave (0.1)
+		create go_to_goal.make_with_goal(goal)
+		create leave_wall.make_with_v_leave (0.1)
+		create unreachable_goal
+	end
+
 
 feature --Accesors
 	set_goal(g: POINT_2D)
@@ -55,13 +74,13 @@ feature --Accesors
 		Result := d_min
 	end
 
-	get_state: TANGENT_BUG_STATE
+	get_state: STATE
 		-- Get Current State
 	do
 		Result := state
 	end
 
-	set_state ( new_state: TANGENT_BUG_STATE)
+	set_state ( new_state: STATE )
 		-- Set a New State
 	do
 		state := new_state
@@ -72,31 +91,31 @@ feature --Accesors
 	is_go_to_goal: BOOLEAN
 		-- Check if state is 'go_to_goal'
 	do
-		Result := state.get_state = {TANGENT_BUG_STATE}.go_to_goal
+		Result := state = go_to_goal
 	end
 
 	is_follow_wall: BOOLEAN
 		-- Check if state is 'follow_wall'
 	do
-		Result := state.get_state = {TANGENT_BUG_STATE}.follow_wall
+		Result := state = follow_wall
 	end
 
 	is_leave_wall: BOOLEAN
 		-- Check if state is 'leave_wall'
 	do
-		Result := state.get_state = {TANGENT_BUG_STATE}.leave_wall
+		Result := state = leave_wall
 	end
 
 	is_at_goal: BOOLEAN
 		-- Check if state is 'at_goal'
 	do
-		Result := state.get_state = {TANGENT_BUG_STATE}.at_goal
+		Result := state = at_goal
 	end
 
 	is_unreachable_goal: BOOLEAN
 		-- Check if state is 'unreachable_goal'
 	do
-		Result := state.get_state = {TANGENT_BUG_STATE}.unreachable_goal
+		Result := state = unreachable_goal
 	end
 
 

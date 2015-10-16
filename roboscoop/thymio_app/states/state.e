@@ -23,7 +23,7 @@ feature
 	deferred
 	end
 
-	update_state(t_sig: TANGENT_BUG_SIGNALER; o_sig: separate ODOMETRY_SIGNALER; r_sig: separate THYMIO_RANGE_GROUP)
+	update_state(t_sig: separate TANGENT_BUG_SIGNALER; o_sig: separate ODOMETRY_SIGNALER; r_sig: separate THYMIO_RANGE_GROUP)
 		-- update the signaler to the next state
 	deferred
 	end

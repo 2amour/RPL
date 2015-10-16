@@ -39,23 +39,23 @@ feature
 	do
 	end
 
-	update_state(t_sig: TANGENT_BUG_SIGNALER; o_sig: separate ODOMETRY_SIGNALER; r_sig: separate THYMIO_RANGE_GROUP)
+	update_state(t_sig: separate TANGENT_BUG_SIGNALER; o_sig: separate ODOMETRY_SIGNALER; r_sig: separate THYMIO_RANGE_GROUP)
 	local
 		new_state: TANGENT_BUG_STATE
 		v_leave_point: POINT_2D
 	do
-		create v_leave_point.make_with_coordinates (o_sig.x + v_leave * {DOUBLE_MATH}.cosine(o_sig.theta),
-													o_sig.y + v_leave * {DOUBLE_MATH}.sine  (o_sig.theta))
+		--create v_leave_point.make_with_coordinates (o_sig.x + v_leave * {DOUBLE_MATH}.cosine(o_sig.theta),
+		--											o_sig.y + v_leave * {DOUBLE_MATH}.sine  (o_sig.theta))
 
 
-		if r_sig.has_obstacle (0.0) and
-			t_sig.get_goal.get_euclidean_distance ( v_leave_point ) < t_sig.get_d_min then
+		--if r_sig.has_obstacle (0.0) and
+		--	t_sig.get_goal.get_euclidean_distance ( v_leave_point ) < t_sig.get_d_min then
 
-			create new_state.make_with_state ({TANGENT_BUG_STATE}.leave_wall)
-			t_sig.set_state (new_state)
+		--	create new_state.make_with_state ({TANGENT_BUG_STATE}.leave_wall)
+		--	t_sig.set_state (new_state)
 
-		end
-		
+		--end
+
 	end
 
 end
