@@ -8,7 +8,7 @@ class
 	POINT_2D
 
 create
-	make, make_with_coordinates
+	make, make_with_coordinates, make_from_vector_3d_msg
 
 feature{NONE} -- Attributes
 	x, y: REAL_64
@@ -29,6 +29,12 @@ feature -- Initializaiton
 	ensure
 		set_x: x = new_x
 		set_y: y = new_y
+	end
+
+	make_from_vector_3d_msg(msg: VECTOR_3D_MSG)
+		-- Init point fom VECTOR_3D_MSG
+	do
+		make_with_coordinates ( msg.x, msg.y )
 	end
 
 feature -- Accesors
@@ -60,5 +66,10 @@ feature -- Accesors
 		-- Get Manhattan distance between point p and this point
 	do
 		Result:= {DOUBLE_MATH}.dabs ( p.get_x - x) + {DOUBLE_MATH}.dabs (p.get_y - y)
+	end
+
+	get_vector_3d_msg: VECTOR_3D_MSG
+	do
+		Result := create {VECTOR_3D_MSG}.make_with_values (x, y, 0.0)
 	end
 end
