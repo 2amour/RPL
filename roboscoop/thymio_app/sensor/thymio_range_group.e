@@ -21,8 +21,10 @@ feature {NONE} -- Initialization.
 	make(topic_name: separate STRING)
 			-- Create an array of sensors and register them.
 		do
+			register_transforms
 			make_with_topic (topic_name)
 			register_ranges
+
 		end
 
 	register_ranges
@@ -37,7 +39,17 @@ feature {NONE} -- Initialization.
 			register_sensor ({THYMIO_TOPICS}.prox_horizontal_link_6)
 		end
 
+	register_transforms
+			-- Register Thymio sensor offsets
+		local
+			data: RANGE_SENSOR_PARSER
+		do
+			create data.make
+			create transforms.make_from_array (data.transforms)
+		end
+
 feature -- Access.
+	transforms: ARRAY[TRANSFORM_2D]
 
 	is_obstacle: BOOLEAN
 			-- Whether an obstacle is observed by any sensor in valid range?
@@ -128,22 +140,35 @@ feature -- Access.
 	is_front_sensor (a_index: INTEGER): BOOLEAN
 			-- <Precursor>
 		do
-			-- TODO.
-			Result := False
+			Result := a_index = 3
 		end
 
 	hit_point_front (a_sensor_index: INTEGER): VECTOR_3D_MSG
 			-- <Precursor>
+		local
+			point: POINT_2D
+			range: REAL_64
 		do
-			-- TODO.
-			Result := create {VECTOR_3D_MSG}.make_empty
+			range := sensors[a_sensor_index].range
+			point := transforms[a_sensor_index].project_to_parent ( create {POINT_2D}.make_with_coordinates (range, 0.0) )
+			Result := point.get_vector_3d_msg
 		end
 
 	has_obstacle (a_direction_with_respect_to_robot: REAL_64): BOOLEAN
 			-- <Precursor>
+			-- If direction is pi/8 rads away of a sensor with a valid_range measurement then has obstacle
+		local
+			i: INTEGER_32
 		do
 			-- TODO.
+			i := 1
 			Result := False
+			across sensors as sensor
+			loop
+				Result := Result or
+					(sensor.item.is_valid_range and {DOUBLE_MATH}.dabs (a_direction_with_respect_to_robot - transforms[i].get_heading) <= {TRIGONOMETRY_MATH}.pi_8)
+				i := i + 1
+			end
 		end
 
 	is_enough_space_for_changing_direction: BOOLEAN
