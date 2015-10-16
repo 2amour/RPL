@@ -31,7 +31,8 @@ feature {NONE} -- Initialization
 			create circle_leds.make_with_topic ({THYMIO_TOPICS}.circle_leds)
 
 			-- Initialize behaviours.
-			create target_behaviour.make_with_attributes (odometry_signaler, diff_drive, buttons_leds, circle_leds, top_leds)
+			-- create target_behaviour.make_with_attributes (odometry_signaler, diff_drive, buttons_leds, circle_leds, top_leds)
+			create tangent_bug_behaviour.make_with_attributes (odometry_signaler, range_sensors, ground_sensors, diff_drive, buttons_leds, circle_leds, top_leds)
 		end
 
 feature -- Constants
@@ -44,18 +45,19 @@ feature -- Constants
 
 feature -- Access
 
-	move_to (x: REAL_64; y: REAL_64)
-			-- Start moving towards the target.
+	start_tangent_bug
+			-- Start tangent bug algorithm.
 		do
-			set_target (x, y, target_behaviour)
-			start_behaviour (target_behaviour)
+			start_behaviour (tangent_bug_behaviour)
+			light_up_leds (top_leds, buttons_leds, circle_leds)
 		end
 
 	stop_moving
 
 			-- Stop moving towards the target.
 		do
-			stop_behaviour (target_behaviour)
+			stop_behaviour (tangent_bug_behaviour)
+			light_down_leds (top_leds, buttons_leds, circle_leds)
 		end
 
 feature {NONE} -- Robot parts
@@ -86,14 +88,7 @@ feature {NONE} -- Robot parts
 
 feature {NONE} -- Implementation
 
-	target_behaviour: separate TARGET_BEHAVIOUR
-			-- Move towards the target.
-
-	set_target (x: REAL_64; y: REAL_64; t_behaviour: separate TARGET_BEHAVIOUR)
-			-- Set t_behaviour's target.
-		do
-			t_behaviour.set_target (x, y)
-		end
+	tangent_bug_behaviour: separate TANGENT_BUG_BEHAVIOUR
 
 	start_behaviour (b: separate BEHAVIOUR)
 			-- Launch `b'.
@@ -109,4 +104,25 @@ feature {NONE} -- Implementation
 			synchronize (b)
 			io.put_string ("Behaviour requested for a stop%N")
 		end
+
+	light_up_leds (top: separate THYMIO_TOP_LEDS;
+					buttons: separate THYMIO_BUTTONS_LEDS;
+					circle: separate THYMIO_CIRCLE_LEDS)
+			-- Turn on some LED lights.
+		do
+			top.set_to_blue
+			buttons.set_leds_brightness (<<0,32,0,32>>)
+			circle.set_leds_brightness (<<0,32,0,32,0,32,0,32>>)
+		end
+
+	light_down_leds (top: separate THYMIO_TOP_LEDS;
+					buttons: separate THYMIO_BUTTONS_LEDS;
+					circle: separate THYMIO_CIRCLE_LEDS)
+			-- Turn on some LED lights.
+		do
+			top.set_to_red
+			buttons.set_leds_brightness (<<32,0,32,0>>)
+			circle.set_leds_brightness (<<32,0,32,0,32,0,32,0>>)
+		end
+
 end

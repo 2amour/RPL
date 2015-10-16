@@ -20,22 +20,7 @@ feature {NONE} -- Initialization
 			robo_node: separate ROBOSCOOP_NODE
 			ros_spinner: separate ROS_SPINNER
 			thymio: separate THYMIO_ROBOT
-			target_x: REAL_64
-			target_y: REAL_64
 		do
-			-- Real command line arguments
-			if	(arguments.argument (1).is_real_64 and arguments.argument (2).is_real_64) then
-				target_x := arguments.argument (1).to_real_64
-				target_y := arguments.argument (2).to_real_64
-				io.put_string ("x: ")
-				io.put_double (target_x)
-				io.put_string (", y: ")
-				io.put_double (target_y)
-				io.put_string ("%N")
-			else
-				io.put_string ("Error parsing arguments, using x:= 0, y := 0%N")
-			end
-
 			-- Initialize this application as a ROS node.
 			robo_node := (create {ROS_NODE_STARTER}).roboscoop_node
 			synchronize (robo_node)
@@ -49,7 +34,7 @@ feature {NONE} -- Initialization
 
 			-- Launch Thymio.
 			separate thymio as t do
-				t.move_to (target_x, target_y)
+				t.start_tangent_bug
 			end
 		end
 end

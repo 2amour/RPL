@@ -22,10 +22,12 @@ feature {NONE} -- Initialization
 			y: REAL_64
 			phi: REAL_64
 			i: INTEGER
+			transform: TRANSFORM_2D
 		do
-			create transforms.make_empty
+			create transform.make
+			create transforms.make_filled (transform, 1, 7)
 			create file.make_open_read (file_path)
-
+			i := 1
 			from file.start
 			until file.off
 			loop
@@ -36,8 +38,8 @@ feature {NONE} -- Initialization
 				file.read_double
 				phi := file.last_double.item
 
-
-				transforms.put (create {TRANSFORM_2D}.make_with_offsets(x, y, phi), i)
+				create transform.make_with_offsets(x, y, phi)
+				transforms.put (transform, i)
 
 				i := i + 1
 			end
@@ -46,7 +48,7 @@ feature {NONE} -- Initialization
 		end
 
 feature {NONE} --Initialization
-	file_path: STRING = "io/target_constants.txt"
+	file_path: STRING = "./sensor_coordinates.txt"
 		-- File path in system.
 feature -- Access
 	transforms: ARRAY[TRANSFORM_2D]
