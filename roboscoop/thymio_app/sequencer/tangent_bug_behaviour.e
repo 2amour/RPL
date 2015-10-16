@@ -39,10 +39,12 @@ feature -- Access
 			-- Start the behaviour.
 		local
 			a: separate TANGENT_BUG_DRIVE_CONTROLLER
+			b: separate TANGENT_BUG_LED_CONTROLLER
 		do
 			create a.make_with_attributes(stop_signaler)
+			create b.make_with_attributes(stop_signaler)
 			sep_stop(stop_signaler, False)
-			sep_start(a)
+			sep_start(a, b)
 		end
 
 	stop
@@ -80,11 +82,13 @@ feature {NONE} -- Implementation
 	top_face_leds: separate THYMIO_TOP_LEDS
 			-- Robot top-face leds
 
-	sep_start (a: separate TANGENT_BUG_DRIVE_CONTROLLER)
+	sep_start (a: separate TANGENT_BUG_DRIVE_CONTROLLER; b: separate TANGENT_BUG_LED_CONTROLLER)
 			-- Start behaviour controllers.
 		do
 			a.repeat_until_stop_requested (
-				agent a.update_velocity(tangent_bug_signaler, odometry_sig, range_group, ground_group, stop_signaler, diff_drive, top_face_leds))
+				agent a.update_velocity (tangent_bug_signaler, odometry_sig, range_group, ground_group, stop_signaler, diff_drive, top_face_leds))
+			b.repeat_until_stop_requested (
+				agent b.update_leds (tangent_bug_signaler, stop_signaler, top_face_leds))
 
 		end
 

@@ -18,5 +18,12 @@ feature -- Initialization
 		do
 			stop_signaler := stop_sig
 		end
-		
+
+
+feature {TANGENT_BUG_BEHAVIOUR}
+	update_leds (tangent_bug_sig: separate TANGENT_BUG_SIGNALER; s_sig: separate STOP_SIGNALER; leds: separate RGB_COLOR_ACTUATOR)
+		do
+			tangent_bug_sig.get_state.update_leds (leds)
+
+		end
 end
