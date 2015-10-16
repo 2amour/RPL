@@ -59,13 +59,10 @@ feature
 	end
 
 	update_state(t_sig: separate TANGENT_BUG_SIGNALER; o_sig: separate ODOMETRY_SIGNALER; r_sig: separate THYMIO_RANGE_GROUP)
-	local
-		new_state: TANGENT_BUG_STATE
 	do
-		--if r_sig.is_obstacle_in_front then
-		--	create new_state.make_with_state ({TANGENT_BUG_STATE}.follow_wall)
-		--	t_sig.set_state (new_state)
-		--end
+		if r_sig.is_obstacle_in_front then
+			t_sig.set_follow_wall
+		end
 	end
 
 end

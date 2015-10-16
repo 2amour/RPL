@@ -15,8 +15,6 @@ feature{NONE} -- Private Attributes
 	goal: POINT_2D
 	d_min: REAL_64
 	intial_point_wall: POINT_2D
-
-
 	state: STATE
 	at_goal: AT_GOAL
 	follow_wall: FOLLOW_WALL
@@ -25,6 +23,7 @@ feature{NONE} -- Private Attributes
 	unreachable_goal: UNREACHABLE_GOAL
 
 feature --Initialization
+
 	make_with_goal(g: separate POINT_2D)
 		-- Init to go_to_goal with goal
 	do
@@ -44,13 +43,43 @@ feature --Initialization
 		create unreachable_goal
 	end
 
+feature -- Access
 
-feature --Accesors
-	set_goal(g: POINT_2D)
-		-- Set Goal
-	do
-		goal := g
-	end
+	set_at_goal
+			-- Set at goal state.
+		do
+			state := at_goal
+		end
+
+	set_follow_wall
+			-- Set follow wall state.
+		do
+			state := follow_wall
+		end
+
+	set_leave_wall
+			-- Set to leave wall state.
+		do
+			state := leave_wall
+		end
+
+	set_go_to_goal
+			-- Set to go to goal state.
+		do
+			state := go_to_goal
+		end
+
+	set_unreachable_goal
+			-- Set to unreachable goal state.
+		do
+			state := unreachable_goal
+		end
+
+	set_goal (g: POINT_2D)
+			-- Set Goal
+		do
+			goal := g
+		end
 
 	get_goal: POINT_2D
 		-- Get Goal Coordinates
