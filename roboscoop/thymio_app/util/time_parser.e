@@ -25,7 +25,7 @@ feature --Initialization
 
 
 feature -- Accesors
-	set_time(t: REAL)
+	set_time(t: REAL_64)
 		-- Set new time
 	do
 		delta_time := t - time

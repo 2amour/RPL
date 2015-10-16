@@ -49,24 +49,24 @@ feature -- Accesors
 		Result := phi
 	end
 
-	project_to_global( local_point: POINT_2D ): POINT_2D
+	project_to_parent( local_point: POINT_2D ): POINT_2D
 		-- Project a point in local coordinates to global coordinates
 	local
-		global_point: POINT_2D
+		parent_point: POINT_2D
 	do
-		create global_point.make_with_coordinates (x + local_point.get_x * cos_phi - local_point.get_y * sin_phi ,
+		create parent_point.make_with_coordinates (x + local_point.get_x * cos_phi - local_point.get_y * sin_phi ,
 												   y + local_point.get_x * sin_phi + local_point.get_y * cos_phi)
 
-		Result := global_point
+		Result := parent_point
 	end
 
-	project_from_global( global_point: POINT_2D ): POINT_2D
+	project_from_parent (parent_point: POINT_2D): POINT_2D
 		-- Project a point in global coordinates to local coordinates
 	local
 		local_point: POINT_2D
 	do
-		create local_point.make_with_coordinates ( (global_point.get_x - x) * cos_phi + (global_point.get_y - y)* sin_phi ,
-												  -(global_point.get_x - x) * sin_phi + (global_point.get_y - y)* cos_phi)
+		create local_point.make_with_coordinates ( (parent_point.get_x - x) * cos_phi + (parent_point.get_y - y)* sin_phi ,
+												  -(parent_point.get_x - x) * sin_phi + (parent_point.get_y - y)* cos_phi)
 
 		Result := local_point
 	end
