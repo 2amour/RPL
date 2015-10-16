@@ -17,13 +17,23 @@ feature -- Initializors
 				    i = follow_wall or
 				    i = leave_wall or
 				    i = at_goal or
-				    i = in_danger or
 				    i = unreachable_goal
 	do
 		value := i
 	ensure
 		value_set: value = i
 	end
+feature --Accesors
+	set_state ( new_state: INTEGER )
+	do
+		make_with_state (new_state)
+	end
+
+	get_state: INTEGER
+	do
+		Result := value
+	end
+
 
 feature {NONE} -- Attributes
 	value: INTEGER
@@ -32,8 +42,7 @@ feature{ANY}
 	follow_wall: INTEGER = 2
 	leave_wall: INTEGER = 3
 	at_goal: INTEGER = 4
-	in_danger: INTEGER = 5
-	unreachable_goal: INTEGER = 6
+	unreachable_goal: INTEGER = 5
 
 
 
@@ -42,7 +51,6 @@ invariant
 				    value = follow_wall or
 				    value = leave_wall or
 				    value = at_goal or
-				    value = in_danger or
 				    value = unreachable_goal
 
 

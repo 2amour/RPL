@@ -20,7 +20,8 @@
 			<cluster name="control" location=".\control\"/>
 			<cluster name="io" location=".\io\"/>
 			<cluster name="util" location=".\util\"/>
-			<cluster name="types" location="\home\parallels\catkin_groupgit_ws\src\RPL\roboscoop\thymio_app\types\"/>
+			<cluster name="types" location=".\types\"/>
+			<cluster name="states" location=".\states\"/>
 		</cluster>
 	</target>
 </system>
