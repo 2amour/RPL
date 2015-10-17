@@ -13,6 +13,7 @@ create
 feature{NONE} -- Private Attributes
 
 	goal: POINT_2D
+	current_pose: POSE_2D
 	d_min: REAL_64
 	intial_point_wall: POINT_2D
 	state: STATE
@@ -27,6 +28,7 @@ feature --Initialization
 	make_with_goal(g: separate POINT_2D)
 		-- Init to go_to_goal with goal
 	do
+		create current_pose.make
 		create goal.make_with_coordinates (g.get_x, g.get_y)
 		init_states
 		set_follow_wall
