@@ -91,10 +91,10 @@ feature -- Access.
 				i > sensors.upper
 			loop
 				if sensors[i].is_valid_range then
-					if i = 1 or i = 2 or i = 6 then
+					if i = 1 or i = 2 then --or i = 6 then
 						left_sum := left_sum + sensors[i].range
 					end
-					if i = 4 or i = 5 or i = 7 then
+					if i = 4 or i = 5 then --or i = 7 then
 						right_sum := right_sum + sensors[i].range
 					end
 				end
@@ -116,10 +116,10 @@ feature -- Access.
 				i > sensors.upper
 			loop
 				if sensors[i].is_valid_range then
-					if i = 1 or i = 2 or i = 6 then
+					if i = 1 or i = 2 then --or i = 6 then
 						left_sum := left_sum + sensors[i].range
 					end
-					if i = 4 or i = 5 or i = 7 then
+					if i = 4 or i = 5 then --or i = 7 then
 						right_sum := right_sum + sensors[i].range
 					end
 				end
@@ -160,7 +160,6 @@ feature -- Access.
 		local
 			i: INTEGER_32
 		do
-			-- TODO.
 			i := 1
 			Result := False
 			across sensors as sensor
@@ -197,24 +196,46 @@ feature -- Access.
 		local
 			a: POINT_2D
 			b: POINT_2D
-			v_wall:  VECTOR_2D
+			--v_wall:  LINE_2D
+			v_wall: VECTOR_2D
 			v_robot: VECTOR_2D
 			current_distance: REAL_64
 			v_theta: VECTOR_2D
 		do
-			-- Works just for walls on the left!
+			if is_obstacle_mostly_at_left then
+				a := transforms[1].project_to_parent (create {POINT_2D}.make_with_coordinates (sensors[1].range, 0))
+				if sensors[2].is_valid_range then
+					b := transforms[2].project_to_parent (create {POINT_2D}.make_with_coordinates (sensors[2].range, 0))
+				else
+					create b.make_with_coordinates (a.get_x + 0.1, a.get_y)
+				end
 
-			create v_wall.make_with_coordinates (1, 1)
-			a := transforms[1].project_to_parent (create {POINT_2D}.make_with_coordinates (0, sensors[1].range))
-			b := transforms[2].project_to_parent (create {POINT_2D}.make_with_coordinates (0, sensors[2].range))
+			else
+				a := transforms[5].project_to_parent (create {POINT_2D}.make_with_coordinates (sensors[5].range, 0))
+
+				if sensors[4].is_valid_range then
+					b := transforms[4].project_to_parent (create {POINT_2D}.make_with_coordinates (sensors[4].range, 0))
+				else
+					create b.make_with_coordinates (a.get_x + 0.1, a.get_y)
+				end
+
+			end
+
 
 			v_wall := (create {LINE_2D}.make_with_points (a, b)).get_vector.get_unitary
-			v_robot := v_wall.get_perpendicular
 
-			current_distance := {DOUBLE_MATH}.dabs (v_robot.dot (create {VECTOR_2D}.make_with_coordinates (b.get_x, b.get_y)))
+			if is_obstacle_mostly_at_left then
+				v_robot := v_wall.get_perpendicular.get_scaled (-1)
+			else
+				v_robot := v_wall.get_perpendicular
+			end
+
+			current_distance :=  {DOUBLE_MATH}.dabs (v_robot.dot (create {VECTOR_2D}.make_with_coordinates (b.get_x, b.get_y)))
 
 			v_theta := v_wall.get_scaled (a_desired_distance_from_wall).add (v_robot.get_scaled (current_distance - a_desired_distance_from_wall))
+
 			Result := v_theta.get_angle
+
 		end
 
 end
