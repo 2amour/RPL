@@ -16,22 +16,36 @@ feature{NONE} -- Attributes
 
 feature -- Initializations
 	make
-		-- make with zero coordinates
-	do
-		create p_1.make
-		create p_2.make
-	end
+			-- make with zero coordinates
+		do
+			create p_1.make
+			create p_2.make
+		end
 
-	make_with_points(p1, p2: POINT_2D)
-	do
-		p_1 := p1
-		p_2 := p2
-	end
+	make_with_points (p1, p2: POINT_2D)
+			-- Init line from 2 points.
+		do
+			p_1 := p1
+			p_2 := p2
+		end
 
 feature --Accesors
+
 	get_vector: VECTOR_2D
-		-- Get Vector formed by the line
-	do
-		Result := create {VECTOR_2D}.make_with_coordinates (p_1.get_x - p_2.get_x, p_1.get_y - p_2.get_y)
-	end
+			-- Get Vector formed by the line.
+		do
+			Result := create {VECTOR_2D}.make_with_coordinates (p_1.get_x - p_2.get_x, p_1.get_y - p_2.get_y)
+		end
+
+	get_distance_from_point (p: POINT_2D): REAL_64
+			-- Get distance between line and point.
+		local
+			r, v: VECTOR_2D
+		do
+			v :=  get_vector.get_perpendicular
+			r :=  create {VECTOR_2D}.make_from_points (p_1, p)
+			Result := {DOUBLE_MATH}.dabs (v.get_unitary.dot (r))
+		end
+
+
 end

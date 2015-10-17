@@ -20,9 +20,10 @@ feature -- Initialization
 			positive_v: v > 0
 		do
 			v_leave := v
-			create orientation_controller.make_with_gains (0.6, 0.0, 0.0) -- TODO - HARDCODED
-			create speed_controller.make
+			create orientation_controller.make_with_gains (2.0, 0.0, 0.0) -- TODO - HARDCODED
+			create speed_controller.make_with_speed (0.05)
 			create time_handler.start (0.0)
+			create wall.make
 		ensure
 			set_v: v_leave = v
 		end
@@ -43,7 +44,7 @@ feature -- Access
 		local
 			error: REAL_64
 		do
-			error := range_signaler.follow_wall_orientation (10) - t_sig.get_pose.get_orientation -- TODO - HARDCODED
+			error := range_signaler.follow_wall_orientation (0.12) -- t_sig.get_pose.get_orientation -- TODO - HARDCODED
 			time_handler.set_time (t_sig.get_timestamp)
 			if time_handler.get_sampling_rate > 0 then
 				orientation_controller.set_sampling (time_handler.get_sampling_rate)
@@ -69,7 +70,25 @@ feature -- Access
 			end
 		end
 
+
+		set_clockwise
+				-- Set clockwise wall-following
+			do
+				clockwise := True
+			end
+
+		set_counter_clockwise
+			do
+				clockwise := False
+			end
+
 feature {NONE} -- Implementation
+
+	clockwise: BOOLEAN
+		-- Follow Wall in clockwise(True) or counter-clockwise(False) direction
+
+	wall: LINE_2D
+			-- Follow Wall in clockwise direction
 
 	v_leave : REAL_64
 			-- Leave obstacle velocity.
