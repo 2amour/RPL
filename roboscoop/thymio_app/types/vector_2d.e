@@ -40,11 +40,8 @@ feature -- Access
 
 	get_angle: REAL_64
 		-- get vector of this angle
-	local
-		math : TRIGONOMETRY_MATH
 	do
-		create math
-		Result := math.atan2(y, x)
+		Result := {DOUBLE_MATH}.arc_tangent (y/x)
 	end
 
 	get_perpendicular: VECTOR_2D
