@@ -19,7 +19,7 @@ feature
 		leds.set_to_magenta
 	end
 
-	set_readings(odometry_signaler:separate ODOMETRY_SIGNALER; range_signaler:separate THYMIO_RANGE_GROUP)
+	set_readings(t_sig: separate TANGENT_BUG_SIGNALER; range_signaler:separate THYMIO_RANGE_GROUP)
 	do
 	end
 

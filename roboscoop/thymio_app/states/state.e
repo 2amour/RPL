@@ -18,7 +18,7 @@ feature
 	deferred
 	end
 
-	set_readings(o_sig: separate ODOMETRY_SIGNALER; r_sig: separate THYMIO_RANGE_GROUP)
+	set_readings(t_sig: separate TANGENT_BUG_SIGNALER; r_sig: separate THYMIO_RANGE_GROUP)
 		-- Set and process readings from sensor inputs
 	deferred
 	end

@@ -8,7 +8,7 @@ class
 	POSE_2D
 
 create
-	make, make_with_pose
+	make, make_with_pose, make_with_coordinates
 
 feature {NONE} -- Implementation
 
@@ -30,6 +30,13 @@ feature	-- Initialization
 			set_position(p)
 			set_orientation(phi)
 		end
+
+	make_with_coordinates(x, y, phi: REAL_64)
+			-- Initialize pose from coordinates
+		do
+			make_with_pose(create {POINT_2D}.make_with_coordinates (x, y), phi)
+		end
+
 
 feature{ANY} -- Accesors
 

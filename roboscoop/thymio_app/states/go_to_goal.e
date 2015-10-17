@@ -44,12 +44,13 @@ feature
 		leds.set_to_yellow
 	end
 
-	set_readings(odometry_signaler:separate ODOMETRY_SIGNALER; range_signaler:separate THYMIO_RANGE_GROUP)
+	set_readings(t_sig: separate TANGENT_BUG_SIGNALER; range_signaler:separate THYMIO_RANGE_GROUP)
 	local
 		error: REAL_64
 	do
-		error := math.atan2(goal.get_y - odometry_signaler.y, goal.get_x - odometry_signaler.x) - odometry_signaler.theta
-		time_handler.set_time(odometry_signaler.timestamp)
+
+		error := math.atan2(goal.get_y - t_sig.get_pose.get_position.get_y, goal.get_x - t_sig.get_pose.get_position.get_x) - t_sig.get_pose.get_orientation
+		time_handler.set_time(t_sig.get_timestamp)
 		if time_handler.get_sampling_rate > 0 then
 			orientation_controller.set_sampling (time_handler.get_sampling_rate)
 			orientation_controller.set_error (error)
