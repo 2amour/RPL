@@ -62,7 +62,11 @@ feature
 	update_state(t_sig: separate TANGENT_BUG_SIGNALER; o_sig: separate ODOMETRY_SIGNALER; r_sig: separate THYMIO_RANGE_GROUP)
 	do
 		if r_sig.is_obstacle_in_front then
-			t_sig.set_follow_wall
+			if r_sig.is_obstacle_mostly_at_left then
+				t_sig.set_follow_wall_counter_clockwise
+			else
+				t_sig.set_follow_wall_clockwise
+			end
 		end
 		if t_sig.get_goal.get_euclidean_distance (t_sig.get_pose.get_position) < 0.02 then -- TODO HARDCODING
 			t_sig.set_at_goal

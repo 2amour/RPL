@@ -43,7 +43,11 @@ feature
 		current_point: POINT_2D
 	do
 		if r_sig.is_obstacle_in_front then
-			t_sig.set_follow_wall
+			if r_sig.is_obstacle_mostly_at_left then
+				t_sig.set_follow_wall_counter_clockwise
+			else
+				t_sig.set_follow_wall_clockwise
+			end
 		else
 			create current_point.make_with_coordinates (o_sig.x, o_sig.y)
 			if t_sig.get_goal.get_euclidean_distance (current_point) < t_sig.get_d_min then

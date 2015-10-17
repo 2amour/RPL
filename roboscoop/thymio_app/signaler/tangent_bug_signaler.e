@@ -32,7 +32,7 @@ feature --Initialization
 			create current_pose.make
 			create goal.make_with_coordinates (g.get_x, g.get_y)
 			init_states
-			set_go_to_goal
+			set_follow_wall_clockwise
 			create intial_point_wall.make
 		end
 
@@ -57,12 +57,23 @@ feature -- Access
 			end
 		end
 
-	set_follow_wall
+	set_follow_wall_clockwise
 			-- Set follow wall state.
 		do
+			follow_wall.set_clockwise
 			state := follow_wall
 			debug
-				io.put_string ("Follow Wall %N")
+				io.put_string ("Follow Wall Clockwise %N")
+			end
+		end
+
+	set_follow_wall_counter_clockwise
+			-- Set follow wall state.
+		do
+			follow_wall.set_counter_clockwise
+			state := follow_wall
+			debug
+				io.put_string ("Follow Wall Counter Clockwise%N")
 			end
 		end
 
@@ -144,7 +155,7 @@ feature -- Access
 		end
 
 	is_follow_wall: BOOLEAN
-			-- Check if state is 'follow_wall'
+			-- Check if state is 'follow_wall_cw'
 		do
 			Result := state = follow_wall
 		end
