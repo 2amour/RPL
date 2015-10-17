@@ -8,7 +8,7 @@ class
 	NON_LINEAR_SPEED
 
 create
-	make
+	make, make_with_speed
 
 feature{NONE} --Attributes
 	max_speed: REAL_64
@@ -16,11 +16,19 @@ feature{NONE} --Attributes
 
 feature -- Initialization
 	make
-		-- Initialize Object with Default Values
-	do
-		max_speed := 0.4
-		output := 0.0
-	end
+			-- Initialize Object with Default Values
+		do
+			max_speed := {THYMIO_ROBOT}.default_linear_speed -- TODO change this
+			output := 0.0
+		end
+
+	make_with_speed (v: REAL_64)
+			-- Initialize object with max speed
+		do
+			max_speed := v
+			output := 0.0
+		end
+
 
 feature --Accesors
 	set_max_speed(v: REAL_64)
