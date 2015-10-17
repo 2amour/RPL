@@ -32,7 +32,7 @@ feature --Initialization
 			create current_pose.make
 			create goal.make_with_coordinates (g.get_x, g.get_y)
 			init_states
-			set_follow_wall
+			set_go_to_goal
 			create intial_point_wall.make
 		end
 

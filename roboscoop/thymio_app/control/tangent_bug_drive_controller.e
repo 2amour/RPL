@@ -29,11 +29,12 @@ feature {TANGENT_BUG_BEHAVIOUR}
 
 				tangent_bug_sig.get_pose.get_position.set_coordinates (o_sig.x, o_sig.y) -- TODO expanded class POSE?
 				tangent_bug_sig.get_pose.set_orientation (o_sig.y) -- TODO
-
 				tangent_bug_sig.set_timestamp (o_sig.timestamp)
 
-				tangent_bug_sig.get_state.update_velocity (drive)
+
+
 				tangent_bug_sig.get_state.set_readings(tangent_bug_sig, r_sig)
+				tangent_bug_sig.get_state.update_velocity (drive)
 				tangent_bug_sig.get_state.update_state(tangent_bug_sig, o_sig, r_sig)
 
 			end

@@ -64,6 +64,9 @@ feature
 		if r_sig.is_obstacle_in_front then
 			t_sig.set_follow_wall
 		end
+		if t_sig.get_goal.get_euclidean_distance (t_sig.get_pose.get_position) < 0.02 then -- TODO HARDCODING
+			t_sig.set_at_goal
+		end
 	end
 
 end
