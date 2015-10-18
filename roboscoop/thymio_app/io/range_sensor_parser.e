@@ -11,12 +11,30 @@ inherit
 	--ARGUMENTS
 
 create
-	make_with_path
+	make, make_with_path
 
 feature {NONE} -- Initialization
 
+	make
+			-- Initialization for `Current'.
+		local
+			paths_parser: PATHS_PARSER
+		do
+			create paths_parser.make
+			read_file (paths_parser.range_sensor_file_path)
+		end
+
 	make_with_path (path: STRING)
 			-- Initialization for `Current'.
+		do
+			read_file (path)
+		end
+
+feature -- Access
+	transforms: ARRAY[TRANSFORM_2D]
+
+	read_file (f_path: STRING)
+			-- Reads file
 		local
 			x: REAL_64
 			y: REAL_64
@@ -26,7 +44,7 @@ feature {NONE} -- Initialization
 		do
 			create transform.make
 			create transforms.make_filled (transform, 1, 7)
-			file_path := path
+			file_path := f_path
 			create file.make_open_read (file_path)
 			i := 1
 			from file.start
@@ -44,10 +62,7 @@ feature {NONE} -- Initialization
 
 				i := i + 1
 			end
-
 			file.close
-
-
 			debug
 				across transforms as t
 				loop
@@ -55,8 +70,4 @@ feature {NONE} -- Initialization
 				end
 			end
 		end
-
-feature -- Access
-	transforms: ARRAY[TRANSFORM_2D]
-
 end

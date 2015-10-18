@@ -22,10 +22,10 @@ feature{NONE}
 
 feature
 	make
-			-- make.
+			-- Make.
 		do
 			create math
-			create pid_parser.make_with_path ("pid_gains.txt")
+			create pid_parser.make
 			create time_handler.start (0.0)
 			create speed_controller.make
 			create orientation_controller.make_with_gains (pid_parser.Kp, pid_parser.Ki, pid_parser.Kd)

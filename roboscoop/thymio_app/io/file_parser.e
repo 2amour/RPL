@@ -8,7 +8,12 @@ deferred class
 
 feature {NONE} -- Initialization
 
-	make_with_path (path: STRING)
+	make
+			--Create current
+		deferred
+		end
+
+	make_with_path (f_path: STRING)
 			-- Create current
 		deferred
 		end

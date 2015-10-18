@@ -22,7 +22,7 @@ feature {NONE} -- Initialization
 			goal_parser: GOAL_PARSER
 		do
 			create stop_signaler.make
-			create goal_parser.make_with_path ("goal.txt")
+			create goal_parser.make
 			create tangent_bug_signaler.make_with_goal (goal_parser.goal)
 
 			odometry_sig := odom_sig
