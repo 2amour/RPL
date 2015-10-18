@@ -41,7 +41,7 @@ feature --Initialization
 		do
 			create at_goal
 			create follow_wall.make_with_v_leave (0.1)
-			create go_to_goal.make_with_goal(goal)
+			create go_to_goal.make
 			create leave_wall.make_with_v_leave (0.1)
 			create unreachable_goal
 		end
