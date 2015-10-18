@@ -176,7 +176,7 @@ feature -- Access.
 			Result := True
 			across sensors as sensor
 			loop
-				Result := Result and (sensor.item.range > ({THYMIO_ROBOT}.robot_base_size - 8.0))
+				Result := Result and (sensor.item.range > ({THYMIO_ROBOT}.robot_base_size - 8.0)) -- TODO, make it with transforms
 			end
 		end
 
@@ -191,6 +191,49 @@ feature -- Access.
 		do
 			-- TODO.
 			Result := create {VECTOR_3D_MSG}.make_empty
+		end
+
+	find_closest_wall_from_point (p: POINT_2D): LINE_2D
+			-- find the closest wall from the points
+		local
+			line, best_line: LINE_2D
+			p1, p2: POINT_2D
+			distance, minimum_distance: REAL_64
+			i, j: INTEGER_32
+		do
+			create best_line.make
+			minimum_distance := {REAL_64}.max_value
+			i := 1
+			j := 1
+
+			across sensors as sensor_1
+			loop
+				if sensor_1.item.is_valid_range then
+					p1 := transforms[i].project_to_parent (create {POINT_2D}.make_with_coordinates (sensor_1.item.range, 0))
+					across sensors as sensor_2
+					loop
+						if not (i = j) then
+							create p2.make
+							if (sensor_2.item.is_valid_range) then
+								p2 := transforms[j].project_to_parent (create {POINT_2D}.make_with_coordinates (sensor_2.item.range, 0))
+							else
+								create p2.make_with_coordinates (p1.get_x + 1, p2.get_y)
+							end
+
+							create line.make_with_points (p1, p2)
+							distance := line.get_distance_from_point (p)
+							if (distance < minimum_distance) then
+								minimum_distance := distance
+								best_line := line
+							end
+						end
+						j := j + 1
+					end
+				end
+				i := i + 1
+			end
+
+			Result := best_line
 		end
 
 	follow_wall_orientation (a_desired_distance_from_wall: REAL_64): REAL_64
