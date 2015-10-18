@@ -1,5 +1,5 @@
 note
-	description: "Parser of file with paths of other files"
+	description: "Parser of file with paths of other files."
 	author: "ferran_antoni_sebastian"
 	date: "17.10.15"
 
@@ -16,7 +16,7 @@ create
 feature {NONE} -- Initialization
 
 	make
-			-- Initialization for `Current' with file path specified fro command line option -p
+			-- Initialization for `Current' with file path specified in first argument at execution.
 		do
 			file_path := get_path_from_arguments
 			create file.make_open_read (file_path)
@@ -36,22 +36,22 @@ feature {NONE} -- Initialization
 feature -- Access
 
 	goal_file_path: STRING
-			-- Path for the file with the goal
+			-- Path for the file with the goal.
 
 	pid_gain_file_path: STRING
-			-- Path for the file with pid gains
+			-- Path for the file with pid gains.
 
 	range_sensor_file_path: STRING
-			-- Path for the file with range sensors' constants
+			-- Path for the file with range sensors' frames.
 
 feature {NONE} -- Implementation
 
 	read_file (f: PLAIN_TEXT_FILE)
-			-- Read file
+			-- Read file.
 		local
-			paths_array: ARRAY [STRING]
+			paths_array: ARRAY[STRING]
 		do
-			-- Default values for the paths
+			-- Default values for the paths.
 			goal_file_path := "goals.txt"
 			pid_gain_file_path := "pid_gains.txt"
 			range_sensor_file_path := "sensor_coordinates.txt"
@@ -83,7 +83,7 @@ feature {NONE} -- Implementation
 		end
 
 	get_path_from_arguments: STRING
-			-- Get the path specified in command argument
+			-- Get the path specified in execution argument.
 		local
 			path: STRING
 		do
@@ -92,7 +92,7 @@ feature {NONE} -- Implementation
 				path := argument (1).string
 			end
 			if path.is_empty then
-				io.put_string ("Use a file with paths of files with goal, pid_gains and sensor range")
+				io.put_string ("Use a file with paths of files with goal, pid gains and sensor positions.")
 			end
 			Result := path
 		end

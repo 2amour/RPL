@@ -1,8 +1,7 @@
 note
-	description: "Summary description for {LINE_2D}."
-	author: ""
-	date: "$Date$"
-	revision: "$Revision$"
+	description: "Line in 2D."
+	author: "ferran_antoni_sebastian"
+	date: "18.10.15"
 
 class
 	LINE_2D
@@ -10,26 +9,23 @@ class
 create
 	make, make_with_points
 
-feature {NONE} -- Implementation
-	p_1: POINT_2D
-	p_2: POINT_2D
+feature {NONE} -- Initialization
 
-feature -- Initializations
 	make
-			-- make with zero coordinates
+			-- Make with zero coordinates.
 		do
 			create p_1.make
 			create p_2.make
 		end
 
 	make_with_points (p1, p2: POINT_2D)
-			-- Init line from 2 points.
+			-- Line from 2 points.
 		do
 			p_1 := p1
 			p_2 := p2
 		end
 
-feature --Accesors
+feature -- Access
 
 	get_vector: VECTOR_2D
 			-- Get vector with line direction starting starting at first point.
@@ -47,5 +43,8 @@ feature --Accesors
 			Result := {DOUBLE_MATH}.dabs (v.get_unitary.dot (r))
 		end
 
+feature {NONE} -- Implementation
 
+	p_1, p_2: POINT_2D
+		-- Point in 2D.
 end

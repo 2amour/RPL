@@ -1,11 +1,11 @@
 note
-	description: "Summary description for {TANGENT_BUG_BEHAVIOUR}."
-	author: ""
-	date: "$Date$"
-	revision: "$Revision$"
+	description: "Behaviour of the robot implementing tangent bug algorithm."
+	author: "ferran_antoni_sebastian"
+	date: "18.10.15"
 
 class
 	TANGENT_BUG_BEHAVIOUR
+
 inherit
 	BEHAVIOUR
 
@@ -35,16 +35,17 @@ feature {NONE} -- Initialization
 		end
 
 feature -- Access
+
 	start
 			-- Start the behaviour.
 		local
 			a: separate TANGENT_BUG_DRIVE_CONTROLLER
 			b: separate TANGENT_BUG_LED_CONTROLLER
 		do
-			create a.make_with_attributes(stop_signaler)
-			create b.make_with_attributes(stop_signaler)
-			sep_stop(stop_signaler, False)
-			sep_start(a, b)
+			create a.make_with_attributes (stop_signaler)
+			create b.make_with_attributes (stop_signaler)
+			sep_stop (stop_signaler, False)
+			sep_start (a, b)
 		end
 
 	stop

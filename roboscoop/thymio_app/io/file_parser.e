@@ -1,5 +1,5 @@
 note
-	description: "Class for parsing key-value structured files."
+	description: "Deferred class for parsing key-value structured files."
 	author: "Ferran Pallarès"
 	date: "06.10.2015"
 
@@ -9,18 +9,20 @@ deferred class
 feature {NONE} -- Initialization
 
 	make
-			--Create current
+			--Create current.
 		deferred
 		end
 
 	make_with_path (f_path: STRING)
-			-- Create current
+			-- Create current from given path.
 		deferred
 		end
 
 feature {NONE} -- Implementation
 
 	file: PLAIN_TEXT_FILE
-	file_path: STRING
+			-- File to read from.
 
+	file_path: STRING
+			-- Path of the file.
 end

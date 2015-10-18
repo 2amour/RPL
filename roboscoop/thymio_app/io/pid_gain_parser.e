@@ -1,14 +1,13 @@
 note
-	description: "Summary description for {PID_GAIN_PARSER}."
-	author: ""
-	date: "$Date$"
-	revision: "$Revision$"
+	description: "PID gains parser."
+	author: "ferran_antoni_sebastian"
+	date: "18.10.15"
 
 class
 	PID_GAIN_PARSER
+
 inherit
 	FILE_PARSER
-	--ARGUMENTS
 
 create
 	make_with_path, make
@@ -31,9 +30,11 @@ feature {NONE} -- Initialization
 		end
 
 feature -- Access
-	Kp, Ki, Kd: REAL_64
 
-feature -- Implementation
+	Kp, Ki, Kd: REAL_64
+			-- PID gains.
+
+feature {NONE} -- Implementation
 
 	read_file (f_path: STRING)
 			-- Read file
@@ -57,10 +58,8 @@ feature -- Implementation
 				end
 			end
 			file.close
-
 			debug
 				io.put_string ("p: " + Kp.out + ", i: " + Ki.out + ", d: " + Kd.out + "%N")
 			end
 		end
-
 end

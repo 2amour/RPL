@@ -1,14 +1,13 @@
 note
-	description: "Summary description for {RANGE_SENSOR_PARSER}."
-	author: ""
-	date: "$Date$"
-	revision: "$Revision$"
+	description: "Parser for range of sensors."
+	author: "ferran_antoni_sebastian"
+	date: "18.10.2015"
 
 class
 	RANGE_SENSOR_PARSER
+
 inherit
 	FILE_PARSER
-	--ARGUMENTS
 
 create
 	make, make_with_path
@@ -31,10 +30,14 @@ feature {NONE} -- Initialization
 		end
 
 feature -- Access
+
 	transforms: ARRAY[TRANSFORM_2D]
+		-- Array with the different transformations from sensor to base frame of the robot
+
+feature {NONE} -- Implementation
 
 	read_file (f_path: STRING)
-			-- Reads file
+			-- Reads file.
 		local
 			x: REAL_64
 			y: REAL_64
@@ -56,10 +59,8 @@ feature -- Access
 				y := file.last_double.item
 				file.read_double
 				phi := file.last_double.item
-
 				create transform.make_with_offsets(x, y, phi)
 				transforms.put (transform, i)
-
 				i := i + 1
 			end
 			file.close

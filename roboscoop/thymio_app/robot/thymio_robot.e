@@ -53,7 +53,6 @@ feature -- Access
 		end
 
 	stop_moving
-
 			-- Stop moving towards the target.
 		do
 			stop_behaviour (tangent_bug_behaviour)

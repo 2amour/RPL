@@ -1,8 +1,7 @@
 note
-	description: "Summary description for {GOAL_PARSER}."
-	author: ""
-	date: "$Date$"
-	revision: "$Revision$"
+	description: "Parser for goal coordinates."
+	author: "ferran_antoni_sebastian"
+	date: "18.10.2015"
 
 class
 	GOAL_PARSER
@@ -25,14 +24,14 @@ feature {NONE} -- Initialization
 		end
 
 	make_with_path (path: STRING)
-			-- Initialization for `Current'.
+			-- Initialization for `Current' with given path.
 		do
 			read_file (path)
 		end
 
-
 feature -- Access
 	goal: POINT_2D
+			-- Goal coordinates in point_2d format.
 
 feature {NONE} -- Implementation
 
@@ -44,9 +43,10 @@ feature {NONE} -- Implementation
 		do
 			file_path := f_path
 			create file.make_open_read (file_path)
-
-			from file.start;
-			until file.off
+			from
+				file.start
+			until
+				file.off
 			loop
 				file.read_character
 				file.read_double
@@ -56,13 +56,11 @@ feature {NONE} -- Implementation
 				when 'y' then
 					y_goal := file.last_double
 				else
-					io.putstring ("Character not recognized")
+					io.putstring ("Character not recognized.")
 				end
 			end
-
 			create goal.make_with_coordinates (x_goal, y_goal)
 			file.close
-
 			debug
 				io.put_string ("x_goal: " + goal.get_x.out + ", y_goal: " + goal.get_y.out + "%N")
 			end

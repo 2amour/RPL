@@ -1,8 +1,7 @@
 note
-	description: "Summary description for {ABSTRACT_2D}."
-	author: ""
-	date: "$Date$"
-	revision: "$Revision$"
+	description: "General class for types in 2D"
+	author: "ferran_antoni_sebastian"
+	date: "18.10.2015"
 
 class
 	ABSTRACT_2D
@@ -10,21 +9,17 @@ class
 create
 	make, make_with_coordinates, make_from_vector_3d_msg
 
-feature {NONE} -- Implementation
-
-	x, y: REAL_64
-
-feature -- Initializaiton
+feature {NONE} -- Initialization
 
 	make
-			-- Init point to 0, 0 coordinates
+			-- Initialize point to 0, 0 coordinates.
 		do
 			x := 0
 			y := 0
 		end
 
-	make_with_coordinates ( new_x, new_y: REAL_64 )
-			-- Init point to (new_x, new_y)
+	make_with_coordinates (new_x, new_y: REAL_64)
+			-- Initialize point from given coordinates.
 		do
 			x := new_x
 			y := new_y
@@ -33,39 +28,40 @@ feature -- Initializaiton
 			set_y: y = new_y
 		end
 
-	make_from_vector_3d_msg(msg: VECTOR_3D_MSG)
-			-- Init point fom VECTOR_3D_MSG
+	make_from_vector_3d_msg (msg: VECTOR_3D_MSG)
+			-- Initialize point from VECTOR_3D_MSG.
 		do
-			make_with_coordinates ( msg.x, msg.y )
+			make_with_coordinates (msg.x, msg.y)
 		end
 
 feature -- Access
 
-	set_coordinates( new_x, new_y: REAL_64)
-			-- Set new new_x, new_y coordinates
+	set_coordinates (new_x, new_y: REAL_64)
+			-- Set new new_x, new_y coordinates.
 		do
-			make_with_coordinates ( new_x, new_y)
+			make_with_coordinates (new_x, new_y)
 		end
 
 	get_x: REAL_64
-			-- Return x coordinate
+			-- Return x coordinate.
 		do
 			Result := x
 		end
 
 	get_y: REAL_64
-			-- Return y coordinate
+			-- Return y coordinate.
 		do
 			Result := y
 		end
 
 	get_vector_3d_msg: VECTOR_3D_MSG
+			-- Get a vector_3d_msg from coordinates x and y.
 		do
 			Result := create {VECTOR_3D_MSG}.make_with_values (x, y, 0.0)
 		end
 
 	get_scaled alias "*" (scalar: REAL_64): like Current
-			-- get original abstract_2d scaled by `scalar'.
+			-- Get original abstract_2d scaled by `scalar'.
 		do
 			Result := create {like Current}.make_with_coordinates (x*scalar, y*scalar)
 		end
@@ -88,4 +84,8 @@ feature -- Access
 			Result := "x: " + x.out + " y: " + y.out
 		end
 
+feature {NONE} -- Implementation
+
+	x, y: REAL_64
+		-- Coordinates.
 end

@@ -1,5 +1,5 @@
 note
-	description: "Generic PID controller"
+	description: "Generic PID controller."
 	author: "Sebastian Curi"
 	date: "15.10.2015"
 
@@ -51,10 +51,8 @@ feature -- Access
 			else
 				ierror := 0.0
 			end
-
 			derror := (e - perror) / delta_t
 			perror := e
-
 			output := Kp * perror + Ki * ierror + Kd * derror
 		end
 
