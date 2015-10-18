@@ -1,6 +1,6 @@
 note
 	description: "Parser of file with paths of other files"
-	author: ""
+	author: "ferran_antoni_sebastian"
 	date: "17.10.15"
 
 class
@@ -83,7 +83,7 @@ feature {NONE} -- Implementation
 		end
 
 	get_path_from_arguments: STRING
-			-- Get the path specified in command option -p
+			-- Get the path specified in command argument
 		local
 			path: STRING
 		do
