@@ -173,8 +173,11 @@ feature -- Access.
 	is_enough_space_for_changing_direction: BOOLEAN
 			-- <Precursor>
 		do
-			-- TODO.
-			Result := False
+			Result := True
+			across sensors as sensor
+			loop
+				Result := Result and (sensor.item.range > ({THYMIO_ROBOT}.robot_base_size - 8.0))
+			end
 		end
 
 	is_all_front_sensors_open: BOOLEAN
