@@ -237,50 +237,47 @@ feature -- Access.
 		end
 
 	follow_wall_orientation (a_desired_distance_from_wall: REAL_64): REAL_64
-			-- Get the orientation the robot should head in order to reach the desired distance from the wall
+			-- Get the orientation the robot should head in order to reach the desired distance from the wall.
 		local
 			a: POINT_2D
 			b: POINT_2D
-			--v_wall:  LINE_2D
-			v_wall: VECTOR_2D
-			v_robot: VECTOR_2D
-			current_distance: REAL_64
-			v_theta: VECTOR_2D
+			follow_line:  LINE_2D
 		do
-			if is_obstacle_mostly_at_left then
-				a := transforms[1].project_to_parent (create {POINT_2D}.make_with_coordinates (sensors[1].range, 0))
-				if sensors[2].is_valid_range then
-					b := transforms[2].project_to_parent (create {POINT_2D}.make_with_coordinates (sensors[2].range, 0))
-				else
-					create b.make_with_coordinates (a.get_x + 0.1, a.get_y)
-				end
+--			if sensors[1].is_valid_range then -- TODO - call only when first sensor range is valid
+				a := transforms[1].project_to_parent (create {POINT_2D}.make_with_coordinates (sensors[1].range, 0)) -- TODO - a -> sensor 5, b -> sensor 4 for clockwise
+				b := transforms[2].project_to_parent (create {POINT_2D}.make_with_coordinates (sensors[2].range, 0))
+				create follow_line.make_with_points (a, b)
+--			else
+--				create follow_line.make_with_points (create {POINT_2D}.make_with_coordinates (0.0, 0.0),
+--													create {POINT_2D}.make_with_coordinates (0.25, 1.0))
+--			end
 
-			else
-				a := transforms[5].project_to_parent (create {POINT_2D}.make_with_coordinates (sensors[5].range, 0))
-
-				if sensors[4].is_valid_range then
-					b := transforms[4].project_to_parent (create {POINT_2D}.make_with_coordinates (sensors[4].range, 0))
-				else
-					create b.make_with_coordinates (a.get_x + 0.1, a.get_y)
-				end
-
-			end
-
-
-			v_wall := (create {LINE_2D}.make_with_points (a, b)).get_vector.get_unitary
-
-			if is_obstacle_mostly_at_left then
-				v_robot := v_wall.get_perpendicular.get_scaled (-1)
-			else
-				v_robot := v_wall.get_perpendicular
-			end
-
-			current_distance :=  {DOUBLE_MATH}.dabs (v_robot.dot (create {VECTOR_2D}.make_with_coordinates (b.get_x, b.get_y)))
-
-			v_theta := v_wall.get_scaled (a_desired_distance_from_wall).add (v_robot.get_scaled (current_distance - a_desired_distance_from_wall))
-
-			Result := v_theta.get_angle
-
+			Result := follow_line_orientation (a_desired_distance_from_wall, follow_line)
 		end
 
+	sensor_range_point (sensor_index: INTEGER_32): POINT_2D
+			-- Get the point measured by the sensor `sensor_index' in relative coordinates.
+		do
+			Result := transforms[sensor_index].project_to_parent (create {POINT_2D}.make_with_coordinates (sensors[sensor_index].range, 0))
+		end
+
+feature {NONE} -- Implementation
+
+	follow_line_orientation (desired_distance: REAL_64; line: LINE_2D): REAL_64
+			-- Get the orientation the robot should head in order to reach the desired distance from the line in the line's direction.
+		local
+			current_distance: REAL_64
+			v_wall: VECTOR_2D
+			v_robot: VECTOR_2D
+			v_theta: VECTOR_2D
+		do
+			current_distance := line.get_distance_from_point (create {POINT_2D}.make_with_coordinates (0.0, 0.0))
+			v_wall := line.get_vector.get_unitary
+			v_robot := v_wall.get_perpendicular
+
+			v_theta := (v_wall*desired_distance) + (v_robot*(+(current_distance - desired_distance))) -- TODO - Change to minus (-) for follow obstacle in the right.
+--			io.put_string ("x: " + v_theta.get_x.out + " y: " + v_theta.get_y.out + "%N")
+
+			Result := v_theta.get_angle
+		end
 end

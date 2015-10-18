@@ -15,10 +15,10 @@ create
 feature
 
 	make_from_points(p1, p2: separate POINT_2D)
-			-- Make a vector from points
+			-- Make a vector starting at `p1' pointing towards `p2'.
 		do
-			x := p1.get_x - p2.get_x
-			y := p1.get_y - p2.get_y
+			x := p2.get_x - p1.get_x
+			y := p2.get_y - p1.get_y
 		end
 
 feature -- Access
@@ -47,32 +47,12 @@ feature -- Access
 	get_perpendicular: VECTOR_2D
 			-- get perpendicular to this vector
 		do
-			Result := create {VECTOR_2D}.make_with_coordinates (y, -x)
+			Result := create {VECTOR_2D}.make_with_coordinates (-y, x) -- TODO - NOTE, if vector points RIGHT, perpendicular points UP
 		end
 
-	get_scaled (scalar: REAL_64): VECTOR_2D
-			-- get original vector scaled by `scalar'
-		do
-			Result := create {VECTOR_2D}.make_with_coordinates (x*scalar, y*scalar)
-		end
-
-	add (other: VECTOR_2D): VECTOR_2D
-			-- The result vector is the addition between the original vector and `other'.
-		do
-			Result := create {VECTOR_2D}.make_with_coordinates (x + other.get_x, y + other.get_y)
-		end
-
-	sub (other: VECTOR_2D): VECTOR_2D
-			-- The result vector is the substraction between the original vector and `other'.
-		do
-			Result := create {VECTOR_2D}.make_with_coordinates (x - other.get_x, y - other.get_y)
-		end
-
-	dot(other: VECTOR_2D): REAL_64
+	dot (other: VECTOR_2D): REAL_64
 			-- dot product between vectors.
 		do
 			Result := other.get_x * x + other.get_y * y
 		end
-
-
 end
