@@ -42,7 +42,7 @@ feature --Initialization
 			create at_goal
 			create follow_wall.make_with_v_leave (0.1)
 			create go_to_goal.make
-			create leave_wall.make_with_v_leave (0.1)
+			create leave_wall.make --.make_with_v_leave (0.1)
 			create unreachable_goal
 		end
 
@@ -77,9 +77,19 @@ feature -- Access
 			end
 		end
 
-	set_leave_wall
+	set_leave_wall -- TODO DELETE THIS
 			-- Set to leave wall state.
 		do
+			state := leave_wall
+			debug
+				io.put_string ("Leave Wall %N")
+			end
+		end
+
+	set_leave_wall_with_target (p: POINT_2D)
+			-- Set to leave wall state.
+		do
+			leave_wall.set_target (p)
 			state := leave_wall
 			debug
 				io.put_string ("Leave Wall %N")
