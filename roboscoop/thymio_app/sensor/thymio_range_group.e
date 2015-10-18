@@ -183,8 +183,7 @@ feature -- Access.
 	is_all_front_sensors_open: BOOLEAN
 			-- <Precursor>
 		do
-			-- TODO.
-			Result := False
+			Result := not is_obstacle_in_front
 		end
 
 	open_direction_front: VECTOR_3D_MSG
