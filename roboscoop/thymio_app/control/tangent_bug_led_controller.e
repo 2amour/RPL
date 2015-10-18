@@ -23,7 +23,10 @@ feature -- Initialization
 feature {TANGENT_BUG_BEHAVIOUR}
 	update_leds (tangent_bug_sig: separate TANGENT_BUG_SIGNALER; s_sig: separate STOP_SIGNALER; leds: separate RGB_COLOR_ACTUATOR)
 		do
-			tangent_bug_sig.get_state.update_leds (leds)
-
+			if s_sig.is_stop_requested then
+				leds.set_to_white
+			else
+				tangent_bug_sig.get_state.update_leds (leds)
+			end
 		end
 end

@@ -28,7 +28,7 @@ feature {TANGENT_BUG_BEHAVIOUR}
 			else
 
 				tangent_bug_sig.get_pose.get_position.set_coordinates (o_sig.x, o_sig.y) -- TODO expanded class POSE?
-				tangent_bug_sig.get_pose.set_orientation (o_sig.y) -- TODO
+				tangent_bug_sig.get_pose.set_orientation (o_sig.theta) 
 				tangent_bug_sig.set_timestamp (o_sig.timestamp)
 
 
