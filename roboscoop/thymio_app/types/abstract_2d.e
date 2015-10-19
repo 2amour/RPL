@@ -7,7 +7,7 @@ class
 	ABSTRACT_2D
 
 create
-	make, make_with_coordinates, make_from_vector_3d_msg
+	make, make_with_coordinates, make_from_vector_3d_msg, make_from_separate
 
 feature {ANY} -- Initialization
 
@@ -16,6 +16,13 @@ feature {ANY} -- Initialization
 		do
 			x := 0
 			y := 0
+		end
+
+	make_from_separate (other: separate ABSTRACT_2D)
+			-- Initialize object from separate object.
+		do
+			x := other.get_x
+			y := other.get_y
 		end
 
 	make_with_coordinates (new_x, new_y: REAL_64)

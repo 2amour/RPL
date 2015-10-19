@@ -7,7 +7,7 @@ class
 	POSE_2D
 
 create
-	make, make_with_pose, make_with_coordinates
+	make, make_with_pose, make_with_coordinates, make_from_separate
 
 feature	-- Initialization
 
@@ -23,6 +23,11 @@ feature	-- Initialization
 		do
 			set_position (p)
 			set_orientation (phi)
+		end
+
+	make_from_separate (other: POSE_2D)
+		do
+			make_with_coordinates (other.get_position.get_x, other.get_position.get_y, other.get_orientation)
 		end
 
 	make_with_coordinates (x, y, phi: REAL_64)

@@ -10,7 +10,7 @@ inherit
 	ABSTRACT_2D
 
 create
-	make, make_with_coordinates, make_from_vector_3d_msg
+	make, make_with_coordinates, make_from_vector_3d_msg, make_from_separate
 
 feature -- Access
 
