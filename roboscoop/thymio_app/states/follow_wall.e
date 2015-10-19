@@ -16,20 +16,24 @@ feature -- Initialization
 
 	make
 			-- Create self.
+		local
+			treshold: TRESHOLD_PARSER
+		    pid: PID_GAIN_PARSER
 		do
+			create treshold.make
 			clockwise := False
-			goal_threshold := 0.05
-			y_robot_guard := 0.08
-			turning_angular_velocity := 0.4
-			target_threshold := 0.08
-			distance_from_wall := 0.18
-			create corner_offset.make_with_coordinates (0.20, 0.03)
+			goal_threshold := treshold.g_th
+			y_robot_guard := treshold.y_rob
+			turning_angular_velocity := treshold.a_vel
+			target_threshold := treshold.t_th
+			distance_from_wall := treshold.d_wall
+			create corner_offset.make_with_coordinates (treshold.g_th, treshold.t_th)
 
 			create world_tf.make
 			create target_point.make
-
-			create orientation_controller.make_with_gains (0.6, 0.0, 0.2) -- TODO - HARDCODED
-			create speed_controller.make_with_speed (0.02)
+			create pid.make
+			create orientation_controller.make_with_gains (pid.kp, pid.ki, pid.kd)
+			create speed_controller.make_with_speed (treshold.a_vel)
 			create time_handler.start (0.0)
 			create last_point.make
 		end

@@ -29,11 +29,10 @@ feature -- Initializer
 		-- Make
 		do
 			create math
-			create pid_parser.make_with_path ("pid_gains.txt")
+			create pid_parser.make
 			create time_handler.start (0.0)
 			create speed_controller.make_with_speed (0.05)
-			create orientation_controller.make_with_gains (0.6, 0.0, 0.0)
-
+			create orientation_controller.make_with_gains (pid_parser.kd, pid_parser.ki, pid_parser.kp)
 			create target.make
 		end
 

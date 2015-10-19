@@ -31,19 +31,20 @@ feature -- Access
 	update_state(t_sig: separate TANGENT_BUG_SIGNALER; o_sig: separate ODOMETRY_SIGNALER; r_sig: separate THYMIO_RANGE_GROUP)
 			-- <Precursor>
 		do
-			if t_sig.get_goal.get_euclidean_distance (t_sig.get_pose.get_position) > goal_treshold then
+			if t_sig.get_goal.get_euclidean_distance (t_sig.get_pose.get_position) > get_goal_treshold then
 				t_sig.set_go_to_goal
 			end
 		end
 
 feature {NONE} -- Implementation
 
-	goal_treshold: REAL_64
-			-- Treshold for going to goal.
+	get_goal_treshold: REAL_64
 
-	paths: PATHS_PARSER
-			-- Paths parser.
-
-	treshold: TRESHOLD_PARSER
-			-- Treshold parser.
+		local
+			treshold: TRESHOLD_PARSER
+			goal_treshold: REAL_64
+		do
+			create treshold.make
+			goal_treshold := treshold.g_th
+		end
 end

@@ -44,7 +44,7 @@ feature -- Access
 	range_sensor_file_path: STRING
 			-- Path for the file with range sensors' frames.
 
-	teshold_file_path: STRING
+	treshold_file_path: STRING
 			-- Path for the file with tresholds.
 
 feature {NONE} -- Implementation
@@ -85,7 +85,7 @@ feature {NONE} -- Implementation
 			goal_file_path := paths_array.at (1)
 			pid_gain_file_path := paths_array.at (2)
 			range_sensor_file_path := paths_array.at (3)
-			teshold_file_path := paths_array.at (3)
+			treshold_file_path := paths_array.at (3)
 		end
 
 	get_path_from_arguments: STRING

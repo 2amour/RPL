@@ -31,7 +31,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	g_th: REAL_64
+	g_th, y_rob, a_vel, t_th, d_wall: REAL_64
 			-- PID gains.
 
 feature {NONE} -- Implementation
@@ -44,17 +44,19 @@ feature {NONE} -- Implementation
 			from file.start;
 			until file.off
 			loop
-				file.read_word
+				file.read_character
 				file.read_double
-				inspect file.last_word
-				when "goal_th" then
+				inspect file.last_character
+				when 'g' then
 					g_th := file.last_double
-				when "" then
-					Ki := file.last_double
-				when "" then
-					Kd := file.last_double
-				when "" then
-								Kd := file.last_double
+				when 'a' then
+					y_rob := file.last_double
+				when 'b' then
+					a_vel := file.last_double
+				when 'c' then
+					t_th := file.last_double
+				when 'd' then
+					d_wall := file.last_double
 				else
 					io.putstring ("Character not recognized")
 				end
