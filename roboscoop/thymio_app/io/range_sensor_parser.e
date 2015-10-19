@@ -32,7 +32,7 @@ feature {NONE} -- Initialization
 feature -- Access
 
 	transforms: ARRAY[TRANSFORM_2D]
-		-- Array with the different transformations from sensor to base frame of the robot
+		-- Array with the different transformations from sensor to base frame of the robot.
 
 feature {NONE} -- Implementation
 
