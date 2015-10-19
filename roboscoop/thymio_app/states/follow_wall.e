@@ -21,12 +21,12 @@ feature -- Initialization
 			turning_angular_velocity := 0.2
 			target_threshold := 0.10
 			distance_from_wall := 0.15
-			create corner_offset.make_with_coordinates (0.20, 0.05)
+			create corner_offset.make_with_coordinates (0.20, 0.03)
 
 			create world_tf.make
 			create target_point.make
 
-			create orientation_controller.make_with_gains (0.6, 0.0, 0.0) -- TODO - HARDCODED
+			create orientation_controller.make_with_gains (0.6, 0.0, 0.2) -- TODO - HARDCODED
 			create speed_controller.make_with_speed (0.02)
 			create time_handler.start (0.0)
 			create last_point.make
@@ -155,14 +155,16 @@ feature -- Access
 		local
 			error: REAL_64
 			line: LINE_2D
+			math: TRIGONOMETRY_MATH
 		do
-			if target_point.get_manhattan_distance (t_sig.get_pose.get_position) > target_threshold then
-				io.put_string (target_point.get_string + "%N")
-				error := {DOUBLE_MATH}.arc_tangent ( (target_point.get_y - t_sig.get_pose.get_position.get_y)/(target_point.get_x - t_sig.get_pose.get_position.get_x))  - t_sig.get_pose.get_orientation
+			create math
+			if target_point.get_euclidean_distance (t_sig.get_pose.get_position) > target_threshold then
+				error := math.atan2 (target_point.get_y - t_sig.get_pose.get_position.get_y, target_point.get_x - t_sig.get_pose.get_position.get_x)  - t_sig.get_pose.get_orientation
+				error := math.atan2 (math.sine (error), math.cosine (error))
 				orientation_controller.set_error (error)
 				angular_velocity := orientation_controller.get_output
 				debug
-					io.put_string (target_point.get_manhattan_distance (t_sig.get_pose.get_position).out + "%N")
+					io.put_string (target_point.get_euclidean_distance (t_sig.get_pose.get_position).out + "%N")
 				end
 			else
 				angular_velocity := turning_angular_velocity
