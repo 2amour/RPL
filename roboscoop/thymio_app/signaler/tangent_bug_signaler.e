@@ -17,7 +17,8 @@ feature {NONE} -- Initialization
 			create current_pose.make
 			create goal.make_with_coordinates (g.get_x, g.get_y)
 			init_states
-			set_follow_wall_clockwise
+			set_follow_wall_counter_clockwise
+--			set_follow_wall_clockwise
 			create intial_point_wall.make
 		end
 
@@ -25,7 +26,7 @@ feature {NONE} -- Initialization
 			-- Initialize states.
 		do
 			create at_goal
-			create follow_wall.make_with_v_leave (0.1)
+			create follow_wall.make --.make_with_v_leave (0.1)
 			create go_to_goal.make
 			create leave_wall.make -- TODO - .make_with_v_leave (0.1)
 			create unreachable_goal

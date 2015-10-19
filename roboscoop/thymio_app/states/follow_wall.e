@@ -10,30 +10,33 @@ inherit
 	STATE
 
 create
-	make_with_v_leave
+	make
 
 feature -- Initialization
 
-	make_with_v_leave (v: REAL_64)
+	make
 			-- Create self.
-		require
-			positive_v: v > 0
 		do
-			v_leave := v
-			create orientation_controller.make_with_gains (0.6, 0.1, 0.1) -- TODO - HARDCODED
+			clockwise := False
+			turning_angular_velocity := 0.2
+			target_threshold := 0.10
+			distance_from_wall := 0.15
+			create corner_offset.make_with_coordinates (0.20, 0.05)
+
+			create world_tf.make
+			create target_point.make
+
+			create orientation_controller.make_with_gains (0.6, 0.0, 0.0) -- TODO - HARDCODED
 			create speed_controller.make_with_speed (0.02)
 			create time_handler.start (0.0)
 			create last_point.make
-		ensure
-			set_v: v_leave = v
 		end
 
 feature -- Access
 
 	update_velocity (drive: separate DIFFERENTIAL_DRIVE)
 		do
-			drive.set_velocity (speed_controller.get_output, orientation_controller.get_output)
---			io.put_string ("Theta:" + orientation_controller.get_output.out + "%N")
+			drive.set_velocity (linear_speed, angular_velocity)
 		end
 
 	update_leds(leds: separate RGB_COLOR_ACTUATOR)
@@ -41,59 +44,35 @@ feature -- Access
 			leds.set_to_red
 		end
 
-	set_readings(t_sig: separate TANGENT_BUG_SIGNALER; range_signaler: separate THYMIO_RANGE_GROUP)
+	set_readings (t_sig: separate TANGENT_BUG_SIGNALER; range_signaler: separate THYMIO_RANGE_GROUP)
 		local
-			error: REAL_64
-			follow_wall: LINE_2D
-			world_coordinate: TRANSFORM_2D
+			i: INTEGER_32
 		do
-			if range_signaler.sensors[1].is_valid_range then
-				io.put_string (last_point.get_string + ", x: " + t_sig.get_pose.get_position.get_x.out + " y: " + t_sig.get_pose.get_position.get_y.out + "%N")
-				create world_coordinate.make_with_offsets (t_sig.get_pose.get_position.get_x, t_sig.get_pose.get_position.get_y, t_sig.get_pose.get_orientation)
-				last_point := world_coordinate.project_to_parent (create {POINT_2D}.make_with_coordinates (range_signaler.sensor_range_point (1).get_x, range_signaler.sensor_range_point (1).get_y))
-				error := range_signaler.follow_wall_orientation (0.15) -- t_sig.get_pose.get_orientation -- TODO - HARDCODED
-			else
-				if t_sig.get_pose.get_position.get_euclidean_distance (last_point) < 0.15 then
---					io.put_string ("ROTATE")
---					create follow_wall.make_with_points (last_point, last_point + create {POINT_2D}.make_with_coordinates ({DOUBLE_MATH}.sine (t_sig.get_pose.get_orientation),
---																															{DOUBLE_MATH}.cosine (t_sig.get_pose.get_orientation)))
-					create follow_wall.make_with_points (create {POINT_2D}.make_with_coordinates (0.0, 0.0),
-															create {POINT_2D}.make_with_coordinates (0.0, 1.0))
-					error := test (0.15, follow_wall)
-				else
---					io.put_string ("STRAIGHT")
-					create follow_wall.make_with_points (create {POINT_2D}.make_with_coordinates (0.0, 0.0),
-															create {POINT_2D}.make_with_coordinates (1.0, 1.0))
-					error := test (0.15, follow_wall)
-				end
-			end
---			io.put_string (" Distance: " + t_sig.get_pose.get_position.get_euclidean_distance (last_point).out + "%N")
 
 			time_handler.set_time (t_sig.get_timestamp)
+			orientation_controller.set_sampling (time_handler.get_sampling_rate)
+
 			if time_handler.get_sampling_rate > 0 then
-				orientation_controller.set_sampling (time_handler.get_sampling_rate)
-				orientation_controller.set_error (error)
+				if clockwise then
+					if range_signaler.is_wall_only_at_right then
+						follow_wall (t_sig, range_signaler)
+					elseif range_signaler.is_huge_at_left then
+						inner_corner (t_sig, range_signaler)
+					elseif range_signaler.is_all_front_sensors_open then
+						outer_corner (t_sig, range_signaler)
+					end
+				else
+					if range_signaler.is_wall_only_at_left then
+						follow_wall (t_sig, range_signaler)
+					elseif range_signaler.is_huge_at_right then
+						inner_corner (t_sig, range_signaler)
+					elseif range_signaler.is_all_front_sensors_open then
+						outer_corner (t_sig, range_signaler)
+					end
+				end
 
-				speed_controller.set_angular_velocity (orientation_controller.get_output)
+				update_minimum_distance_to_goal (t_sig)
 			end
-		end
-
-	test (desired_distance: REAL_64; line: LINE_2D): REAL_64
-			-- Get the orientation the robot should head in order to reach the desired distance from the line in the line's direction.
-		local
-			current_distance: REAL_64
-			v_wall: VECTOR_2D
-			v_robot: VECTOR_2D
-			v_theta: VECTOR_2D
-		do
-			current_distance := line.get_distance_from_point (create {POINT_2D}.make_with_coordinates (0.0, 0.0))
-			v_wall := line.get_vector.get_unitary
-			v_robot := v_wall.get_perpendicular
-
-			v_theta := (v_wall*desired_distance) + (v_robot*(+(current_distance - desired_distance))) -- TODO - Change to minus (-) for follow obstacle in the right.
---			io.put_string ("x: " + v_theta.get_x.out + " y: " + v_theta.get_y.out + "%N")
-
-			Result := v_theta.get_angle
 		end
 
 	update_state(t_sig: separate TANGENT_BUG_SIGNALER; o_sig: separate ODOMETRY_SIGNALER; r_sig: separate THYMIO_RANGE_GROUP)
@@ -101,39 +80,135 @@ feature -- Access
 			v_leave_point: separate POINT_2D
 			vector_to_goal: VECTOR_2D
 		do
-			create vector_to_goal.make_from_points(create {POINT_2D}.make_with_coordinates (o_sig.x, o_sig.y), t_sig.get_goal)
+--			create vector_to_goal.make_from_points(create {POINT_2D}.make_with_coordinates (o_sig.x, o_sig.y), t_sig.get_goal)
 
-			create v_leave_point.make_with_coordinates (o_sig.x + v_leave * {DOUBLE_MATH}.cosine(vector_to_goal.get_angle),
-														o_sig.y + v_leave * {DOUBLE_MATH}.sine  (vector_to_goal.get_angle))
+--			create v_leave_point.make_with_coordinates (o_sig.x + v_leave * {DOUBLE_MATH}.cosine(vector_to_goal.get_angle),
+--														o_sig.y + v_leave * {DOUBLE_MATH}.sine  (vector_to_goal.get_angle))
 
-			if r_sig.has_obstacle (vector_to_goal.get_angle) and
-				t_sig.get_goal.get_euclidean_distance ( v_leave_point ) < t_sig.get_d_min then
-				t_sig.set_leave_wall
+--			if r_sig.has_obstacle (vector_to_goal.get_angle) and
+--				t_sig.get_goal.get_euclidean_distance ( v_leave_point ) < t_sig.get_d_min then
+--				t_sig.set_leave_wall
+--			end
+		end
+
+	set_clockwise
+			-- Set clockwise wall-following.
+		do
+			corner_offset.make_with_coordinates (0.20, -0.03)
+			turning_angular_velocity := -0.4
+			clockwise := True
+		end
+
+	set_counter_clockwise
+			-- Set clockwise wall-following.
+		do
+			corner_offset.make_with_coordinates (0.20, 0.03)
+			turning_angular_velocity := 0.4
+			clockwise := False
+		end
+
+	follow_wall (t_sig: separate TANGENT_BUG_SIGNALER; range_signaler: separate THYMIO_RANGE_GROUP)
+		local
+			error: REAL_64
+		do
+			world_tf.make_with_offsets (t_sig.get_pose.get_position.get_x, t_sig.get_pose.get_position.get_y, t_sig.get_pose.get_orientation)
+			target_point := world_tf.project_to_parent (corner_offset)
+
+			if clockwise then
+				error := range_signaler.follow_right_wall (distance_from_wall)
+			else
+				error := range_signaler.follow_left_wall (distance_from_wall)
+			end
+
+			orientation_controller.set_error (error)
+			angular_velocity := orientation_controller.get_output
+
+			speed_controller.set_angular_velocity (angular_velocity)
+			linear_speed := speed_controller.get_output
+
+			debug
+				io.put_string ("Follow Wall %N")
+			end
+		end
+
+	inner_corner (t_sig: separate TANGENT_BUG_SIGNALER; range_signaler: separate THYMIO_RANGE_GROUP)
+		local
+			error: REAL_64
+		do
+			if clockwise then
+				error := range_signaler.follow_closest_wall_cw (distance_from_wall)
+			else
+				error := range_signaler.follow_closest_wall_ccw (distance_from_wall)
+			end
+
+			orientation_controller.set_error (error)
+			angular_velocity := orientation_controller.get_output
+			speed_controller.set_angular_velocity (angular_velocity)
+			linear_speed := speed_controller.get_output
+
+			debug
+				io.put_string ("Inner Corner %N")
+			end
+		end
+
+	outer_corner (t_sig: separate TANGENT_BUG_SIGNALER; range_signaler: separate THYMIO_RANGE_GROUP)
+		local
+			error: REAL_64
+			line: LINE_2D
+		do
+			if target_point.get_manhattan_distance (t_sig.get_pose.get_position) > target_threshold then
+				io.put_string (target_point.get_string + "%N")
+				error := {DOUBLE_MATH}.arc_tangent ( (target_point.get_y - t_sig.get_pose.get_position.get_y)/(target_point.get_x - t_sig.get_pose.get_position.get_x))  - t_sig.get_pose.get_orientation
+				orientation_controller.set_error (error)
+				angular_velocity := orientation_controller.get_output
+				debug
+					io.put_string (target_point.get_manhattan_distance (t_sig.get_pose.get_position).out + "%N")
+				end
+			else
+				angular_velocity := turning_angular_velocity
+				debug
+					io.put_string ("Turn %N")
+				end
+				speed_controller.set_angular_velocity (angular_velocity)
+				linear_speed := speed_controller.get_output
+			end
+
+		end
+
+	update_minimum_distance_to_goal (t_sig: separate TANGENT_BUG_SIGNALER)
+			-- Check if current distance to goal is smaller than the minimum
+		do
+			if t_sig.get_goal.get_euclidean_distance (t_sig.get_pose.get_position) < t_sig.get_d_min then
+				t_sig.set_d_min (t_sig.get_goal.get_euclidean_distance (t_sig.get_pose.get_position))
 			end
 		end
 
 
-		set_clockwise
-				-- Set clockwise wall-following
-			do
-				clockwise := True
-			end
-
-		set_counter_clockwise
-			do
-				clockwise := False
-			end
 
 feature {NONE} -- Implementation
+	turning_angular_velocity: REAL_64
+			-- Angular velocity when its only turning.
+
+	distance_from_wall: REAL_64
+			-- Distance to follow wall
+
+	corner_offset: POINT_2D
+			-- Target offset when finding a corner.
+
+	world_tf: TRANSFORM_2D
+			-- Transformation from base to robot.
+
+	target_point: POINT_2D
+			-- Target point, offset from last detected point
+
+	target_threshold: REAL_64
+			-- Target threshold for controller
 
 	clockwise: BOOLEAN
 			-- Follow Wall in clockwise(True) or counter-clockwise(False) direction
 
 	last_point: POINT_2D
 			-- Last point detected in the wall the robot is following.
-
-	v_leave : REAL_64
-			-- Leave obstacle velocity.
 
 	orientation_controller: PID
 			-- Controller for the robot orientation.
@@ -143,4 +218,10 @@ feature {NONE} -- Implementation
 
 	time_handler: TIME_PARSER
 			-- ROS message time stamp parser.
+
+	linear_speed: REAL_64
+			-- Desiread linear speed.
+
+	angular_velocity: REAL_64
+			-- Desired angular speed.
 end

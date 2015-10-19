@@ -193,7 +193,92 @@ feature -- Access.
 			Result := create {VECTOR_3D_MSG}.make_empty
 		end
 
-	find_closest_wall_from_point (p: POINT_2D): LINE_2D
+	is_wall_only_at_left: BOOLEAN
+		-- Check if there is a wall only at left.
+		do
+			Result := sensors[1].is_valid_range and
+					  (not sensors[3].is_valid_range) and
+					  (not sensors[4].is_valid_range) and
+					  (not sensors[5].is_valid_range)
+		end
+
+	is_wall_only_at_right: BOOLEAN
+		-- Check if there is a wall only at right.
+		do
+			Result := sensors[5].is_valid_range and
+					  (not sensors[3].is_valid_range) and
+					  (not sensors[2].is_valid_range) and
+					  (not sensors[1].is_valid_range)
+		end
+
+	is_huge_at_left: BOOLEAN
+		-- Check if there is an obstacle in left and right sensors
+		do
+			Result := (sensors[3].is_valid_range or sensors[4].is_valid_range or sensors[5].is_valid_range)
+		end
+
+	is_huge_at_right: BOOLEAN
+		-- Check if there is an obstacle in left and right sensors
+		do
+			Result := (sensors[3].is_valid_range or sensors[2].is_valid_range or sensors[1].is_valid_range)
+		end
+
+	get_left_wall: LINE_2D
+			-- Get left wall.
+		local
+			line: LINE_2D
+		do
+			if sensors[2].is_valid_range then
+				Result := get_line_between_sensors (1, 2)
+			else
+				Result := get_estimated_line_from_sensor (1)
+			end
+
+		end
+
+	get_right_wall: LINE_2D
+			-- Get left wall.
+		local
+			line: LINE_2D
+		do
+			if sensors[4].is_valid_range then
+				Result := get_line_between_sensors (4, 5)
+			else
+				Result := get_estimated_line_from_sensor (5)
+			end
+
+		end
+
+	get_estimated_line_from_sensor (i: INTEGER_32): LINE_2D
+			-- Get estimated line from sensor readings. Its estimated as a prolongation of the measured point in the x direction
+		require
+			valid_range: (i >= 1 and i <= 7)
+		local
+			p1, p2: POINT_2D
+		do
+			p1 := transforms[i].project_to_parent (create {POINT_2D}.make_with_coordinates (sensors[i].range, 0))
+			if not is_front_sensor (i) then
+				create p2.make_with_coordinates (p1.get_x + 1, p1.get_y)
+			else
+				create p2.make_with_coordinates (p1.get_x, p1.get_y + 1)
+			end
+			Result := create {LINE_2D}.make_with_points (p1, p2)
+		end
+
+	get_line_between_sensors (i, j: INTEGER_32): LINE_2D
+			-- Get Line between two sensors
+		require
+			valid_range: (i > 0 and i < 8) and (j > 0 and j < 8) and (i /= j)
+		local
+			p1, p2: POINT_2D
+		do
+			p1 := transforms[i].project_to_parent (create {POINT_2D}.make_with_coordinates (sensors[i].range, 0))
+			p2 := transforms[j].project_to_parent (create {POINT_2D}.make_with_coordinates (sensors[j].range, 0))
+
+			Result := create {LINE_2D}.make_with_points (p1, p2)
+		end
+
+	get_closest_wall_from_point (p: POINT_2D): LINE_2D
 			-- find the closest wall from the points
 		local
 			line, best_line: LINE_2D
@@ -206,64 +291,82 @@ feature -- Access.
 			i := 1
 			j := 1
 
-			across sensors as sensor_1
-			loop
-				if sensor_1.item.is_valid_range then
-					p1 := transforms[i].project_to_parent (create {POINT_2D}.make_with_coordinates (sensor_1.item.range, 0))
-					across sensors as sensor_2
+			from i:=1 until i > 7
+  			loop
+  				if sensors[i].is_valid_range then
+					from j := 1 until j > 7
 					loop
-						if not (i = j) then
-							create p2.make
-							if (sensor_2.item.is_valid_range) then
-								p2 := transforms[j].project_to_parent (create {POINT_2D}.make_with_coordinates (sensor_2.item.range, 0))
-							else
-								create p2.make_with_coordinates (p1.get_x + 1, p2.get_y)
-							end
-
-							create line.make_with_points (p1, p2)
-							distance := line.get_distance_from_point (p)
-							if (distance < minimum_distance) then
-								minimum_distance := distance
-								best_line := line
-							end
+						if sensors[j].is_valid_range then
+							line := get_line_between_sensors (i, j)
+						else
+							line := get_estimated_line_from_sensor (i)
 						end
+
+						distance := line.get_distance_from_point (p)
+						if (distance < minimum_distance) then
+							minimum_distance := distance
+							best_line := line
+						end
+
 						j := j + 1
 					end
-				end
-				i := i + 1
-			end
+  				end
+  				i := i + 1
+  			end
 
 			Result := best_line
 		end
 
+--	get_closest_sensor: INTEGER_32
+--			-- Get closest measured point
+--		local
+--			i, j: INTEGER_32
+--			range: REAL_64
+--		do
+--			i := 1
+--			range := sensors[i].range
+
+--			from i:=2 until i > 7
+--  			loop
+--				if sensors[i].range < range  then
+--					range := sensors[i].range
+--					j := i
+--				end
+--  			end
+
+--			Result := j
+--		end
+
+
 	follow_wall_orientation (a_desired_distance_from_wall: REAL_64): REAL_64
 			-- Get the orientation the robot should head in order to reach the desired distance from the wall.
-		local
-			a: POINT_2D
-			b: POINT_2D
-			follow_line:  LINE_2D
-		do
---			if sensors[1].is_valid_range then -- TODO - call only when first sensor range is valid
-				a := transforms[1].project_to_parent (create {POINT_2D}.make_with_coordinates (sensors[1].range, 0)) -- TODO - a -> sensor 5, b -> sensor 4 for clockwise
-				b := transforms[2].project_to_parent (create {POINT_2D}.make_with_coordinates (sensors[2].range, 0))
-				create follow_line.make_with_points (a, b)
---			else
---				create follow_line.make_with_points (create {POINT_2D}.make_with_coordinates (0.0, 0.0),
---													create {POINT_2D}.make_with_coordinates (0.25, 1.0))
---			end
+	do
+		Result := 0.0
+	end
 
-			Result := follow_line_orientation (a_desired_distance_from_wall, follow_line)
+	follow_left_wall (desired_distance: REAL_64): REAL_64
+		-- Get the orientation the robot should head in order to reach the desired distance from the line in the line's direction.
+		do
+			Result := follow_line_ccw (desired_distance, get_left_wall)
 		end
 
-	sensor_range_point (sensor_index: INTEGER_32): POINT_2D
-			-- Get the point measured by the sensor `sensor_index' in relative coordinates.
+	follow_right_wall (desired_distance: REAL_64): REAL_64
+		-- Get the orientation the robot should head in order to reach the desired distance from the line in the line's direction.
 		do
-			Result := transforms[sensor_index].project_to_parent (create {POINT_2D}.make_with_coordinates (sensors[sensor_index].range, 0))
+			Result := follow_line_cw (desired_distance, get_right_wall)
 		end
 
-feature {NONE} -- Implementation
+	follow_closest_wall_ccw (desired_distance: REAL_64): REAL_64
+		do
+			Result := follow_line_ccw (desired_distance, get_closest_wall_from_point (create {POINT_2D}.make_with_coordinates (0, 0)))
+		end
 
-	follow_line_orientation (desired_distance: REAL_64; line: LINE_2D): REAL_64
+	follow_closest_wall_cw (desired_distance: REAL_64): REAL_64
+		do
+			Result := follow_line_cw (desired_distance, get_closest_wall_from_point (create {POINT_2D}.make_with_coordinates (0, 0)))
+		end
+
+	follow_line_ccw (desired_distance: REAL_64; line: LINE_2D): REAL_64
 			-- Get the orientation the robot should head in order to reach the desired distance from the line in the line's direction.
 		local
 			current_distance: REAL_64
@@ -275,9 +378,25 @@ feature {NONE} -- Implementation
 			v_wall := line.get_vector.get_unitary
 			v_robot := v_wall.get_perpendicular
 
-			v_theta := (v_wall*desired_distance) + (v_robot*(+(current_distance - desired_distance))) -- TODO - Change to minus (-) for follow obstacle in the right.
---			io.put_string ("x: " + v_theta.get_x.out + " y: " + v_theta.get_y.out + "%N")
-
+			v_theta := (v_wall*desired_distance) + (v_robot*((current_distance - desired_distance))) -- TODO - Change to minus (-) for follow obstacle in the right.
 			Result := v_theta.get_angle
 		end
+
+	follow_line_cw (desired_distance: REAL_64; line: LINE_2D): REAL_64
+			-- Get the orientation the robot should head in order to reach the desired distance from the line in the line's direction.
+		local
+			current_distance: REAL_64
+			v_wall: VECTOR_2D
+			v_robot: VECTOR_2D
+			v_theta: VECTOR_2D
+		do
+			current_distance := line.get_distance_from_point (create {POINT_2D}.make_with_coordinates (0.0, 0.0))
+			v_wall := line.get_vector.get_unitary
+			v_robot := v_wall.get_perpendicular
+
+			v_theta := (v_wall*desired_distance) - (v_robot*((current_distance - desired_distance))) -- TODO - Change to minus (-) for follow obstacle in the right.
+			Result := v_theta.get_angle
+		end
+
+
 end
