@@ -17,9 +17,9 @@ feature {NONE} -- Initialization
 			create current_pose.make
 			create goal.make_with_coordinates (g.get_x, g.get_y)
 			init_states
-			set_follow_wall_counter_clockwise
---			set_follow_wall_clockwise
+			set_go_to_goal
 			create intial_point_wall.make
+			d_min := {REAL_64}.max_value
 		end
 
 	init_states
@@ -72,10 +72,10 @@ feature -- Access
 			end
 		end
 
-	set_leave_wall_with_target (p: POINT_2D)
+	set_leave_wall_with_target (p: separate POINT_2D)
 			-- Set to leave wall state.
 		do
-			leave_wall.set_target (p)
+			leave_wall.set_target (create {POINT_2D}.make_with_coordinates (p.get_x, p.get_y))
 			state := leave_wall
 			debug
 				io.put_string ("Leave Wall %N")

@@ -48,6 +48,7 @@ feature
 		do
 
 			error := math.atan2(t_sig.get_goal.get_y - t_sig.get_pose.get_position.get_y, t_sig.get_goal.get_x - t_sig.get_pose.get_position.get_x) - t_sig.get_pose.get_orientation
+			error := math.atan2 (math.sine (error), math.cosine (error))
 			time_handler.set_time(t_sig.get_timestamp)
 			if time_handler.get_sampling_rate > 0 then
 				orientation_controller.set_sampling (time_handler.get_sampling_rate)
@@ -66,7 +67,7 @@ feature
 					t_sig.set_follow_wall_clockwise
 				end
 			end
-			if t_sig.get_goal.get_euclidean_distance (t_sig.get_pose.get_position) < 0.02 then -- TODO HARDCODING
+			if t_sig.get_goal.get_euclidean_distance (t_sig.get_pose.get_position) < 0.05 then -- TODO HARDCODING
 				t_sig.set_at_goal
 			end
 		end

@@ -25,7 +25,7 @@ feature
 
 	update_state(t_sig: separate TANGENT_BUG_SIGNALER; o_sig: separate ODOMETRY_SIGNALER; r_sig: separate THYMIO_RANGE_GROUP)
 		do
-			if t_sig.get_goal.get_euclidean_distance (t_sig.get_pose.get_position) < 0.05 then -- TODO, REMOVE THIS HARDCODING
+			if t_sig.get_goal.get_euclidean_distance (t_sig.get_pose.get_position) > 0.05 then -- TODO, REMOVE THIS HARDCODING
 				t_sig.set_go_to_goal
 			end
 		end

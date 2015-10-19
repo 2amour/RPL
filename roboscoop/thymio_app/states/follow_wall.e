@@ -20,7 +20,7 @@ feature -- Initialization
 			clockwise := False
 			turning_angular_velocity := 0.2
 			target_threshold := 0.10
-			distance_from_wall := 0.15
+			distance_from_wall := 0.18
 			create corner_offset.make_with_coordinates (0.20, 0.03)
 
 			create world_tf.make
@@ -77,9 +77,49 @@ feature -- Access
 
 	update_state(t_sig: separate TANGENT_BUG_SIGNALER; o_sig: separate ODOMETRY_SIGNALER; r_sig: separate THYMIO_RANGE_GROUP)
 		local
-			v_leave_point: separate POINT_2D
+			v_leave_point, best_point: POINT_2D
 			vector_to_goal: VECTOR_2D
+			world_coordinates: TRANSFORM_2D
+			i : INTEGER_32
+
+			min_distance: REAL_64
 		do
+--			io.put_string ("min_distance: "+ t_sig.get_d_min.out + " current: " +  (t_sig.get_goal.get_euclidean_distance (t_sig.get_pose.get_position)).out + "%N")
+
+			create world_coordinates.make_with_offsets (t_sig.get_pose.get_position.get_x, t_sig.get_pose.get_position.get_y, t_sig.get_pose.get_orientation)
+			create best_point.make
+			create v_leave_point.make
+			min_distance :=  {REAL_64}.max_value
+			from i := 2
+			until i >= 4
+			loop
+				--i := 3
+				if not r_sig.is_obstacle_in_front and
+--				not (r_sig.sensors[i-1].is_valid_range or r_sig.sensors[i].is_valid_range or r_sig.sensors[i+1].is_valid_range) and
+				({DOUBLE_MATH}.dabs (r_sig.get_sensor_point (1).get_y) > 0.08 and {DOUBLE_MATH}.dabs (r_sig.get_sensor_point (5).get_y) > 0.08) then
+					v_leave_point := world_coordinates.project_to_parent (create {POINT_2D}.make_with_coordinates (r_sig.get_sensor_point (i).get_x, r_sig.get_sensor_point (i).get_y))
+				end
+				if v_leave_point.get_euclidean_distance (t_sig.get_goal) < min_distance then
+					min_distance := v_leave_point.get_euclidean_distance (t_sig.get_goal)
+					best_point := v_leave_point
+				end
+				i := i + 1
+			end
+
+--			io.put_string (best_point.get_string + "%N")
+
+			if min_distance < t_sig.get_d_min then
+				t_sig.set_leave_wall_with_target (best_point)
+			end
+
+			if t_sig.get_goal.get_euclidean_distance (t_sig.get_pose.get_position) < 0.05 then
+				t_sig.set_at_goal
+			end
+
+--			if t_sig.get_goal.get_euclidean_distance (t_sig.get_pose.get_position) > t_sig.get_d_min and
+--				not ( r_sig.sensors[3].is_valid_range) then
+--				t_sig.set_go_to_goal
+--			end
 --			create vector_to_goal.make_from_points(create {POINT_2D}.make_with_coordinates (o_sig.x, o_sig.y), t_sig.get_goal)
 
 --			create v_leave_point.make_with_coordinates (o_sig.x + v_leave * {DOUBLE_MATH}.cosine(vector_to_goal.get_angle),
@@ -163,9 +203,9 @@ feature -- Access
 				error := math.atan2 (math.sine (error), math.cosine (error))
 				orientation_controller.set_error (error)
 				angular_velocity := orientation_controller.get_output
-				debug
-					io.put_string (target_point.get_euclidean_distance (t_sig.get_pose.get_position).out + "%N")
-				end
+--				debug
+--					io.put_string (target_point.get_euclidean_distance (t_sig.get_pose.get_position).out + "%N")
+--				end
 			else
 				angular_velocity := turning_angular_velocity
 				debug

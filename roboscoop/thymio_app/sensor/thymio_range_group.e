@@ -398,5 +398,15 @@ feature -- Access.
 			Result := v_theta.get_angle
 		end
 
+	get_sensor_point (sensor_index: INTEGER_32): POINT_2D
+			-- TODO
+		do
+			if sensors[sensor_index].is_valid_range then
+				Result := transforms[sensor_index].project_to_parent (create {POINT_2D}.make_with_coordinates (sensors[sensor_index].range, 0.0))
+			else
+				Result := transforms[sensor_index].project_to_parent (create {POINT_2D}.make_with_coordinates (sensors[sensor_index].max_range, 0.0))
+			end
+		end
+
 
 end
