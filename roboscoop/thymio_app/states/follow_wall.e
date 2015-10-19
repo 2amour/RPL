@@ -18,7 +18,9 @@ feature -- Initialization
 			-- Create self.
 		do
 			clockwise := False
-			turning_angular_velocity := 0.2
+			goal_threshold := 0.05
+			y_robot_guard := 0.08
+			turning_angular_velocity := 0.4
 			target_threshold := 0.08
 			distance_from_wall := 0.18
 			create corner_offset.make_with_coordinates (0.20, 0.03)
@@ -77,6 +79,7 @@ feature -- Access
 		end
 
 	update_state(t_sig: separate TANGENT_BUG_SIGNALER; o_sig: separate ODOMETRY_SIGNALER; r_sig: separate THYMIO_RANGE_GROUP)
+			-- <Precursor>
 		local
 			v_leave_point, best_point: POINT_2D
 			vector_to_goal: VECTOR_2D
@@ -93,7 +96,8 @@ feature -- Access
 			until i >= 4
 			loop
 				if not r_sig.is_obstacle_in_front and
-					({DOUBLE_MATH}.dabs (r_sig.get_sensor_point (1).get_y) > 0.08 and {DOUBLE_MATH}.dabs (r_sig.get_sensor_point (5).get_y) > 0.08) then
+					({DOUBLE_MATH}.dabs (r_sig.get_sensor_point (1).get_y) > y_robot_guard and
+					{DOUBLE_MATH}.dabs (r_sig.get_sensor_point (5).get_y) > y_robot_guard) then
 					v_leave_point := world_coordinates.project_to_parent (create {POINT_2D}.make_with_coordinates (r_sig.get_sensor_point (i).get_x, r_sig.get_sensor_point (i).get_y))
 				end
 				if v_leave_point.get_euclidean_distance (t_sig.get_goal) < min_distance then
@@ -107,7 +111,7 @@ feature -- Access
 				t_sig.set_leave_wall_with_target (best_point)
 			end
 
-			if t_sig.get_goal.get_euclidean_distance (t_sig.get_pose.get_position) < 0.05 then
+			if t_sig.get_goal.get_euclidean_distance (t_sig.get_pose.get_position) < goal_threshold then
 				t_sig.set_at_goal
 			end
 
@@ -116,16 +120,16 @@ feature -- Access
 	set_clockwise
 			-- Set clockwise wall-following.
 		do
-			corner_offset.make_with_coordinates (0.20, +0.03) -- (0.20, -0.03)
-			turning_angular_velocity := -0.4
+			corner_offset.make_with_coordinates (corner_offset.get_x, {DOUBLE_MATH}.dabs (corner_offset.get_y))
+			turning_angular_velocity := -{DOUBLE_MATH}.dabs (turning_angular_velocity)
 			clockwise := True
 		end
 
 	set_counter_clockwise
 			-- Set clockwise wall-following.
 		do
-			corner_offset.make_with_coordinates (0.20, -0.03) -- (0.20, +0.03)
-			turning_angular_velocity := 0.4
+			corner_offset.make_with_coordinates (corner_offset.get_x, -{DOUBLE_MATH}.dabs (corner_offset.get_y))
+			turning_angular_velocity := {DOUBLE_MATH}.dabs (turning_angular_velocity)
 			clockwise := False
 		end
 
@@ -204,6 +208,12 @@ feature -- Access
 
 
 feature {NONE} -- Implementation
+	goal_threshold: REAL_64
+			-- Threshold to go-to-goal
+
+	y_robot_guard: REAL_64
+			-- Distance from robot center to wall.
+
 	turning_angular_velocity: REAL_64
 			-- Angular velocity when its only turning.
 
