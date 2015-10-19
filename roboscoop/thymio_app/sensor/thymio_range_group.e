@@ -237,7 +237,7 @@ feature -- Access.
 		end
 
 	get_right_wall: LINE_2D
-			-- Get left wall.
+			-- Get right wall.
 		local
 			line: LINE_2D
 		do
@@ -250,7 +250,7 @@ feature -- Access.
 		end
 
 	get_estimated_line_from_sensor (i: INTEGER_32): LINE_2D
-			-- Get estimated line from sensor readings. Its estimated as a prolongation of the measured point in the x direction
+			-- Get estimated line from sensor readings. When sensors are in valid range then its the line joining the points, else its an estimation.
 		require
 			valid_range: (i >= 1 and i <= 7)
 		local
@@ -266,7 +266,7 @@ feature -- Access.
 		end
 
 	get_line_between_sensors (i, j: INTEGER_32): LINE_2D
-			-- Get Line between two sensors
+			-- Get Line between two sensors.
 		require
 			valid_range: (i > 0 and i < 8) and (j > 0 and j < 8) and (i /= j)
 		local
@@ -279,7 +279,7 @@ feature -- Access.
 		end
 
 	get_closest_wall_from_point (p: POINT_2D): LINE_2D
-			-- find the closest wall from the points
+			-- Find the closest wall from the measured points.
 		local
 			line, best_line: LINE_2D
 			p1, p2: POINT_2D
@@ -317,27 +317,6 @@ feature -- Access.
 			Result := best_line
 		end
 
---	get_closest_sensor: INTEGER_32
---			-- Get closest measured point
---		local
---			i, j: INTEGER_32
---			range: REAL_64
---		do
---			i := 1
---			range := sensors[i].range
-
---			from i:=2 until i > 7
---  			loop
---				if sensors[i].range < range  then
---					range := sensors[i].range
---					j := i
---				end
---  			end
-
---			Result := j
---		end
-
-
 	follow_wall_orientation (a_desired_distance_from_wall: REAL_64): REAL_64
 			-- Get the orientation the robot should head in order to reach the desired distance from the wall.
 	do
@@ -345,44 +324,42 @@ feature -- Access.
 	end
 
 	follow_left_wall (desired_distance: REAL_64): REAL_64
-		-- Get the orientation the robot should head in order to reach the desired distance from the line in the line's direction.
+		-- Get the orientation the robot should head in order to follow the left wall.
 		do
 			Result := follow_line_ccw (desired_distance, get_left_wall)
 		end
 
 	follow_right_wall (desired_distance: REAL_64): REAL_64
-		-- Get the orientation the robot should head in order to reach the desired distance from the line in the line's direction.
+		-- Get the orientation the robot should head in order to follow the right wall.
 		do
 			Result := follow_line_cw (desired_distance, get_right_wall)
 		end
 
 	follow_closest_wall_ccw (desired_distance: REAL_64): REAL_64
+			-- Get the orientation the robot should head in order to follow the closest wall counter-clockwise.
 		do
 			Result := follow_line_ccw (desired_distance, get_closest_wall_from_point (create {POINT_2D}.make_with_coordinates (0, 0)))
 		end
 
 	follow_closest_wall_cw (desired_distance: REAL_64): REAL_64
+			-- Get the orientation the robot should head in order to follow the closest wall clockwise.
 		do
 			Result := follow_line_cw (desired_distance, get_closest_wall_from_point (create {POINT_2D}.make_with_coordinates (0, 0)))
 		end
 
 	follow_line_ccw (desired_distance: REAL_64; line: LINE_2D): REAL_64
-			-- Get the orientation the robot should head in order to reach the desired distance from the line in the line's direction.
-		local
-			current_distance: REAL_64
-			v_wall: VECTOR_2D
-			v_robot: VECTOR_2D
-			v_theta: VECTOR_2D
+			-- Get the orientation the robot should head in order to reach the desired distance from the line in the line's direction when turning counter-clockwise.
 		do
-			current_distance := line.get_distance_from_point (create {POINT_2D}.make_with_coordinates (0.0, 0.0))
-			v_wall := line.get_vector.get_unitary
-			v_robot := v_wall.get_perpendicular
-
-			v_theta := (v_wall*desired_distance) + (v_robot*((current_distance - desired_distance))) -- TODO - Change to minus (-) for follow obstacle in the right.
-			Result := v_theta.get_angle
+			Result := follow_line (desired_distance, line, False)
 		end
 
 	follow_line_cw (desired_distance: REAL_64; line: LINE_2D): REAL_64
+			-- Get the orientation the robot should head in order to reach the desired distance from the line in the line's direction when turning clockwise
+		do
+			Result := follow_line (desired_distance, line, True)
+		end
+
+	follow_line (desired_distance: REAL_64; line: LINE_2D; clockwise: BOOLEAN): REAL_64
 			-- Get the orientation the robot should head in order to reach the desired distance from the line in the line's direction.
 		local
 			current_distance: REAL_64
@@ -392,14 +369,19 @@ feature -- Access.
 		do
 			current_distance := line.get_distance_from_point (create {POINT_2D}.make_with_coordinates (0.0, 0.0))
 			v_wall := line.get_vector.get_unitary
-			v_robot := v_wall.get_perpendicular
 
-			v_theta := (v_wall*desired_distance) - (v_robot*((current_distance - desired_distance))) -- TODO - Change to minus (-) for follow obstacle in the right.
+			if clockwise then
+				v_robot := v_wall.get_perpendicular
+			else
+				v_robot := v_wall.get_perpendicular * (-1)
+			end
+
+			v_theta := (v_wall*desired_distance) + (v_robot*((current_distance - desired_distance)))
 			Result := v_theta.get_angle
 		end
 
 	get_sensor_point (sensor_index: INTEGER_32): POINT_2D
-			-- TODO
+			-- Get point measured by sensor in local coordinates.
 		do
 			if sensors[sensor_index].is_valid_range then
 				Result := transforms[sensor_index].project_to_parent (create {POINT_2D}.make_with_coordinates (sensors[sensor_index].range, 0.0))
