@@ -12,9 +12,9 @@ create
 feature -- Initialization
 
 	make
-			-- Initialize Object with Default Values.
+			-- Initialize object with default values.
 		do
-			max_speed := {THYMIO_ROBOT}.default_linear_speed -- TODO change this
+			max_speed := 0.08 -- Initialized by default
 			output := 0.0
 		end
 
