@@ -7,7 +7,7 @@ note
 class
 	UNREACHABLE_GOAL
 inherit
-	STATE
+	TANGENT_BUG_STATE
 feature
 	update_velocity(drive: separate DIFFERENTIAL_DRIVE)
 	do

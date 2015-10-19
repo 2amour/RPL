@@ -8,7 +8,7 @@ class
 	LEAVE_WALL
 
 inherit
-	STATE
+	TANGENT_BUG_STATE
 
 create
 	make
@@ -40,16 +40,19 @@ feature -- Initializer
 
 feature
 	update_velocity(drive: separate DIFFERENTIAL_DRIVE)
+			-- <Precursor>
 		do
 			drive.set_velocity (speed_controller.get_output, orientation_controller.get_output)
 		end
 
 	update_leds(leds: separate RGB_COLOR_ACTUATOR)
+			-- <Precursor>
 		do
 			leds.set_to_blue
 		end
 
 	set_readings(t_sig: separate TANGENT_BUG_SIGNALER; range_signaler:separate THYMIO_RANGE_GROUP)
+			-- <Precursor>
 		local
 			error: REAL_64
 		do
@@ -67,10 +70,10 @@ feature
 
 
 	update_state(t_sig: separate TANGENT_BUG_SIGNALER; o_sig: separate ODOMETRY_SIGNALER; r_sig: separate THYMIO_RANGE_GROUP)
+			-- <Precursor>
 		local
 			current_point: POINT_2D
 		do
-			io.put_string ("target: " + target.get_string + " currant: x: " + t_sig.get_pose.get_position.get_x.out + " y: " + t_sig.get_pose.get_position.get_y.out + "%N")
 			if {DOUBLE_MATH}.dabs (r_sig.sensors[1].range) < 0.07 or
 			   {DOUBLE_MATH}.dabs (r_sig.sensors[3].range) < 0.07 or
 			   {DOUBLE_MATH}.dabs (r_sig.sensors[5].range) < 0.07 then

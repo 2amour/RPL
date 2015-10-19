@@ -8,7 +8,7 @@ class
 	GO_TO_GOAL
 
 inherit
-	STATE
+	TANGENT_BUG_STATE
 create
 	make
 
@@ -33,16 +33,19 @@ feature
 
 feature
 	update_velocity(drive: separate DIFFERENTIAL_DRIVE)
+			-- <Precursor>
 		do
 			drive.set_velocity (speed_controller.get_output, orientation_controller.get_output)
 		end
 
 	update_leds(leds: separate RGB_COLOR_ACTUATOR)
+			-- <Precursor>
 		do
 			leds.set_to_yellow
 		end
 
 	set_readings(t_sig: separate TANGENT_BUG_SIGNALER; range_signaler:separate THYMIO_RANGE_GROUP)
+			-- <Precursor>
 		local
 			error: REAL_64
 		do
@@ -59,6 +62,7 @@ feature
 		end
 
 	update_state(t_sig: separate TANGENT_BUG_SIGNALER; o_sig: separate ODOMETRY_SIGNALER; r_sig: separate THYMIO_RANGE_GROUP)
+			-- <Precursor>
 		do
 			if r_sig.is_obstacle_in_front then
 				if r_sig.is_obstacle_mostly_at_left then

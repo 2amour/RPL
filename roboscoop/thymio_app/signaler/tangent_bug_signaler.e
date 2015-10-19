@@ -37,7 +37,7 @@ feature -- Access
 	set_at_goal
 			-- Set at goal state.
 		do
-			state := at_goal
+			tangent_bug_state := at_goal
 			debug
 				io.put_string ("At Goal %N")
 			end
@@ -47,7 +47,7 @@ feature -- Access
 			-- Set follow wall state.
 		do
 			follow_wall.set_clockwise
-			state := follow_wall
+			tangent_bug_state := follow_wall
 			debug
 				io.put_string ("Follow Wall Clockwise %N")
 			end
@@ -57,7 +57,7 @@ feature -- Access
 			-- Set follow wall state.
 		do
 			follow_wall.set_counter_clockwise
-			state := follow_wall
+			tangent_bug_state := follow_wall
 			debug
 				io.put_string ("Follow Wall Counter Clockwise%N")
 			end
@@ -66,7 +66,7 @@ feature -- Access
 	set_leave_wall -- TODO DELETE THIS
 			-- Set to leave wall state.
 		do
-			state := leave_wall
+			tangent_bug_state := leave_wall
 			debug
 				io.put_string ("Leave Wall %N")
 			end
@@ -76,7 +76,7 @@ feature -- Access
 			-- Set to leave wall state.
 		do
 			leave_wall.set_target (create {POINT_2D}.make_with_coordinates (p.get_x, p.get_y))
-			state := leave_wall
+			tangent_bug_state := leave_wall
 			debug
 				io.put_string ("Leave Wall %N")
 			end
@@ -85,7 +85,7 @@ feature -- Access
 	set_go_to_goal
 			-- Set to go to goal state.
 		do
-			state := go_to_goal
+			tangent_bug_state := go_to_goal
 			debug
 				io.put_string ("Go to Goal %N")
 			end
@@ -94,7 +94,7 @@ feature -- Access
 	set_unreachable_goal
 			-- Set to unreachable goal state.
 		do
-			state := unreachable_goal
+			tangent_bug_state := unreachable_goal
 			debug
 				io.put_string ("Unreachable Wall %N")
 			end
@@ -130,48 +130,48 @@ feature -- Access
 			Result := d_min
 		end
 
-	get_state: STATE
+	get_state: TANGENT_BUG_STATE
 			-- Get current state.
 		do
-			Result := state
+			Result := tangent_bug_state
 		end
 
-	set_state (new_state: STATE)
+	set_state (new_state: TANGENT_BUG_STATE)
 			-- Set a new state.
 		do
-			state := new_state
+			tangent_bug_state := new_state
 		ensure
-			state_set: state = new_state
+			state_set: tangent_bug_state = new_state
 		end
 
 	is_go_to_goal: BOOLEAN
 			-- Check if state is 'go_to_goal'.
 		do
-			Result := state = go_to_goal
+			Result := tangent_bug_state = go_to_goal
 		end
 
 	is_follow_wall: BOOLEAN
 			-- Check if state is 'follow_wall_cw'.
 		do
-			Result := state = follow_wall
+			Result := tangent_bug_state = follow_wall
 		end
 
 	is_leave_wall: BOOLEAN
 			-- Check if state is 'leave_wall'.
 		do
-			Result := state = leave_wall
+			Result := tangent_bug_state = leave_wall
 		end
 
 	is_at_goal: BOOLEAN
 			-- Check if state is 'at_goal'.
 		do
-			Result := state = at_goal
+			Result := tangent_bug_state = at_goal
 		end
 
 	is_unreachable_goal: BOOLEAN
 			-- Check if state is 'unreachable_goal'.
 		do
-			Result := state = unreachable_goal
+			Result := tangent_bug_state = unreachable_goal
 		end
 
 	get_pose: POSE_2D
@@ -219,7 +219,7 @@ feature {NONE} -- Implementation
 	intial_point_wall: POINT_2D
 			-- Position at the beginning of finding a wall.
 
-	state: STATE
+	tangent_bug_state: TANGENT_BUG_STATE
 			-- State of the robot.
 
 	at_goal: AT_GOAL
