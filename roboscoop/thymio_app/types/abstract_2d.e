@@ -9,7 +9,7 @@ class
 create
 	make, make_with_coordinates, make_from_vector_3d_msg
 
-feature {NONE} -- Initialization
+feature {ANY} -- Initialization
 
 	make
 			-- Initialize point to 0, 0 coordinates.
@@ -29,7 +29,7 @@ feature {NONE} -- Initialization
 		end
 
 	make_from_vector_3d_msg (msg: VECTOR_3D_MSG)
-			-- Initialize point from VECTOR_3D_MSG.
+			-- Initialize point from VECTOR_2D_MSG.
 		do
 			make_with_coordinates (msg.x, msg.y)
 		end
