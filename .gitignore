@@ -1,2 +1,4 @@
 roboscoop/roboscoop_lib/EIFGENs/
 roboscoop/thymio_app/EIFGENs/
+*.swp
+*~
