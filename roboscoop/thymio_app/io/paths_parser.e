@@ -44,6 +44,9 @@ feature -- Access
 	range_sensor_file_path: STRING
 			-- Path for the file with range sensors' frames.
 
+	teshold_file_path: STRING
+			-- Path for the file with tresholds.
+
 feature {NONE} -- Implementation
 
 	read_file (f: PLAIN_TEXT_FILE)
@@ -71,6 +74,8 @@ feature {NONE} -- Implementation
 					 paths_array.put (f.last_string.twin, 2)
 				when 3 then
 					 paths_array.put (f.last_string.twin, 3)
+				when 4 then
+					 paths_array.put (f.last_string.twin, 4)
 				else
 					if (not f.last_integer.is_equal (0)) then
 						io.putstring ("Integer not recognized in the paths file%N")
@@ -80,6 +85,7 @@ feature {NONE} -- Implementation
 			goal_file_path := paths_array.at (1)
 			pid_gain_file_path := paths_array.at (2)
 			range_sensor_file_path := paths_array.at (3)
+			teshold_file_path := paths_array.at (3)
 		end
 
 	get_path_from_arguments: STRING
