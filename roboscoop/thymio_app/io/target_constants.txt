@@ -1,5 +1,0 @@
-Kp: 0.4
-Ki: 0.1
-Kd: 0.1
-target_threshold_(m): 0.005
-min_time_increment_(nsec): 10
