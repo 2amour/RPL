@@ -38,7 +38,7 @@ feature {TANGENT_BUG_BEHAVIOUR} -- Access
 				tangent_bug_sig.set_timestamp (o_sig.timestamp)
 
 				vector_to_goal.make_from_points (tangent_bug_sig.get_goal, tangent_bug_sig.get_pose.get_position)
-				angle_to_goal := change_interval (vector_to_goal.get_angle, tangent_bug_sig.get_goal.get_x)
+				angle_to_goal := change_interval (vector_to_goal.get_angle, vector_to_goal.get_x)
 			 	if has_turned_around_goal (angle_to_goal)  then
 			 		tangent_bug_sig.set_unreachable_goal
 			 	end
@@ -57,8 +57,9 @@ feature {NONE} -- Implementation
 			-- Vector to goal from robot with respect to odometry frame.
 
 	angular_sections_reached: ARRAY[BOOLEAN]
+			-- Angular sections with respect to goal that are crossed by robot
 
-	change_interval (theta: REAL_64; x_goal: REAL_64): REAL_64
+	change_interval (theta: REAL_64; x_vector: REAL_64): REAL_64
 			-- Change the interval of definition of `theta', now it will be from 0 to 2*pi.
 		local
 			theta_res: REAL_64
@@ -66,7 +67,7 @@ feature {NONE} -- Implementation
 		do
 			theta_res := theta
 			create math
-			if (x_goal <= 0) then
+			if (x_vector <= 0) then
 					theta_res := theta + math.pi
 			else
 				if (theta <= 0) then
