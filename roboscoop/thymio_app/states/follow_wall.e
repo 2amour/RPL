@@ -19,7 +19,7 @@ feature -- Initialization
 		do
 			clockwise := False
 			turning_angular_velocity := 0.2
-			target_threshold := 0.10
+			target_threshold := 0.08
 			distance_from_wall := 0.18
 			create corner_offset.make_with_coordinates (0.20, 0.03)
 
@@ -134,7 +134,7 @@ feature -- Access
 	set_clockwise
 			-- Set clockwise wall-following.
 		do
-			corner_offset.make_with_coordinates (0.20, -0.03)
+			corner_offset.make_with_coordinates (0.20, -0.00)
 			turning_angular_velocity := -0.4
 			clockwise := True
 		end
@@ -142,7 +142,7 @@ feature -- Access
 	set_counter_clockwise
 			-- Set clockwise wall-following.
 		do
-			corner_offset.make_with_coordinates (0.20, 0.03)
+			corner_offset.make_with_coordinates (0.20, 0.00)
 			turning_angular_velocity := 0.4
 			clockwise := False
 		end

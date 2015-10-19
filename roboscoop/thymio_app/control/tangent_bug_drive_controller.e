@@ -12,6 +12,7 @@ inherit
 create
 	make_with_attributes
 
+
 feature {NONE} -- Initialization	
 
 	make_with_attributes (stop_sig: separate STOP_SIGNALER)
@@ -19,7 +20,7 @@ feature {NONE} -- Initialization
 		do
 			stop_signaler := stop_sig
 			create vector_to_goal.make
-			create angular_sections_reached.make_filled (False, 0, 9)
+			create angular_sections_reached.make_filled (False, 0, 49)
 		end
 
 feature {TANGENT_BUG_BEHAVIOUR} -- Access
@@ -86,10 +87,10 @@ feature {NONE} -- Implementation
 			vector_of_trues: ARRAY[BOOLEAN]
 		do
 			create math
-			create vector_of_trues.make_filled (True, 0, 9)
-			angular_section := 10 * (theta / (2 * math.pi))
-			if angular_section.truncated_to_integer >= 10 then
-				truncated := 9
+			create vector_of_trues.make_filled (True, 0, 49)
+			angular_section := 50 * (theta / (2 * math.pi))
+			if angular_section.truncated_to_integer >= 50 then
+				truncated := 49
 			elseif angular_section.truncated_to_integer <= 0  then
 				truncated := 0
 			else
