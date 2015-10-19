@@ -26,9 +26,9 @@ feature {NONE} -- Initialization
 			-- Initialize states.
 		do
 			create at_goal
-			create follow_wall.make --.make_with_v_leave (0.1)
+			create follow_wall.make
 			create go_to_goal.make
-			create leave_wall.make -- TODO - .make_with_v_leave (0.1)
+			create leave_wall.make 
 			create unreachable_goal
 		end
 
