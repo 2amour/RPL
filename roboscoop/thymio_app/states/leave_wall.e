@@ -71,7 +71,9 @@ feature
 			current_point: POINT_2D
 		do
 			io.put_string ("target: " + target.get_string + " currant: x: " + t_sig.get_pose.get_position.get_x.out + " y: " + t_sig.get_pose.get_position.get_y.out + "%N")
-			if {DOUBLE_MATH}.dabs (r_sig.sensors[1].range) < 0.04 or {DOUBLE_MATH}.dabs (r_sig.sensors[5].range) < 0.04 then
+			if {DOUBLE_MATH}.dabs (r_sig.sensors[1].range) < 0.07 or
+			   {DOUBLE_MATH}.dabs (r_sig.sensors[3].range) < 0.07 or
+			   {DOUBLE_MATH}.dabs (r_sig.sensors[5].range) < 0.07 then
 					if r_sig.is_obstacle_mostly_at_left then
 						t_sig.set_follow_wall_counter_clockwise
 					else

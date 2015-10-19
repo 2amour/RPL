@@ -129,12 +129,17 @@ feature -- Access
 --				t_sig.get_goal.get_euclidean_distance ( v_leave_point ) < t_sig.get_d_min then
 --				t_sig.set_leave_wall
 --			end
+--			io.put_string ("distance: " + t_sig.initial_point_wall.get_euclidean_distance (t_sig.get_pose.get_position).out + "%N")
+--			if t_sig.get_timestamp > (t_sig.initial_time + 20) and t_sig.initial_point_wall.get_euclidean_distance (t_sig.get_pose.get_position) < 0.08 then
+--				t_sig.set_unreachable_goal
+--			end
+
 		end
 
 	set_clockwise
 			-- Set clockwise wall-following.
 		do
-			corner_offset.make_with_coordinates (0.20, -0.00)
+			corner_offset.make_with_coordinates (0.20, +0.03) -- (0.20, -0.03)
 			turning_angular_velocity := -0.4
 			clockwise := True
 		end
@@ -142,7 +147,7 @@ feature -- Access
 	set_counter_clockwise
 			-- Set clockwise wall-following.
 		do
-			corner_offset.make_with_coordinates (0.20, 0.00)
+			corner_offset.make_with_coordinates (0.20, -0.03) -- (0.20, +0.03)
 			turning_angular_velocity := 0.4
 			clockwise := False
 		end
