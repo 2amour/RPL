@@ -18,13 +18,12 @@ create
 
 feature {NONE} -- Initialization.
 
-	make(topic_name: separate STRING)
+	make (topic_name: separate STRING; range_sensors_parameters: separate RANGE_SENSORS_PARAMETERS)
 			-- Create an array of sensors and register them.
 		do
-			register_transforms
+			initialize_sensors_transforms (range_sensors_parameters)
 			make_with_topic (topic_name)
 			register_ranges
-
 		end
 
 	register_ranges
@@ -39,13 +38,20 @@ feature {NONE} -- Initialization.
 			register_sensor ({THYMIO_TOPICS}.prox_horizontal_link_6)
 		end
 
-	register_transforms
-			-- Register Thymio sensor offsets
+	initialize_sensors_transforms (range_sensors_parameters: separate RANGE_SENSORS_PARAMETERS)
+			-- Initialize transforms with sensors position offsets and orientation.
 		local
-			data_parser: RANGE_SENSOR_PARSER
+			i: INTEGER
+			pose: POSE_2D
 		do
-			create data_parser.make_with_path ("sensor_coordinates.txt")
-			create transforms.make_from_array (data_parser.transforms)
+			create transforms.make_filled (create {TRANSFORM_2D}.make, range_sensors_parameters.sensors_poses.lower, range_sensors_parameters.sensors_poses.upper)
+			from i := range_sensors_parameters.sensors_poses.lower
+			until i > range_sensors_parameters.sensors_poses.upper
+			loop
+				create pose.make_from_separate (range_sensors_parameters.sensors_poses[i])
+				transforms.put (create {TRANSFORM_2D}.make_with_offsets (pose.get_position.get_x, pose.get_position.get_y, pose.get_orientation), i)
+				i := i + 1
+			end
 		end
 
 feature -- Access.

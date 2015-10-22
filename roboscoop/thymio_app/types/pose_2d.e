@@ -25,7 +25,7 @@ feature	-- Initialization
 			set_orientation (phi)
 		end
 
-	make_from_separate (other: POSE_2D)
+	make_from_separate (other: separate POSE_2D)
 		do
 			make_with_coordinates (other.get_position.get_x, other.get_position.get_y, other.get_orientation)
 		end

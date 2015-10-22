@@ -1,0 +1,4 @@
+Desired_wall_distance				0.0
+Outer_corner_angular_velocity		0.1
+Safe_outer_corner_turn_offset		0.2	0.3
+Safe_leaving_wall_vertical_distance	0.4

@@ -10,30 +10,24 @@ inherit
 	TANGENT_BUG_STATE
 
 create
-	make
+	make_with_attributes
 
 feature -- Initialization
 
-	make
+	make_with_attributes (pid_parameters: PID_PARAMETERS; wall_following_parameters: WALL_FOLLOWING_PARAMETERS)
 			-- Create self.
-		local
-			treshold: TRESHOLD_PARSER
-		    pid: PID_GAIN_PARSER
 		do
-			create treshold.make
 			clockwise := False
-			goal_threshold := treshold.g_th
-			y_robot_guard := treshold.y_rob
-			turning_angular_velocity := treshold.a_vel
-			target_threshold := treshold.t_th
-			distance_from_wall := treshold.d_wall
-			create corner_offset.make_with_coordinates (treshold.g_th, treshold.t_th)
+			safe_leaving_wall_vertical_distance := wall_following_parameters.safe_leaving_wall_vertical_distance
+			turning_angular_velocity := wall_following_parameters.outer_corner_angular_velocity
+			target_threshold := wall_following_parameters.safe_outer_corner_turn_offset_threshold
+			distance_from_wall := wall_following_parameters.desired_wall_distance
+			corner_offset := wall_following_parameters.safe_outer_corner_turn_offset
 
 			create world_tf.make
 			create target_point.make
-			create pid.make
-			create orientation_controller.make_with_gains (pid.kp, pid.ki, pid.kd)
-			create speed_controller.make_with_speed (treshold.a_vel)
+			create orientation_controller.make_with_gains (pid_parameters.kp, pid_parameters.ki, pid_parameters.kd)
+			create speed_controller.make_with_speed (wall_following_parameters.outer_corner_angular_velocity)
 			create time_handler.start (0.0)
 			create last_point.make
 		end
@@ -100,8 +94,8 @@ feature -- Access
 			until i >= 4
 			loop
 				if not r_sig.is_obstacle_in_front and
-					({DOUBLE_MATH}.dabs (r_sig.get_sensor_point (1).get_y) > y_robot_guard and
-					{DOUBLE_MATH}.dabs (r_sig.get_sensor_point (5).get_y) > y_robot_guard) then
+					({DOUBLE_MATH}.dabs (r_sig.get_sensor_point (1).get_y) > safe_leaving_wall_vertical_distance and
+					{DOUBLE_MATH}.dabs (r_sig.get_sensor_point (5).get_y) > safe_leaving_wall_vertical_distance) then
 					v_leave_point := world_coordinates.project_to_parent (create {POINT_2D}.make_with_coordinates (r_sig.get_sensor_point (i).get_x, r_sig.get_sensor_point (i).get_y))
 				end
 				if v_leave_point.get_euclidean_distance (t_sig.get_goal) < min_distance then
@@ -115,7 +109,7 @@ feature -- Access
 				t_sig.set_leave_wall_with_target (best_point)
 			end
 
-			if t_sig.get_goal.get_euclidean_distance (t_sig.get_pose.get_position) < goal_threshold then
+			if t_sig.get_goal.get_euclidean_distance (t_sig.get_pose.get_position) < t_sig.get_goal_threshold then
 				t_sig.set_at_goal
 			end
 
@@ -212,11 +206,9 @@ feature -- Access
 
 
 feature {NONE} -- Implementation
-	goal_threshold: REAL_64
-			-- Threshold to go-to-goal
 
-	y_robot_guard: REAL_64
-			-- Distance from robot center to wall.
+	safe_leaving_wall_vertical_distance: REAL_64
+			-- Minimum local vertical distance between the robot and the followed wall to leave it safely.
 
 	turning_angular_velocity: REAL_64
 			-- Angular velocity when its only turning.

@@ -10,7 +10,7 @@ class
 inherit
 	TANGENT_BUG_STATE
 create
-	make
+	make_with_attributes
 
 feature{NONE}
 	orientation_controller: PID
@@ -18,17 +18,14 @@ feature{NONE}
 	time_handler: TIME_PARSER
 	math: TRIGONOMETRY_MATH
 
-	pid_parser: PID_GAIN_PARSER
-
 feature
-	make
-			-- Make.
+	make_with_attributes (pid_parameters: PID_PARAMETERS)
+			-- Create self with attributes.
 		do
 			create math
-			create pid_parser.make
 			create time_handler.start (0.0)
 			create speed_controller.make
-			create orientation_controller.make_with_gains (pid_parser.Kp, pid_parser.Ki, pid_parser.Kd)
+			create orientation_controller.make_with_gains (pid_parameters.kp, pid_parameters.ki, pid_parameters.kd)
 		end
 
 feature
@@ -71,7 +68,7 @@ feature
 					t_sig.set_follow_wall_clockwise
 				end
 			end
-			if t_sig.get_goal.get_euclidean_distance (t_sig.get_pose.get_position) < 0.05 then -- TODO HARDCODING
+			if t_sig.get_goal.get_euclidean_distance (t_sig.get_pose.get_position) < t_sig.get_goal_threshold then
 				t_sig.set_at_goal
 			end
 		end

@@ -11,7 +11,7 @@ inherit
 	TANGENT_BUG_STATE
 
 create
-	make
+	make_with_attributes
 feature {NONE} --Atributes
 	target: POINT_2D
 
@@ -20,19 +20,15 @@ feature {NONE} --Atributes
 	time_handler: TIME_PARSER
 	math: TRIGONOMETRY_MATH
 
-	pid_parser: PID_GAIN_PARSER
-
-
 
 feature -- Initializer
-	make
+	make_with_attributes (pid_parameters: PID_PARAMETERS)
 		-- Make
 		do
 			create math
-			create pid_parser.make
 			create time_handler.start (0.0)
 			create speed_controller.make_with_speed (0.05)
-			create orientation_controller.make_with_gains (pid_parser.kd, pid_parser.ki, pid_parser.kp)
+			create orientation_controller.make_with_gains (pid_parameters.kp, pid_parameters.ki, pid_parameters.kd)
 			create target.make
 		end
 
