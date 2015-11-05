@@ -16,6 +16,7 @@ feature {NONE} -- Initialization
 		do
 			create current_pose.make
 			create goal.make_with_coordinates (goal_parameters.x, goal_parameters.y)
+			goal_threshold := goal_parameters.threshold
 			initialize_states (create {PID_PARAMETERS}.make_from_separate (pid_parameters), create {WALL_FOLLOWING_PARAMETERS}.make_from_separate (wall_following_parameters))
 			set_go_to_goal
 			create intial_point_wall.make

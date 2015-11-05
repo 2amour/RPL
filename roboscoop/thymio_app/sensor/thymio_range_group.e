@@ -11,7 +11,7 @@ class
 
 inherit
 	GROUP_SIGNALER[RANGE_MSG]
-	PERIMETER_OBSTACLE_DETECTOR
+	RANGE_GROUP
 
 create
 	make
@@ -257,8 +257,8 @@ feature -- Access.
 
 	get_estimated_line_from_sensor (i: INTEGER_32): LINE_2D
 			-- Get estimated line from sensor readings. When sensors are in valid range then its the line joining the points, else its an estimation.
-		require
-			valid_range: (i >= 1 and i <= 7)
+--		require -- TODO - revise
+--			valid_range: (i >= 1 and i <= 7)
 		local
 			p1, p2: POINT_2D
 		do
@@ -273,8 +273,6 @@ feature -- Access.
 
 	get_line_between_sensors (i, j: INTEGER_32): LINE_2D
 			-- Get Line between two sensors.
-		require
-			valid_range: (i > 0 and i < 8) and (j > 0 and j < 8) and (i /= j)
 		local
 			p1, p2: POINT_2D
 		do
