@@ -14,7 +14,7 @@ feature {ANY} -- Constants
 	map: STRING_8 = "/map"
 			-- map to be published.
 
-	target: STRING_8 = "/driver/goal"
+	target: STRING_8 = "/robot_controller/goal"
 			-- target goal for the driver.
 
 	odometry: STRING_8 = "/thymio_driver/odometry"
