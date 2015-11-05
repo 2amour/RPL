@@ -19,10 +19,13 @@ feature {NONE} -- Initialization
 	make
 			-- Run application.
 		local
+			parser: MISSION_PLANNER_PARSER
 			path_planner_node: separate ROBOSCOOP_NODE
 			ros_spinner: separate ROS_SPINNER
 		do
 				-- Parse command line arguments
+			create parser.make
+			--parser.way_points_parser.points
 
 				-- Transform LIST[POINT_MSGS] to LIST[SPATIAL_GRAPH_NODES]
 
@@ -37,7 +40,7 @@ feature {NONE} -- Initialization
 				-- Start Signalers
 
 				-- Start Behaviour
-				
+
 		end
 
 end
