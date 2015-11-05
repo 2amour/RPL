@@ -1,6 +1,1 @@
 io/way_points.txt
-io/connectivity.txt
-io/edge_cost.txt
-io/heuristic.txt
-io/open_set.txt
-io/map_inflation.txt
