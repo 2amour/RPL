@@ -15,18 +15,16 @@
 				<exclude>/CVS$</exclude>
 				<exclude>/.svn$</exclude>
 			</file_rule>
-			<cluster name="sensor" location=".\sensor\"/>
 			<cluster name="communication" location=".\communication\"/>
-			<cluster name="robot" location=".\robot\"/>
-			<cluster name="actuator" location=".\actuator\"/>
-			<cluster name="sequencer" location=".\sequencer\"/>
 			<cluster name="signaler" location=".\signaler\"/>
-			<cluster name="control" location=".\control\"/>
+			<cluster name="graph_search_strategies" location=".\graph_search_strategies\"/>
+			<cluster name="heuristic_strategies" location=".\heuristic_strategies\"/>
+			<cluster name="connectivity_strategies" location=".\connectivity_strategies\"/>
+			<cluster name="sequencer" location=".\sequencer\"/>
+			<cluster name="controller" location=".\controller\"/>
 			<cluster name="io" location=".\io\"/>
 			<cluster name="util" location=".\util\"/>
-			<cluster name="types" location=".\types\"/>
-			<cluster name="states" location=".\states\"/>
-			<cluster name="parameters" location=".\parameters\"/>
+			<cluster name="actuator" location=".\actuator\"/>
 		</cluster>
 	</target>
 </system>
