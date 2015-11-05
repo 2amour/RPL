@@ -17,6 +17,9 @@ feature {ANY} -- Constants
 	target: STRING_8 = "/driver/goal"
 			-- target goal for the driver.
 
+	odometry: STRING_8 = "/thymio_driver/odometry"
+			-- odometry topic.
+
 	path_planner_start: STRING_8 = "/path_planner/start"
 			-- start position for path_planner node.
 
