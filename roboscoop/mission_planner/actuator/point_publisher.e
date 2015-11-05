@@ -20,10 +20,10 @@ feature {NONE} -- Initialization
 
 feature {ANY} -- Access
 
-	publish_path (point_msg: separate POINT_MSG)
+	publish_path (a_point: separate POINT)
 			-- Publishing path.
 		do
-			publisher.publish (point_msg)
+			publisher.publish (a_point.get_msg)
 		end
 
 feature {NONE} -- Implementation
