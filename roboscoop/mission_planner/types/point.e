@@ -7,7 +7,7 @@ class
 	POINT
 
 create
-	make_default, make_with_coordinates, make_from_separate, make_from_msg
+	make_default, make_with_values, make_from_separate, make_from_msg
 
 feature {NONE} -- Initialization
 
@@ -19,7 +19,7 @@ feature {NONE} -- Initialization
 			z := 0
 		end
 
-	make_with_coordinates (a_x, a_y, a_z: REAL_64)
+	make_with_values (a_x, a_y, a_z: REAL_64)
 			-- Make `Current' with given values.
 		do
 			x := a_x
@@ -48,8 +48,10 @@ feature {ANY} -- Access
 
 	x: REAL_64
 			-- x coordinate.
+
 	y: REAL_64
 			-- y coordinate.
+
 	z: REAL_64
 			-- z coordinate.
 
@@ -57,6 +59,28 @@ feature {ANY} -- Access
 			-- Get point_msg associated to this point.
 		do
 			Result := create {POINT_MSG}.make_with_values (x, y, z)
+		end
+
+	euclidean_distance (other: separate POINT): REAL_64
+			-- Return eculidean distance between current point and other
+		local
+			dx, dy, dz: REAL_64
+		do
+			dx := Current.x - other.x
+			dy := Current.y - other.y
+			dz := Current.z - other.z
+			Result := {DOUBLE_MATH}.sqrt (dx * dx + dy * dy + dz * dz)
+		end
+
+	manhattan_distance (other: separate POINT): REAL_64
+			-- Return manhattan distance between current point and other
+		local
+			dx, dy, dz: REAL_64
+		do
+			dx := {DOUBLE_MATH}.dabs (Current.x - other.x)
+			dy := {DOUBLE_MATH}.dabs (Current.y - other.y)
+			dz := {DOUBLE_MATH}.dabs (Current.z - other.z)
+			Result := dx + dy + dz
 		end
 
 end
