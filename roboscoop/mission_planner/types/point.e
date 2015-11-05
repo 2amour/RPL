@@ -83,4 +83,24 @@ feature {ANY} -- Access
 			Result := dx + dy + dz
 		end
 
+	get_angle (other: separate POINT): REAL_64
+			-- Return angle of the vector (in 2D only) connecting two points
+		require
+			other.z = 0
+		local
+			tmath:TRIGONOMETRY_MATH
+			dx, dy: REAL_64
+		do
+			dx := Current.x - other.x
+			dy := Current.y - other.y
+			create tmath
+			Result := tmath.atan2 (dy, dx)
+		end
+
+	get_string: STRING_8
+			-- Return string representation of point
+		do
+			Result := "x: " + x.out + " y: " + y.out + " z: " + z.out 
+		end
+
 end
