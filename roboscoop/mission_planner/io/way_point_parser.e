@@ -44,7 +44,7 @@ feature {NONE} -- Implementation
 			new_file.close
 			create coordinates_parser.make
 			coordinates_parser.parse_path (new_path)
-			points.put_right (create {POINT_MSG}.make_with_values (coordinates_parser.x, coordinates_parser.y, coordinates_parser.z))
+			points.put_right (create {POINT}.make_with_values (coordinates_parser.x, coordinates_parser.y, coordinates_parser.z))
 			if opened_file.end_of_file then
 				new_file.delete -- Delete auxiliar file.
 			end
@@ -52,7 +52,7 @@ feature {NONE} -- Implementation
 
 feature {ANY} -- Access
 
-	points: LINKED_LIST [POINT_MSG]
+	points: LINKED_LIST [POINT]
 			-- Array of points.
 
 end
