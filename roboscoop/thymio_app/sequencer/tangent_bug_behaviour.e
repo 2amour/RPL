@@ -27,12 +27,10 @@ feature -- Access
 			-- Start the behaviour.
 		local
 			a: separate TANGENT_BUG_DRIVE_CONTROLLER
-			b: separate TANGENT_BUG_LED_CONTROLLER
 		do
 			create a.make_with_attributes (stop_signaler)
-			create b.make_with_attributes (stop_signaler)
 			sep_stop (stop_signaler, False)
-			sep_start (a, b)
+			sep_start (a)
 		end
 
 	stop
@@ -43,15 +41,16 @@ feature -- Access
 
 feature {NONE} -- Implementation
 
-	sep_start (a: separate TANGENT_BUG_DRIVE_CONTROLLER; b: separate TANGENT_BUG_LED_CONTROLLER)
+	sep_start (a: separate TANGENT_BUG_DRIVE_CONTROLLER)
 			-- Start behaviour controllers.
 		do
-			a.repeat_until_stop_requested (
-				agent a.update_velocity (tangent_bug_signaler, odometry_sig, range_group, ground_group, stop_signaler, diff_drive))
-
-			b.repeat_until_stop_requested (
-				agent b.update_leds (tangent_bug_signaler, stop_signaler, top_face_leds))
-
+			if attached odometry_sig as a_odometry_sig and
+				attached range_group as a_range_group and
+				attached ground_group as a_ground_group and
+				attached diff_drive as a_diff_drive then
+				a.repeat_until_stop_requested (
+					agent a.update_velocity (tangent_bug_signaler, a_odometry_sig, a_range_group, a_ground_group, stop_signaler, a_diff_drive))
+			end
 		end
 
 	sep_stop (stop_sig: separate STOP_SIGNALER; val: BOOLEAN)

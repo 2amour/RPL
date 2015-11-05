@@ -40,13 +40,7 @@ feature -- Access
 			drive.set_velocity (linear_speed, angular_velocity)
 		end
 
-	update_leds(leds: separate RGB_COLOR_ACTUATOR)
-			-- <Precursor>
-		do
-			leds.set_to_red
-		end
-
-	set_readings (t_sig: separate TANGENT_BUG_SIGNALER; range_signaler: separate THYMIO_RANGE_GROUP)
+	set_readings (t_sig: separate TANGENT_BUG_SIGNALER; range_signaler: separate RANGE_GROUP)
 			-- <Precursor>
 		do
 
@@ -76,7 +70,7 @@ feature -- Access
 			end
 		end
 
-	update_state(t_sig: separate TANGENT_BUG_SIGNALER; o_sig: separate ODOMETRY_SIGNALER; r_sig: separate THYMIO_RANGE_GROUP)
+	update_state(t_sig: separate TANGENT_BUG_SIGNALER; o_sig: separate ODOMETRY_SIGNALER; r_sig: separate RANGE_GROUP)
 			-- <Precursor>
 		local
 			v_leave_point, best_point: POINT_2D
@@ -131,7 +125,7 @@ feature -- Access
 			clockwise := False
 		end
 
-	follow_wall (t_sig: separate TANGENT_BUG_SIGNALER; range_signaler: separate THYMIO_RANGE_GROUP)
+	follow_wall (t_sig: separate TANGENT_BUG_SIGNALER; range_signaler: separate RANGE_GROUP)
 		local
 			error: REAL_64
 		do
@@ -155,7 +149,7 @@ feature -- Access
 			end
 		end
 
-	inner_corner (t_sig: separate TANGENT_BUG_SIGNALER; range_signaler: separate THYMIO_RANGE_GROUP)
+	inner_corner (t_sig: separate TANGENT_BUG_SIGNALER; range_signaler: separate RANGE_GROUP)
 		local
 			error: REAL_64
 		do
@@ -175,7 +169,7 @@ feature -- Access
 			end
 		end
 
-	outer_corner (t_sig: separate TANGENT_BUG_SIGNALER; range_signaler: separate THYMIO_RANGE_GROUP)
+	outer_corner (t_sig: separate TANGENT_BUG_SIGNALER; range_signaler: separate RANGE_GROUP)
 		local
 			error: REAL_64
 			line: LINE_2D

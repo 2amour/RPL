@@ -23,12 +23,12 @@ feature -- Access
 			leds.set_to_green
 		end
 
-	set_readings(t_sig: separate TANGENT_BUG_SIGNALER; range_signaler:separate THYMIO_RANGE_GROUP)
+	set_readings(t_sig: separate TANGENT_BUG_SIGNALER; range_signaler:separate RANGE_GROUP)
 			-- <Precursor>
 		do
 		end
 
-	update_state(t_sig: separate TANGENT_BUG_SIGNALER; o_sig: separate ODOMETRY_SIGNALER; r_sig: separate THYMIO_RANGE_GROUP)
+	update_state(t_sig: separate TANGENT_BUG_SIGNALER; o_sig: separate ODOMETRY_SIGNALER; r_sig: separate RANGE_GROUP)
 			-- <Precursor>
 		do
 			if t_sig.get_goal.get_euclidean_distance (t_sig.get_pose.get_position) > t_sig.get_goal_threshold then

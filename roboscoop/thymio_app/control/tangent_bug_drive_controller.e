@@ -25,7 +25,7 @@ feature {NONE} -- Initialization
 
 feature {TANGENT_BUG_BEHAVIOUR} -- Access
 
-	update_velocity(tangent_bug_sig: separate TANGENT_BUG_SIGNALER; o_sig: separate ODOMETRY_SIGNALER; r_sig: separate THYMIO_RANGE_GROUP;
+	update_velocity(tangent_bug_sig: separate TANGENT_BUG_SIGNALER; o_sig: separate ODOMETRY_SIGNALER; r_sig: separate RANGE_GROUP;
 					g_sig: separate LIFTABLE; s_sig: separate STOP_SIGNALER;
 					drive: separate DIFFERENTIAL_DRIVE)
 					-- Update velocity settings.
