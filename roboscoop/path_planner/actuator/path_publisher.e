@@ -20,7 +20,7 @@ feature {NONE} -- Initialization
 
 feature {ANY} -- Access
 
-	publish_path (path: separate ARRAYED_STACK [SPATIAL_GRAPH_NODE])
+	publish_path (path: separate LIST [SPATIAL_GRAPH_NODE])
 			-- Publishing path.
 		do
 			publisher.publish (get_path_msg (path))
@@ -31,7 +31,7 @@ feature {NONE} -- Implementation
 	publisher: ROS_PUBLISHER [PATH_MSG]
 			-- Publisher object.
 
-	get_path_msg (path: separate ARRAYED_STACK [SPATIAL_GRAPH_NODE]): separate PATH_MSG
+	get_path_msg (path: separate LIST [SPATIAL_GRAPH_NODE]): separate PATH_MSG
 			-- Get path_msg from path feature.
 		local
 			msg: PATH_MSG
