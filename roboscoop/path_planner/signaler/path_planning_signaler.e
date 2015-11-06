@@ -11,26 +11,36 @@ create
 
 feature {NONE} -- Initialization
 
-	make_with_attributes (w_points: LINKED_LIST[SPATIAL_GRAPH_NODE]; edge_cost: COST_HEURISTIC; heuristic: COST_HEURISTIC; bfs_, dfs_, dijkstra_: BOOLEAN)
+	make_with_attributes (edge_cost: separate COST_HEURISTIC; heuristic: separate COST_HEURISTIC; bfs_, dfs_, dijkstra_: BOOLEAN; a_frame: separate STRING_8)
 			-- Make `Current' and assign its attributes.
 		do
-			way_points := w_points
+			create start_point.make_default
+			create goal_point.make_default
 			edge_cost_strategy := edge_cost
 			heuristic_strategy := heuristic
 			bfs := bfs_
 			dfs := dfs_
 			dijkstra := dijkstra_
+			frame := a_frame
+
+			is_search_requested := False
 		end
 
 feature {ANY} -- Access
 
-	way_points: LINKED_LIST[SPATIAL_GRAPH_NODE]
-			-- Way points for path planning algorithm.
+	start_point: POINT
+			-- Algorithm start point.
 
-	edge_cost_strategy: COST_HEURISTIC
+	goal_point: POINT
+			-- Algorithm goal point.
+
+	is_search_requested: BOOLEAN
+			-- Request a new search
+
+	edge_cost_strategy: separate COST_HEURISTIC
 			-- Edge cost function.
 
-	heuristic_strategy: COST_HEURISTIC
+	heuristic_strategy: separate COST_HEURISTIC
 			-- Heuristic cost used in a* algorithm.
 
 	bfs: BOOLEAN
@@ -41,6 +51,15 @@ feature {ANY} -- Access
 
 	dijkstra: BOOLEAN
 			-- Best-first-search strategy.
+
+	frame: separate STRING_8
+			-- Frame id to publish goal.
+
+	request_search (a_val: BOOLEAN)
+			-- set `a_val' to is_search_requested.
+		do
+			is_search_requested := a_val
+		end
 
 invariant
 	only_one: (bfs and not dfs and not dijkstra) or (not bfs and dfs and not dijkstra) or (not bfs and not dfs and dijkstra)

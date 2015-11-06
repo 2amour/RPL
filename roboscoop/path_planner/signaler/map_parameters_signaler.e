@@ -11,19 +11,34 @@ create
 
 feature {NONE} -- Initialization
 
-	make_with_attributes (inf: REAL_64; connectivity: GRID_CONNECTIVITY_STRATEGY)
+	make_with_attributes (a_blocking: INTEGER_32; a_inflation: REAL_64; a_connectivity: separate GRID_CONNECTIVITY_STRATEGY)
 			-- Make `Current' and assign its attributes.
 		do
-			inflation := inf
-			connectivity_strategy := connectivity
+			blocking := a_blocking
+			inflation := a_inflation
+			connectivity_strategy := a_connectivity
+			timestamp := 0
 		end
 
 feature {ANY} -- Access
 
-	inflation: REAL_64
-			-- Inflation distance for map boundaries
+	blocking: INTEGER_32
+			-- Blocking parameter for grid rescaling.
 
-	connectivity_strategy: GRID_CONNECTIVITY_STRATEGY
+
+	inflation: REAL_64
+			-- Inflation distance for map boundaries.
+
+	connectivity_strategy: separate GRID_CONNECTIVITY_STRATEGY
 			-- Grid connectivity used.
+
+	timestamp: REAL_64
+			-- Timestamp  of last update.
+
+	set_timestamp (a_timestamp: REAL_64)
+			-- Set a new timestamp
+		do
+			timestamp := a_timestamp
+		end
 
 end
