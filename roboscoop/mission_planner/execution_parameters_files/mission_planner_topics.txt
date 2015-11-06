@@ -1,0 +1,6 @@
+path:						/path
+map:						/map
+target:						/robot_controller/target
+odometry:					/robot_controller/odometry
+start:						/path_planner/start
+goal:						/path_planner/goal

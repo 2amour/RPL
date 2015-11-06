@@ -1,0 +1,4 @@
+point: 0.2 0.8
+point: 1.2 1.2
+point: 1.2 1.8
+way_point_threshold: 0.02
