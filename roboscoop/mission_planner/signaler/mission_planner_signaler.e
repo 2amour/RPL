@@ -13,6 +13,9 @@ feature {NONE} -- Initialization
 
 	make_with_attributes (wp: separate LIST[separate POINT]; thresh: REAL_64)
 			-- Make `Current' and assign its attributes.
+		local
+			print_point: POINT
+			i: INTEGER_32
 		do
 			way_points := wp
 
@@ -21,9 +24,18 @@ feature {NONE} -- Initialization
 			is_path_requested := True
 
 			create path.make (0)
-			path.force (wp.first)
-			path.force (wp.last)
+			from
+				i := 1
+			until
+				i > wp.count
+			loop
+				path.force (wp.at (i))
+				i := i + 1
+			end
 			path.start
+
+			create print_point.make_from_separate (path.item)
+			io.put_string ("x: " + print_point.x.out + " y: " + print_point.y.out + "%N")
 		end
 
 feature {ANY} -- Access

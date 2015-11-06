@@ -24,6 +24,12 @@ feature {NONE} -- Initialization
 
 feature {MISSION_PLANNER_BEHAVIOUR} -- Execute algorithm
 
+	send_target (mission_sig: separate MISSION_PLANNER_SIGNALER; target_pub: separate POINT_PUBLISHER)
+			-- send the target to robot driver.
+		do
+			target_pub.publish_point (mission_sig.path.item)
+		end
+
 	update_target (odometry_sig: separate ODOMETRY_SIGNALER; mission_sig: separate MISSION_PLANNER_SIGNALER; target_pub: separate POINT_PUBLISHER)
 			-- update target of robot driver.
 		require
@@ -31,10 +37,8 @@ feature {MISSION_PLANNER_BEHAVIOUR} -- Execute algorithm
 			get_separate_point_distance (mission_sig.path.item, mission_sig.path.last) > mission_sig.goal_threshold
 			-- TODO CHECK IF mission_sig.path.item /= mission_sig.goal works!
 		do
-			io.put_string ("there?")
-
-			mission_sig.path.remove
-			target_pub.publish_point (mission_sig.path.item)
+			mission_sig.path.forth
+			send_target (mission_sig, target_pub)
 		end
 
 feature {MISSION_PLANNER_BEHAVIOUR} -- Implementation

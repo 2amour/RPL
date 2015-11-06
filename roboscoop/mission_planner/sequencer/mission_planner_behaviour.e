@@ -30,14 +30,15 @@ feature {ANY} -- Access
 	start
 			-- Start the behaviour.
 		local
-			a: separate ROBOT_TARGET_CONTROLLER
-			b, c: separate PATH_PLANNING_CONTROLLER
+			a, b: separate ROBOT_TARGET_CONTROLLER
+			c, d: separate PATH_PLANNING_CONTROLLER
 		do
 			create a.make (stop_signaler)
 			create b.make (stop_signaler)
 			create c.make (stop_signaler)
+			create d.make (stop_signaler)
 			sep_stop (stop_signaler, False)
-			sep_start (a, b, c)
+			sep_start (a, b, c, d)
 		end
 
 	stop
@@ -69,12 +70,13 @@ feature {NONE} -- Implementation
 	stop_signaler: separate STOP_SIGNALER
 			-- Signaler for stopping the behaviour.
 
-	sep_start (a: separate ROBOT_TARGET_CONTROLLER; b, c: separate PATH_PLANNING_CONTROLLER)
+	sep_start (a, b: separate ROBOT_TARGET_CONTROLLER; c, d: separate PATH_PLANNING_CONTROLLER)
 			-- Start controllers asynchronously.
 		do
-			a.repeat_until_stop_requested (agent a.update_target(odometry_signaler, mission_signaler, target_publisher))
-			b.repeat_until_stop_requested (agent b.update_path(path_signaler, mission_signaler))
-			c.repeat_until_stop_requested (agent c.request_path(mission_signaler, start_publisher, goal_publisher))
+			a.send_target (mission_signaler, target_publisher)
+			b.repeat_until_stop_requested (agent b.update_target(odometry_signaler, mission_signaler, target_publisher))
+			c.repeat_until_stop_requested (agent c.update_path(path_signaler, mission_signaler))
+			d.repeat_until_stop_requested (agent d.request_path(mission_signaler, start_publisher, goal_publisher))
 		end
 
 	sep_stop (s_sig: separate STOP_SIGNALER; val: BOOLEAN)
