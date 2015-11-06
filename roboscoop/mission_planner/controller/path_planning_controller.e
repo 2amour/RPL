@@ -1,11 +1,11 @@
 note
-	description: "Summary description for {MISSION_PLANNER_CONTROLLER}."
+	description: "Summary description for {PATH_PLANNING_CONTROLLER}."
 	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 
 class
-	MISSION_PLANNER_CONTROLLER
+	PATH_PLANNING_CONTROLLER
 
 inherit
 
@@ -23,19 +23,6 @@ feature {NONE} -- Initialization
 		end
 
 feature {MISSION_PLANNER_BEHAVIOUR} -- Execute algorithm
-
-	update_target (odometry_sig: separate ODOMETRY_SIGNALER; mission_sig: separate MISSION_PLANNER_SIGNALER; target_pub: separate POINT_PUBLISHER)
-			-- update target of robot driver.
-		require
-			mission_sig.path.item.euclidean_distance (create {POINT}.make_from_msg (odometry_sig.data.pose.pose.position)) < mission_sig.goal_threshold
-		do
-			io.put_string ("there?")
-
-			if mission_sig.path.item.euclidean_distance(mission_sig.goal) > mission_sig.goal_threshold then
-				mission_sig.path.remove
-				target_pub.publish_path (mission_sig.path.item)
-			end
-		end
 
 	update_path (path_sig: separate PATH_SIGNALER; mission_sig: separate MISSION_PLANNER_SIGNALER)
 			-- update recieved path.
@@ -55,7 +42,7 @@ feature {MISSION_PLANNER_BEHAVIOUR} -- Execute algorithm
 			loop
 				current_point := create {POINT}.make_from_msg (path_sig.data.poses[idx].pose.position)
 				next_point := create {POINT}.make_from_msg (path_sig.data.poses[idx+1].pose.position)
-				if mission_sig.path.item.get_angle (current_point) /= mission_sig.path.item.get_angle (next_point) then
+				if get_separate_point_angle (mission_sig.path.item, current_point) /= get_separate_point_angle (mission_sig.path.item, next_point) then
 					mission_sig.update_path (current_point)
 				end
 				idx := idx + 1
@@ -68,10 +55,33 @@ feature {MISSION_PLANNER_BEHAVIOUR} -- Execute algorithm
 			-- request a new path to the path_planner.
 		require
 			mission_sig.is_path_requested
+		local
+			current_idx: INTEGER_32
 		do
 			io.put_string ("Publishing!")
-			start_pub.publish_path (mission_sig.start)
-			goal_pub.publish_path (mission_sig.goal)
+			current_idx := get_separate_list_index(mission_sig.way_points)
+			start_pub.publish_point (get_separate_list_point (mission_sig.way_points, current_idx))
+			goal_pub.publish_point (get_separate_list_point (mission_sig.way_points, current_idx+1))
 			mission_sig.request_path (False)
+		end
+
+feature {NONE} -- Implementation
+
+	get_separate_point_angle (point, other: separate POINT): REAL_64
+			-- Get angle from point in separate call
+		do
+			Result := point.get_angle (other)
+		end
+
+	get_separate_list_index (list: separate LIST[separate POINT]): INTEGER_32
+			-- Get index from a separate list
+		do
+			Result := list.index
+		end
+
+	get_separate_list_point (list: separate LIST[separate POINT]; index: INTEGER_32): separate POINT
+			-- Get point from a separate list by index
+		do
+			Result := list.at (index)
 		end
 end
