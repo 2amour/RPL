@@ -11,16 +11,16 @@ create
 
 feature {NONE} -- Initialization
 
-	make_with_attributes (mission_sig: separate MISSION_PLANNER_SIGNALER)
+	make_with_attributes (parameters_bag: separate MISSION_PLANNER_PARAMETERS_BAG)
 			-- Create `Current' with attributes.
 		do
-			mission_signaler := mission_sig
-			create odometry_signaler.make_with_topic ({MISSION_PLANNER_TOPICS}.odometry)
-			create path_signaler.make_with_topic ({MISSION_PLANNER_TOPICS}.path)
+			create mission_signaler.make_with_attributes (parameters_bag.mission_planner_parameters.way_points, parameters_bag.mission_planner_parameters.way_point_threshold)
+			create odometry_signaler.make_with_topic (parameters_bag.mission_planner_topics.odometry)
+			create path_signaler.make_with_topic (parameters_bag.mission_planner_topics.path)
 
-			create start_publisher.make_with_topic ({MISSION_PLANNER_TOPICS}.path_planner_start)
-			create goal_publisher.make_with_topic ({MISSION_PLANNER_TOPICS}.path_planner_goal)
-			create target_publisher.make_with_topic ({MISSION_PLANNER_TOPICS}.target)
+			create start_publisher.make_with_topic (parameters_bag.mission_planner_topics.path_planner_start)
+			create goal_publisher.make_with_topic (parameters_bag.mission_planner_topics.path_planner_goal)
+			create target_publisher.make_with_topic (parameters_bag.mission_planner_topics.target)
 
 			create stop_signaler.make
 		end
@@ -30,7 +30,8 @@ feature {ANY} -- Access
 	start
 			-- Start the behaviour.
 		local
-			a, b, c: separate MISSION_PLANNER_CONTROLLER
+			a: separate ROBOT_TARGET_CONTROLLER
+			b, c: separate PATH_PLANNING_CONTROLLER
 		do
 			create a.make (stop_signaler)
 			create b.make (stop_signaler)
@@ -68,7 +69,7 @@ feature {NONE} -- Implementation
 	stop_signaler: separate STOP_SIGNALER
 			-- Signaler for stopping the behaviour.
 
-	sep_start (a, b, c: separate MISSION_PLANNER_CONTROLLER)
+	sep_start (a: separate ROBOT_TARGET_CONTROLLER; b, c: separate PATH_PLANNING_CONTROLLER)
 			-- Start controllers asynchronously.
 		do
 			a.repeat_until_stop_requested (agent a.update_target(odometry_signaler, mission_signaler, target_publisher))

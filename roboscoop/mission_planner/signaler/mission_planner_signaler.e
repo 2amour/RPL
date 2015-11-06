@@ -11,30 +11,30 @@ create
 
 feature {NONE} -- Initialization
 
-	make_with_attributes (a_start, a_goal: POINT; thresh: REAL_64)
+	make_with_attributes (wp: separate LIST[separate POINT]; thresh: REAL_64)
 			-- Make `Current' and assign its attributes.
 		do
-			start := a_start
-			goal := a_goal
+			way_points := wp
+
 			timestamp := 0
 			goal_threshold := thresh
 			is_path_requested := True
+
 			create path.make (0)
-			path.put (goal)
+			path.force (wp.first)
+			path.force (wp.last)
+			path.start
 		end
 
 feature {ANY} -- Access
 
-	start: POINT
-			-- Starting point.
-
-	goal: POINT
-			-- Goal point.
+	way_points: separate LIST[separate POINT]
+			-- Way points to visit.
 
 	is_path_requested: BOOLEAN
 			-- Is a new path requested?
 
-	path: ARRAYED_QUEUE [POINT]
+	path: ARRAYED_LIST [separate POINT]
 			-- Path of points to go.
 
 	timestamp: REAL_64
