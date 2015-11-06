@@ -1,0 +1,3 @@
+map:				/map
+path:				/path_planner/path"
+marker:				/visualization_marker"
