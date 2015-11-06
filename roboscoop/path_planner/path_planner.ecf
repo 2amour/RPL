@@ -15,7 +15,6 @@
 				<exclude>/CVS$</exclude>
 				<exclude>/.svn$</exclude>
 			</file_rule>
-			<cluster name="communication" location=".\communication\"/>
 			<cluster name="signaler" location=".\signaler\"/>
 			<cluster name="graph_search_strategies" location=".\graph_search_strategies\"/>
 			<cluster name="heuristic_strategies" location=".\heuristic_strategies\"/>
@@ -25,6 +24,8 @@
 			<cluster name="io" location=".\io\"/>
 			<cluster name="util" location=".\util\"/>
 			<cluster name="actuator" location=".\actuator\"/>
+			<cluster name="parameters" location=".\parameters\"/>
+			<cluster name="types" location=".\types\"/>
 		</cluster>
 	</target>
 </system>
