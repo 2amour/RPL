@@ -16,12 +16,12 @@
 				<exclude>/.svn$</exclude>
 			</file_rule>
 			<cluster name="io" location=".\io\"/>
-			<cluster name="communication" location=".\communication\"/>
 			<cluster name="actuator" location=".\actuator\"/>
 			<cluster name="sequencer" location=".\sequencer\"/>
 			<cluster name="signaler" location=".\signaler\"/>
 			<cluster name="controller" location=".\controller\"/>
 			<cluster name="types" location=".\types\"/>
+			<cluster name="parameters" location=".\parameters\"/>
 		</cluster>
 	</target>
 </system>
