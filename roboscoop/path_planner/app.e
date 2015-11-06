@@ -19,25 +19,40 @@ feature {NONE} -- Initialization
 	make
 			-- Run application.
 		local
-			parser: PATH_PLANNING_PARSER
+			algorithm_parameters: PATH_PLANNER_PARAMETERS
+			algorithm_parameter_parser: PATH_PLANNER_PARAMETERS_PARSER
+
+			map_parameters: MAP_PARAMETERS
+			map_parameter_parser: MAP_PARAMETERS_PARSER
+
+			topic_parameters: PATH_PLANNER_TOPICS_PARAMETERS
+			topic_parameters_parser: PATH_PLANNER_TOPICS_PARSER
+			parameters_bag: PATH_PLANNER_PARAMETERS_BAG
+
+
 			path_planner_node: separate ROBOSCOOP_NODE
 			ros_spinner: separate ROS_SPINNER
-			path_planning_signaler: PATH_PLANNING_SIGNALER
-			map_parameters_signaler: MAP_PARAMETERS_SIGNALER
+
 			path_planning_behaviour: PATH_PLANNING_BEHAVIOUR
-			way_points: LINKED_LIST [SPATIAL_GRAPH_NODE]
+
 		do
 				-- Parse command line arguments
-			create parser.make
-			parser.parse_args (argument_count, argument_array)
-
-				-- Transform LIST[POINT_MSGS] to LIST[SPATIAL_GRAPH_NODES]
-			create way_points.make
-			across
-				parser.way_points_parser.points as points
-			loop
-				way_points.put_right (create {SPATIAL_GRAPH_NODE}.make_with_coords (points.item))
+			if argument_count < 3 then
+				io.put_string ("Usage: ./path_planner algorithm_parameters_file map_parameters_file topics_file%N")
+				(create {EXCEPTIONS}).die (-1)
 			end
+
+			create algorithm_parameter_parser
+			algorithm_parameters := algorithm_parameter_parser.parse_file (argument_array[1])
+
+			create map_parameter_parser
+			map_parameters := map_parameter_parser.parse_file (argument_array[2])
+
+			create topic_parameters_parser
+			topic_parameters := topic_parameters_parser.parse_file (argument_array[3])
+
+			create parameters_bag.make_with_attributes (map_parameters, algorithm_parameters, topic_parameters)
+
 
 				-- Initialize this application as a ROS node.
 			path_planner_node := (create {ROS_NODE_STARTER}).roboscoop_node
@@ -47,12 +62,8 @@ feature {NONE} -- Initialization
 			create ros_spinner.make
 			start_spinning (ros_spinner)
 
-				-- Start Signalers
-			create path_planning_signaler.make_with_attributes (way_points, parser.edge_cost_parser.cost, parser.heuristic_cost_parser.cost, parser.open_set_strategy_parser.bfs, parser.open_set_strategy_parser.dfs, parser.open_set_strategy_parser.dijkstra)
-			create map_parameters_signaler.make_with_attributes (parser.map_inflation_parser.inflation, parser.connectivity_parser.connectivity)
-
 				-- Start Behaviour
-			create path_planning_behaviour.make_with_attributes (path_planning_signaler, map_parameters_signaler)
+			create path_planning_behaviour.make_with_attributes (parameters_bag)
 			path_planning_behaviour.start
 		end
 
