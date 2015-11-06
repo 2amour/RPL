@@ -20,10 +20,10 @@ feature {NONE} -- Initialization
 
 feature {ANY} -- Access
 
-	publish_path (path: separate LIST [SPATIAL_GRAPH_NODE])
+	publish_path (path: separate LIST [SPATIAL_GRAPH_NODE]; frame: separate STRING_8)
 			-- Publishing path.
 		do
-			publisher.publish (get_path_msg (path))
+			publisher.publish (get_path_msg (path, frame))
 		end
 
 feature {NONE} -- Implementation
@@ -31,7 +31,7 @@ feature {NONE} -- Implementation
 	publisher: ROS_PUBLISHER [PATH_MSG]
 			-- Publisher object.
 
-	get_path_msg (path: separate LIST [SPATIAL_GRAPH_NODE]): separate PATH_MSG
+	get_path_msg (path: separate LIST [SPATIAL_GRAPH_NODE]; frame: separate STRING_8): separate PATH_MSG
 			-- Get path_msg from path feature.
 		local
 			msg: PATH_MSG
@@ -40,7 +40,7 @@ feature {NONE} -- Implementation
 			a_poses: ARRAY [POSE_STAMPED_MSG]
 			idx: INTEGER_32
 		do
-			header := create {HEADER_MSG}.make_now ({PATH_PLANNING_TOPICS}.frame)
+			header := create {HEADER_MSG}.make_now (create {STRING_8}.make_from_separate (frame))
 			create a_poses.make_filled (create {POSE_STAMPED_MSG}.make_empty, 1, path.count)
 			idx := 1
 			from
