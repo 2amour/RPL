@@ -2,7 +2,7 @@
 <system xmlns="http://www.eiffel.com/developers/xml/configuration-1-14-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-14-0 http://www.eiffel.com/developers/xml/configuration-1-14-0.xsd" name="robot_controller" uuid="DC112819-D718-4560-AB6B-434253B6A0FA">
 	<target name="robot_controller">
 		<root class="APP" feature="make"/>
-		<option debug="true" void_safety="none">
+		<option debug="true">
 			<debug name="__unnamed_debug__" enabled="true"/>
 			<debug name="debug_info" enabled="true"/>
 		</option>
@@ -25,7 +25,6 @@
 			<cluster name="io" location=".\io\"/>
 			<cluster name="util" location=".\util\"/>
 			<cluster name="types" location=".\types\"/>
-			<cluster name="states" location=".\states\"/>
 			<cluster name="parameters" location=".\parameters\"/>
 		</cluster>
 	</target>

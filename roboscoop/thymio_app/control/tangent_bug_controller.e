@@ -1,10 +1,10 @@
 note
-	description: "Controls robot speed during tangent bug behaviour."
-	author: "ferran_antoni_sebastian"
-	date: "18.10.15"
+	description: "Controls robot during tangent bug behaviour."
+	author: "Ferran Pallarès"
+	date: "06.11.15"
 
 class
-	TANGENT_BUG_DRIVE_CONTROLLER
+	TANGENT_BUG_CONTROLLER
 
 inherit
 	CANCELLABLE_CONTROL_LOOP
@@ -13,7 +13,7 @@ create
 	make_with_attributes
 
 
-feature {NONE} -- Initialization	
+feature {NONE} -- Initialization
 
 	make_with_attributes (stop_sig: separate STOP_SIGNALER)
 		-- Create controller given the attributes.
@@ -40,9 +40,9 @@ feature {TANGENT_BUG_BEHAVIOUR} -- Access
 
 				vector_to_goal.make_from_points (tangent_bug_sig.get_goal, tangent_bug_sig.get_pose.get_position)
 				angle_to_goal := change_interval (vector_to_goal.get_angle, vector_to_goal.get_x)
-			 	if has_turned_around_goal (angle_to_goal)  then
-			 		tangent_bug_sig.set_unreachable_goal
-			 	end
+				if has_turned_around_goal (angle_to_goal)  then
+					tangent_bug_sig.set_unreachable_goal
+				end
 
 				tangent_bug_sig.get_state.set_readings(tangent_bug_sig, r_sig)
 				tangent_bug_sig.get_state.update_velocity (drive)

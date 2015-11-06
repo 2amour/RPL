@@ -26,7 +26,7 @@ feature -- Access
 	start
 			-- Start the behaviour.
 		local
-			a: separate TANGENT_BUG_DRIVE_CONTROLLER
+			a: separate TANGENT_BUG_CONTROLLER
 		do
 			create a.make_with_attributes (stop_signaler)
 			sep_stop (stop_signaler, False)
@@ -41,7 +41,7 @@ feature -- Access
 
 feature {NONE} -- Implementation
 
-	sep_start (a: separate TANGENT_BUG_DRIVE_CONTROLLER)
+	sep_start (a: separate TANGENT_BUG_CONTROLLER)
 			-- Start behaviour controllers.
 		do
 			if attached odometry_sig as a_odometry_sig and
