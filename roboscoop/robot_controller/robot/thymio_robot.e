@@ -19,29 +19,17 @@ feature {NONE} -- Initialization
 			-- Create a robot with range sensors parameters.
 		do
 			-- Initialize sensors.
+			create odometry_signaler.make_with_topic ({THYMIO_TOPICS}.odometry)
 			create range_sensors.make ({THYMIO_TOPICS}.prox_horizontal, range_sensors_parameters)
 			create ground_sensors.make ({THYMIO_TOPICS}.prox_ground)
-			create odometry_signaler.make_with_topic ({THYMIO_TOPICS}.odometry)
 
 			-- Initialize actuators.
 			create diff_drive.make_with_topic ({THYMIO_TOPICS}.velocity)
-			create sound_player.make_with_topic ({THYMIO_TOPICS}.sound)
-			create top_leds.make_with_topic ({THYMIO_TOPICS}.top_leds)
-			create buttons_leds.make_with_topic ({THYMIO_TOPICS}.buttons_leds)
-			create circle_leds.make_with_topic ({THYMIO_TOPICS}.circle_leds)
 
 			-- Assign behaviour.
-			thymio_robot_behaviour.set_robot_parts (odometry_signaler, range_sensors, ground_sensors, diff_drive, buttons_leds, circle_leds, top_leds)
+			thymio_robot_behaviour.set_robot_parts (odometry_signaler, range_sensors, ground_sensors, diff_drive)
 			behaviour := thymio_robot_behaviour
 		end
-
-feature -- Constants
-
-	robot_base_size: REAL_64 = 0.11
-			-- Robot's width.
-
-	default_linear_speed: REAL_64 = 0.08
-			-- Default linear speed of the robot.
 
 feature -- Access
 
@@ -70,18 +58,6 @@ feature {NONE} -- Robot parts
 
 	diff_drive: separate THYMIO_DIFFERENTIAL_DRIVE
 			-- Differential drive.
-
-	sound_player: separate THYMIO_SOUND_PLAYER
-			-- Built-in sound player.
-
-	top_leds: separate THYMIO_TOP_LEDS
-			-- RGB LEDs on the top.
-
-	buttons_leds: separate THYMIO_BUTTONS_LEDS
-			-- 4 Red LEDs on the buttons.
-
-	circle_leds: separate THYMIO_CIRCLE_LEDS
-			-- 8 Orange LEDS around the buttons.
 
 feature {NONE} -- Implementation
 

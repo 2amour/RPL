@@ -1,7 +1,7 @@
 note
 	description: "Behaviour of the robot implementing tangent bug algorithm."
-	author: "Sebastián Curi"
-	date: "18.10.15"
+	author: "Ferran Pallarès"
+	date: "06.11.15"
 
 class
 	TANGENT_BUG_BEHAVIOUR
@@ -26,13 +26,16 @@ feature -- Access
 	start
 			-- Start the behaviour.
 		local
-			a: separate TANGENT_BUG_DRIVE_CONTROLLER
-			b: separate TANGENT_BUG_LED_CONTROLLER
+			a, b, c, d, e: separate TANGENT_BUG_CONTROLLER
 		do
 			create a.make_with_attributes (stop_signaler)
 			create b.make_with_attributes (stop_signaler)
+			create c.make_with_attributes (stop_signaler)
+			create d.make_with_attributes (stop_signaler)
+			create e.make_with_attributes (stop_signaler)
+
 			sep_stop (stop_signaler, False)
-			sep_start (a, b)
+			sep_start (a, b, c, d, e)
 		end
 
 	stop
@@ -43,15 +46,24 @@ feature -- Access
 
 feature {NONE} -- Implementation
 
-	sep_start (a: separate TANGENT_BUG_DRIVE_CONTROLLER; b: separate TANGENT_BUG_LED_CONTROLLER)
+	sep_start (a, b, c, d, e: separate TANGENT_BUG_CONTROLLER)
 			-- Start behaviour controllers.
 		do
-			a.repeat_until_stop_requested (
-				agent a.update_velocity (tangent_bug_signaler, odometry_sig, range_group, ground_group, stop_signaler, diff_drive))
-
-			b.repeat_until_stop_requested (
-				agent b.update_leds (tangent_bug_signaler, stop_signaler, top_face_leds))
-
+			if attached odometry_sig as a_odometry_sig and
+				attached range_group as a_range_group and
+				attached ground_group as a_ground_group and
+				attached diff_drive as a_diff_drive then
+				a.repeat_until_stop_requested (
+					agent a.go_to_goal (stop_signaler, tangent_bug_signaler, a_odometry_sig, a_range_group, a_ground_group, a_diff_drive))
+				b.repeat_until_stop_requested (
+					agent b.follow_obstacle (stop_signaler, tangent_bug_signaler, a_odometry_sig, a_range_group, a_ground_group, a_diff_drive))
+				c.repeat_until_stop_requested (
+					agent c.leave_obstacle (stop_signaler, tangent_bug_signaler, a_odometry_sig, a_range_group, a_ground_group, a_diff_drive))
+				d.repeat_until_stop_requested (
+					agent d.reached_goal (stop_signaler, tangent_bug_signaler, a_odometry_sig, a_range_group, a_ground_group, a_diff_drive))
+				e.repeat_until_stop_requested (
+					agent e.unreachable_goal (stop_signaler, tangent_bug_signaler, a_odometry_sig, a_range_group, a_ground_group, a_diff_drive))
+			end
 		end
 
 	sep_stop (stop_sig: separate STOP_SIGNALER; val: BOOLEAN)
