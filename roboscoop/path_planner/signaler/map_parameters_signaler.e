@@ -19,6 +19,7 @@ feature {NONE} -- Initialization
 			inflation := a_inflation
 			connectivity_strategy := a_connectivity
 			timestamp := 0
+			is_changed := False
 		end
 
 feature {ANY} -- Access
@@ -35,13 +36,22 @@ feature {ANY} -- Access
 	connectivity_strategy: separate GRID_CONNECTIVITY_STRATEGY
 			-- Grid connectivity used.
 
+	is_changed: BOOLEAN
+			-- Has the map changed?
+
 	timestamp: REAL_64
 			-- Timestamp  of last update.
 
 	set_timestamp (a_timestamp: REAL_64)
-			-- Set a new timestamp
+			-- Set timestap to `a_timestamp'.
 		do
 			timestamp := a_timestamp
+		end
+
+	set_changed (a_val: BOOLEAN)
+			-- Set is_changed to `a_val'.
+		do
+			is_changed := a_val
 		end
 
 end
