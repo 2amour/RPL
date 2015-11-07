@@ -17,18 +17,19 @@ feature {ANY} -- Acces.
 			-- Parse file with path `file_path'.
 		local
 			frame_id: STRING_8
+			search_strategy: LABEL_CORRECTING_GRAPH_SEARCH_STRATEGY
 			edge_cost, heuristic_cost: COST_HEURISTIC
-			bfs, dfs, dijkstra: BOOLEAN
 			edge_key, heuristic_key, search_key: STRING
 			file: PLAIN_TEXT_FILE
 			key: STRING
 		do
+			-- Default init.
 			frame_id := ""
+			search_strategy := create {A_STAR}.make_default
 			edge_cost := create {ZERO_HEURISTIC}
 			heuristic_cost := create {ZERO_HEURISTIC}
-			bfs := False dfs := False dijkstra := True
 			edge_key := "" heuristic_key := "" search_key:= ""
-			
+
 			create file.make_open_read (file_path)
 			from
 				file.start
@@ -37,7 +38,6 @@ feature {ANY} -- Acces.
 			loop
 				file.read_word
 				create key.make_from_string (file.last_string)
-
 				if key.is_equal ("frame_id:") then
 					file.read_word
 					create frame_id.make_from_string (file.last_string)
@@ -77,11 +77,11 @@ feature {ANY} -- Acces.
 					file.read_word
 					create search_key.make_from_string (file.last_string)
 					if search_key.is_equal ("dijkstra") then
-						bfs := False dfs := False dijkstra := True
+						search_strategy := create {A_STAR}.make_default
 					elseif heuristic_key.is_equal ("bfs") then
-						bfs := True dfs := False dijkstra := False
+						search_strategy := create {BFS}.make_default
 					elseif heuristic_key.is_equal ("dfs") then
-						bfs := False dfs := True dijkstra := False
+						search_strategy := create {DFS}.make_default
 					elseif not heuristic_key.is_empty then
 						io.putstring ("Parser error while parsing file '" + file_path + "': Key '" + search_key + "' not recognized%N")
 					end
@@ -91,7 +91,7 @@ feature {ANY} -- Acces.
 			end
 			file.close
 
-			Result := create {PATH_PLANNER_PARAMETERS}.make_with_attributes (frame_id, edge_cost, heuristic_cost, bfs, dfs, dijkstra)
+			Result := create {PATH_PLANNER_PARAMETERS}.make_with_attributes (frame_id, search_strategy, edge_cost, heuristic_cost)
 		end
 
 end

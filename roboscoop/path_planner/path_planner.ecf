@@ -2,7 +2,7 @@
 <system xmlns="http://www.eiffel.com/developers/xml/configuration-1-14-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-14-0 http://www.eiffel.com/developers/xml/configuration-1-14-0.xsd" name="path_planner" uuid="DC112819-D718-4560-AB6B-434253B6A0FA">
 	<target name="path_planner">
 		<root class="APP" feature="make"/>
-		<option debug="true" void_safety="none">
+		<option debug="true" void_safety="all">
 			<debug name="__unnamed_debug__" enabled="true"/>
 			<debug name="debug_info" enabled="true"/>
 		</option>

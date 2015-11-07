@@ -11,19 +11,15 @@ create
 
 feature {NONE} -- Initialization
 
-	make_with_attributes (edge_cost: separate COST_HEURISTIC; heuristic: separate COST_HEURISTIC; bfs_, dfs_, dijkstra_: BOOLEAN; a_frame: separate STRING_8)
+	make_with_attributes (a_search_strategy: separate LABEL_CORRECTING_GRAPH_SEARCH_STRATEGY; edge_cost: separate COST_HEURISTIC; heuristic: separate COST_HEURISTIC; a_frame: separate STRING_8)
 			-- Make `Current' and assign its attributes.
 		do
 			changed_start := False
 			changed_goal := False
-
+			search_strategy := a_search_strategy
 			edge_cost_strategy := edge_cost
 			heuristic_strategy := heuristic
-			bfs := bfs_
-			dfs := dfs_
-			dijkstra := dijkstra_
 			frame := a_frame
-
 		end
 
 feature {ANY} -- Access
@@ -46,14 +42,8 @@ feature {ANY} -- Access
 	heuristic_strategy: separate COST_HEURISTIC
 			-- Heuristic cost used in a* algorithm.
 
-	bfs: BOOLEAN
-			-- Breadth-first-search strategy.
-
-	dfs: BOOLEAN
-			-- Depth-first-search strategy.
-
-	dijkstra: BOOLEAN
-			-- Best-first-search strategy.
+	search_strategy: separate LABEL_CORRECTING_GRAPH_SEARCH_STRATEGY
+			-- search strategy.
 
 	frame: separate STRING_8
 			-- Frame id to publish goal.
@@ -92,8 +82,5 @@ feature {ANY} -- Access
 		do
 			changed_goal := False
 		end
-
-invariant
-	only_one: (bfs and not dfs and not dijkstra) or (not bfs and dfs and not dijkstra) or (not bfs and not dfs and dijkstra)
 
 end

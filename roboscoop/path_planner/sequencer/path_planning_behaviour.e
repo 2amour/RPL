@@ -15,7 +15,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make_with_attributes (param_bag: separate PATH_PLANNER_PARAMETERS_BAG)
+	make_with_attributes (param_bag: PATH_PLANNER_PARAMETERS_BAG)
 			-- Create Current with signaler.
 		do
 			create start_signaler.make_with_topic (param_bag.path_planner_topics.start)
@@ -24,7 +24,7 @@ feature {NONE} -- Initialization
 			create path_publisher.make_with_topic (param_bag.path_planner_topics.path)
 			create stop_signaler.make
 
-			create path_planning_signaler.make_with_attributes (param_bag.path_planner_parameters.edge_cost, param_bag.path_planner_parameters.heuristic_cost, param_bag.path_planner_parameters.bfs, param_bag.path_planner_parameters.dfs, param_bag.path_planner_parameters.dijkstra, param_bag.path_planner_parameters.frame_id)
+			create path_planning_signaler.make_with_attributes (param_bag.path_planner_parameters.search_strategy, param_bag.path_planner_parameters.edge_cost, param_bag.path_planner_parameters.heuristic_cost, param_bag.path_planner_parameters.frame_id)
 			create map_parameters_signaler.make_with_attributes (param_bag.map_parameters.block_width, param_bag.map_parameters.block_height, param_bag.map_parameters.inflation, param_bag.map_parameters.connectivity_strategy)
 		end
 

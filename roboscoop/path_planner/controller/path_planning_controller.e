@@ -18,7 +18,7 @@ feature {NONE} -- Initialization
 	make (s_sig: separate STOP_SIGNALER)
 			-- Create `Current' and assign given attributes.
 		do
-			search_algorithm := create {A_STAR}.make_default
+			create search_strategy.make_default
 			stop_signaler := s_sig
 		end
 
@@ -83,11 +83,13 @@ feature {PATH_PLANNING_BEHAVIOUR} -- Execute algorithm
 
 				create start_point.make_from_separate (sp)
 				create goal_point.make_from_separate (gp)
-				search_algorithm := create {A_STAR}.make_with_graph (gw.grid)
+
+				search_strategy.make_with_size (gw.grid.nodes.count)
 
 				start_node := gw.grid.node_at (((start_point.x - map.state.info.origin.position.x) / map.state.info.resolution).rounded, ((start_point.y - map.state.info.origin.position.y) / map.state.info.resolution).rounded, 1)
 				goal_node := gw.grid.node_at (((goal_point.x - map.state.info.origin.position.x) / map.state.info.resolution).rounded, ((goal_point.y - map.state.info.origin.position.y) / map.state.info.resolution).rounded, 1)
-				path := search_algorithm.search (start_node, goal_node, path_planning_sig.edge_cost_strategy, path_planning_sig.heuristic_strategy)
+				path := search_strategy.search (start_node, goal_node, path_planning_sig.edge_cost_strategy, path_planning_sig.heuristic_strategy)
+
 				path_publisher.publish_path (path, path_planning_sig.frame)
 
 				path_planning_sig.processed_start_point
@@ -123,17 +125,9 @@ feature {PATH_PLANNING_BEHAVIOUR} -- Execute algorithm
 				create start_point.make_from_separate (sp)
 				create goal_point.make_from_separate (gp)
 
---				if path_planning_sig.bfs then
---					open_set := create {LINKED_QUEUE [LABELED_NODE]}.make
---				elseif path_planning_sig.dfs then
---					open_set := create {LINKED_STACK [LABELED_NODE]}.make
---				elseif path_planning_sig.dijkstra then
---					open_set := create {HEAP_PRIORITY_QUEUE [LABELED_NODE]}.make (gw.grid.nodes.count)
---				end
-
 				start_node := gw.grid.node_at (((start_point.x - map.state.info.origin.position.x) / map.state.info.resolution).rounded, ((start_point.y - map.state.info.origin.position.y) / map.state.info.resolution).rounded, 1)
 				goal_node := gw.grid.node_at (((goal_point.x - map.state.info.origin.position.x) / map.state.info.resolution).rounded, ((goal_point.y - map.state.info.origin.position.y) / map.state.info.resolution).rounded, 1)
-				path := search_algorithm.search (start_node, goal_node, path_planning_sig.edge_cost_strategy, path_planning_sig.heuristic_strategy)
+				path := search_strategy.search (start_node, goal_node, path_planning_sig.edge_cost_strategy, path_planning_sig.heuristic_strategy)
 				path_publisher.publish_path (path, path_planning_sig.frame)
 
 				path_planning_sig.processed_start_point
@@ -147,8 +141,7 @@ feature {NONE} -- Implementation
 	grid_wrapper: detachable GRID_FROM_MAP
 			-- Grid realization from the map msg.
 
-	search_algorithm: LABEL_CORRECTING_GRAPH_SEARCH
-			-- Search algorithm to execute.
-
+	search_strategy: A_STAR -- REMOVE THIS TODO
+			-- Search strategy
 end
 

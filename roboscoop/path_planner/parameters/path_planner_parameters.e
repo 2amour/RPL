@@ -14,15 +14,13 @@ create
 
 feature {NONE} -- Initialization
 
-	make_with_attributes (a_frame_id: STRING_8; a_edge_cost, a_heuristic_cost: COST_HEURISTIC; is_bfs, is_dfs, is_dijkstra: BOOLEAN)
+	make_with_attributes (a_frame_id: STRING_8; a_search_strategy: LABEL_CORRECTING_GRAPH_SEARCH_STRATEGY; a_edge_cost, a_heuristic_cost: COST_HEURISTIC)
 			-- Create `Current' and assign given attributes.
 		do
 			frame_id := a_frame_id
+			search_strategy := a_search_strategy
 			edge_cost := a_edge_cost
 			heuristic_cost := a_heuristic_cost
-			bfs := is_bfs
-			dfs := is_dfs
-			dijkstra := is_dijkstra
 		end
 
 feature {ANY} -- Acces
@@ -36,13 +34,7 @@ feature {ANY} -- Acces
 	heuristic_cost: COST_HEURISTIC
 			-- Heuristic cost function.
 
-	bfs: BOOLEAN
-			-- Breadth-first-search strategy.
-
-	dfs: BOOLEAN
-			-- Depth-first-search strategy.
-
-	dijkstra: BOOLEAN
-			-- Best-first-search strategy.
+	search_strategy: LABEL_CORRECTING_GRAPH_SEARCH_STRATEGY
+			-- Label correcting search strateyg.
 
 end
