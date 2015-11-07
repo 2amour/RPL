@@ -21,13 +21,17 @@ feature {NONE} -- Initialize
 		do
 			map := "/map"
 			path := "/path_planner/path"
+			start := "/path_planner/start"
+			goal := "/path_planner/goal"
 		end
 
-	make_with_attributes (a_map, a_path: STRING_8)
+	make_with_attributes (a_map, a_path, a_start, a_goal: STRING_8)
 			-- Create `Current' and assign given attributes.
 		do
 			map := a_map
 			path := a_path
+			start := a_start
+			goal := a_goal
 		end
 
 
@@ -38,5 +42,11 @@ feature {ANY} -- Access
 
 	path: STRING_8
 			-- topic where path must be published.
+
+	start: STRING_8
+			-- topic where start position must be read.
+
+	goal: STRING_8
+			-- topic where goal position must be read.
 
 end

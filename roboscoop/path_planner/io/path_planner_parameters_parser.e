@@ -23,7 +23,12 @@ feature {ANY} -- Acces.
 			file: PLAIN_TEXT_FILE
 			key: STRING
 		do
-
+			frame_id := ""
+			edge_cost := create {ZERO_HEURISTIC}
+			heuristic_cost := create {ZERO_HEURISTIC}
+			bfs := False dfs := False dijkstra := True
+			edge_key := "" heuristic_key := "" search_key:= ""
+			
 			create file.make_open_read (file_path)
 			from
 				file.start

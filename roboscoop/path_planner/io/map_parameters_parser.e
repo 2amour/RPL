@@ -22,7 +22,7 @@ feature {ANY} -- Acces.
 			file: PLAIN_TEXT_FILE
 			key: STRING
 		do
-
+			connectivity := create {FULL_CONNECTIVITY_STRATEGY}
 			create file.make_open_read (file_path)
 			from
 				file.start

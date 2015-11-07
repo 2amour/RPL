@@ -15,13 +15,15 @@ feature {ANY} -- Access.
 	parse_file (file_path: STRING): PATH_PLANNER_TOPICS_PARAMETERS
 			-- Parse file with path `file_path'.
 		local
-			map, path: STRING_8
+			map, path, start, goal: STRING_8
 			file: PLAIN_TEXT_FILE
 			key: STRING
 		do
 			map := ""
 			path := ""
-
+			start := ""
+			goal := ""
+			
 			create file.make_open_read (file_path)
 			from
 				file.start
@@ -37,13 +39,19 @@ feature {ANY} -- Access.
 				elseif key.is_equal("path:") then
 					file.read_word_thread_aware
 					create path.make_from_string (file.last_string)
+				elseif key.is_equal("start:") then
+					file.read_word_thread_aware
+					create start.make_from_string (file.last_string)
+				elseif key.is_equal("goal:") then
+					file.read_word_thread_aware
+					create goal.make_from_string (file.last_string)
 				elseif not key.is_empty then
 					io.putstring ("Parser error while parsing file '" + file_path + "': Key '" + key + "' not recognized%N")
 				end
 			end
 			file.close
 
-			Result := create {PATH_PLANNER_TOPICS_PARAMETERS}.make_with_attributes (map, path)
+			Result := create {PATH_PLANNER_TOPICS_PARAMETERS}.make_with_attributes (map, path, start, goal)
 		end
 
 end
