@@ -54,7 +54,12 @@ feature {NONE} -- Initialization.
 			end
 		end
 
-feature -- Access.
+feature -- Constants
+
+	angle_between_front_sensors: REAL_64 = 0.3927
+
+feature -- Access
+
 	transforms: ARRAY[TRANSFORM_2D]
 
 	is_obstacle: BOOLEAN
@@ -146,7 +151,7 @@ feature -- Access.
 	is_front_sensor (a_index: INTEGER): BOOLEAN
 			-- <Precursor>
 		do
-			Result := a_index = 3
+			Result := a_index = 2 or a_index = 3 or a_index = 4
 		end
 
 	hit_point_front (a_sensor_index: INTEGER): VECTOR_3D_MSG
@@ -394,5 +399,67 @@ feature -- Access.
 			end
 		end
 
+	get_safe_point_in_direction (orientation: REAL_64): POINT_2D
+			-- Return a safe relative point in given relative orientation.
+		local
+			safe: BOOLEAN
+			shortest_separation, angle_separation: REAL_64
+			closest_sensor_max_range: REAL_64
+			safe_point: POINT_2D
+			i: INTEGER
+		do
+			safe := True
+			shortest_separation := {REAL_64}.positive_infinity
+			from
+				i := 1
+			until
+				i > 5
+			loop
+				angle_separation := {DOUBLE_MATH}.dabs (transforms[i].get_heading - orientation)
+				if angle_separation < 2*angle_between_front_sensors then
+					safe := safe and not sensors[i].is_valid_range
+					if safe and angle_separation < shortest_separation then
+						shortest_separation := angle_separation
+						closest_sensor_max_range := sensors[i].max_range
+					end
+				end
+				i := i + 1
+			end
+			if safe then
+				safe_point := create {POINT_2D}.make_with_coordinates (closest_sensor_max_range*{DOUBLE_MATH}.cosine (orientation),
+																		closest_sensor_max_range*{DOUBLE_MATH}.sine (orientation))
+			else
+				safe_point := create {POINT_2D}.make
+			end
+			Result := safe_point
+		end
 
+	get_closest_safe_point_in_front (target: separate POINT_2D): POINT_2D
+			-- Return the closest point to target which is safe in front of the robot.
+		local
+			candidate: POINT_2D
+			candidate_distance: REAL_64
+			closest_point: POINT_2D
+			minimum_distance: REAL_64
+			i: INTEGER
+		do
+			create closest_point.make
+			minimum_distance := {REAL_64}.positive_infinity
+			from
+				i := sensors.lower
+			until
+				i > sensors.upper
+			loop
+				if is_front_sensor (i) then
+					candidate := get_safe_point_in_direction (transforms[i].get_heading)
+					candidate_distance := candidate.get_euclidean_distance (target)
+					if candidate_distance < minimum_distance then
+						minimum_distance := candidate_distance
+						closest_point := candidate
+					end
+				end
+				i := i + 1
+			end
+			Result := closest_point
+		end
 end
