@@ -18,6 +18,8 @@ feature {NONE} -- Initialization
 	make_with_attributes (param_bag: separate PATH_PLANNER_PARAMETERS_BAG)
 			-- Create Current with signaler.
 		do
+			create start_signaler.make_with_topic (param_bag.path_planner_topics.start)
+			create goal_signaler.make_with_topic (param_bag.path_planner_topics.goal)
 			create map_signaler.make_with_topic (param_bag.path_planner_topics.map)
 			create path_publisher.make_with_topic (param_bag.path_planner_topics.path)
 			create stop_signaler.make
@@ -31,11 +33,14 @@ feature -- Access
 	start
 			-- Start the behaviour.
 		local
-			a: separate PATH_PLANNING_CONTROLLER
+			a, b, c, d: separate PATH_PLANNING_CONTROLLER
 		do
 			create a.make (stop_signaler)
+			create b.make (stop_signaler)
+			create c.make (stop_signaler)
+			create d.make (stop_signaler)
 			sep_stop (stop_signaler, False)
-			sep_start (a, path_planning_signaler, map_parameters_signaler)
+			sep_start (a, b, c, d)
 		end
 
 	stop
@@ -45,6 +50,12 @@ feature -- Access
 		end
 
 feature {NONE} -- Implementation
+
+	start_signaler: separate POINT_SIGNALER
+			-- Signaler of the start position.
+
+	goal_signaler: separate POINT_SIGNALER
+			-- Signaler of the goal position.
 
 	path_planning_signaler: separate PATH_PLANNING_SIGNALER
 			-- Signaler with path planning algorithm states.
@@ -61,10 +72,13 @@ feature {NONE} -- Implementation
 	stop_signaler: separate STOP_SIGNALER
 			-- Signaler for stopping the behaviour.
 
-	sep_start (a: separate PATH_PLANNING_CONTROLLER; path_plan_sig: separate PATH_PLANNING_SIGNALER; map_params_sig: separate MAP_PARAMETERS_SIGNALER)
+	sep_start (a, b, c, d: separate PATH_PLANNING_CONTROLLER)
 			-- Start controllers asynchronously.
 		do
-			a.search (map_signaler, map_params_sig, path_planning_signaler, path_publisher)
+			a.search (map_signaler, map_parameters_signaler, path_planning_signaler, path_publisher)
+			b.repeat_until_stop_requested (agent b.update_start_point (start_signaler, path_planning_signaler))
+			c.repeat_until_stop_requested (agent c.update_goal_point (goal_signaler, path_planning_signaler))
+			d.repeat_until_stop_requested (agent d.update_map (map_signaler, map_parameters_signaler))
 		end
 
 	sep_stop (s_sig: separate STOP_SIGNALER; val: BOOLEAN)
