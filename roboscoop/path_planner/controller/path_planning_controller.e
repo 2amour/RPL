@@ -36,7 +36,7 @@ feature {PATH_PLANNING_BEHAVIOUR} -- Execute algorithm
 	search (map: separate OCCUPANCY_GRID_SIGNALER; map_params_sig: separate MAP_PARAMETERS_SIGNALER; path_planning_sig: separate PATH_PLANNING_SIGNALER; path_publisher: separate PATH_PUBLISHER)
 			-- Apply search strategy
 		require
-			map.state.info.resolution > 0
+			path_planning_sig.is_search_requested
 		local
 			search_algorithm: LABEL_CORRECTING_GRAPH_SEARCH
 			start: SPATIAL_GRAPH_NODE
@@ -71,14 +71,12 @@ feature {PATH_PLANNING_BEHAVIOUR} -- Execute algorithm
 
 			create search_algorithm.make_with_graph (grid_wrapper.grid)
 
-			start := grid_wrapper.grid.node_at (((path_planning_sig.start_point.x - map.state.info.origin.position.x) / map.state.info.resolution).ceiling, ((path_planning_sig.start_point.y - map.state.info.origin.position.y) / map.state.info.resolution).ceiling, 1)
-			goal := grid_wrapper.grid.node_at (((path_planning_sig.goal_point.x - map.state.info.origin.position.x) / map.state.info.resolution).ceiling, ((path_planning_sig.goal_point.y - map.state.info.origin.position.y) / map.state.info.resolution).ceiling, 1)
+			start := grid_wrapper.grid.node_at (((path_planning_sig.start_point.x - map.state.info.origin.position.x) / map.state.info.resolution).rounded, ((path_planning_sig.start_point.y - map.state.info.origin.position.y) / map.state.info.resolution).rounded, 1)
+			goal := grid_wrapper.grid.node_at (((path_planning_sig.goal_point.x - map.state.info.origin.position.x) / map.state.info.resolution).rounded, ((path_planning_sig.goal_point.y - map.state.info.origin.position.y) / map.state.info.resolution).rounded, 1)
 			path := search_algorithm.search (start, goal, path_planning_sig.edge_cost_strategy, path_planning_sig.heuristic_strategy, open_set)
 			path_publisher.publish_path (path, path_planning_sig.frame)
 
-			separate stop_signaler as s_sig do
-				s_sig.set_stop_requested (True)
-			end
+			path_planning_sig.request_search (False)
 		end
 
 feature {NONE} -- Implementation
