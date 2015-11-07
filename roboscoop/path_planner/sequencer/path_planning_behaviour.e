@@ -75,7 +75,7 @@ feature {NONE} -- Implementation
 	sep_start (a, b, c, d: separate PATH_PLANNING_CONTROLLER)
 			-- Start controllers asynchronously.
 		do
-			a.search (map_signaler, map_parameters_signaler, path_planning_signaler, path_publisher)
+			a.repeat_until_stop_requested (agent a.search (map_signaler, map_parameters_signaler, path_planning_signaler, path_publisher))
 			b.repeat_until_stop_requested (agent b.update_start_point (start_signaler, path_planning_signaler))
 			c.repeat_until_stop_requested (agent c.update_goal_point (goal_signaler, path_planning_signaler))
 			d.repeat_until_stop_requested (agent d.update_map (map_signaler, map_parameters_signaler))

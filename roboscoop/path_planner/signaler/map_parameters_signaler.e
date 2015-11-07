@@ -20,6 +20,7 @@ feature {NONE} -- Initialization
 			connectivity_strategy := a_connectivity
 			timestamp := 0
 			is_changed := False
+			is_created := False
 		end
 
 feature {ANY} -- Access
@@ -35,6 +36,9 @@ feature {ANY} -- Access
 
 	connectivity_strategy: separate GRID_CONNECTIVITY_STRATEGY
 			-- Grid connectivity used.
+
+	is_created: BOOLEAN
+			-- Has the map been initialized.
 
 	is_changed: BOOLEAN
 			-- Has the map changed?
@@ -52,6 +56,12 @@ feature {ANY} -- Access
 			-- Set is_changed to `a_val'.
 		do
 			is_changed := a_val
+		end
+
+	set_created (a_val: BOOLEAN)
+			-- Set is_created to `a_val'.
+		do
+			is_created := a_val
 		end
 
 end

@@ -31,24 +31,17 @@ feature {ANY} -- Access
 			loop
 				current_node := open.item
 				open.remove
-				if not cost.has (current_node.node) then
-					across
-						current_node.node.neighbours as neighbour
-					loop
-						new_cost := cost.at (current_node.node) + edge_cost.cost (current_node.node, neighbour.item)
-						if ((not cost.has (goal_node)) or new_cost + heuristic.cost (neighbour.item, goal_node) < cost.at (goal_node)) and
-						   ((not cost.has (neighbour.item)) or new_cost < cost.at (neighbour.item)) then
-							cost.force (new_cost, neighbour.item)
-							path.force (current_node.node, neighbour.item)
-							new_visited_node := create {LABELED_NODE}.make_with_node (neighbour.item)
-							new_visited_node.set_label (new_cost + heuristic.cost (neighbour.item, goal_node))
-							open.put (new_visited_node)
-						end
-						debug
-							if neighbour.item ~ goal_node then
-								io.put_string ("Goal Found!%N")
-							end
-						end
+				across
+					current_node.node.neighbours as neighbour
+				loop
+					new_cost := cost.at (current_node.node) + edge_cost.cost (current_node.node, neighbour.item)
+					if ((not cost.has (goal_node)) or new_cost + heuristic.cost (neighbour.item, goal_node) < cost.at (goal_node)) and
+					   ((not cost.has (neighbour.item)) or new_cost < cost.at (neighbour.item)) then
+						cost.force (new_cost, neighbour.item)
+						path.force (current_node.node, neighbour.item)
+						new_visited_node := create {LABELED_NODE}.make_with_node (neighbour.item)
+						new_visited_node.set_label (new_cost + heuristic.cost (neighbour.item, goal_node))
+						open.put (new_visited_node)
 					end
 				end
 			end
