@@ -29,7 +29,7 @@ feature {PATH_PLANNING_BEHAVIOUR} -- Execute algorithm
 			map.state.header.timestamp > map_params_sig.timestamp
 		do
 			map.inflate (map_params_sig.inflation)
-			create grid_wrapper.make_with_connectivity (map, map_params_sig)
+			create grid_wrapper.make_with_connectivity (map, map_params_sig.connectivity_strategy, map_params_sig.block_width, map_params_sig.block_height)
 			map_params_sig.set_timestamp(map.state.header.timestamp)
 		end
 

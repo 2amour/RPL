@@ -11,14 +11,14 @@ create
 
 feature {NONE} -- Initialization.
 
-	make_with_connectivity (map: separate OCCUPANCY_GRID_SIGNALER; map_params_sig: separate MAP_PARAMETERS_SIGNALER)
+	make_with_connectivity (map: separate OCCUPANCY_GRID_SIGNALER; connectivity_strategy: separate GRID_CONNECTIVITY_STRATEGY; block_width, block_height: INTEGER_32)
 			-- Make `Current's grid from a map message and a connectivity strategy.
 		local
 			ix, iy, ixx, iyy: INTEGER_32
 			idx: INTEGER_32
 			resolution: REAL_64
 			width, height: REAL_64
-			block_width, block_height: INTEGER_32
+
 			n_pixels_x, n_pixels_y: INTEGER_32
 			n_blocks_x, n_blocks_y: INTEGER_32
 			block_occupancy: INTEGER_32
@@ -29,11 +29,8 @@ feature {NONE} -- Initialization.
 			width := resolution * n_pixels_x
 			height := resolution * n_pixels_y
 
-			block_width := map_params_sig.block_width
-			block_height := map_params_sig.block_height
-
-			n_blocks_x := (n_pixels_x / map_params_sig.block_width).floor
-			n_blocks_y := (n_pixels_y / map_params_sig.block_height).floor
+			n_blocks_x := (n_pixels_x / block_width).floor
+			n_blocks_y := (n_pixels_y / block_height).floor
 
 			create grid.make_2d (n_blocks_x,
 								n_blocks_y,
@@ -41,7 +38,7 @@ feature {NONE} -- Initialization.
 								map.state.info.origin.position.x + width - (width/n_blocks_x)/2,
 								map.state.info.origin.position.y + (height/n_blocks_y)/2,
 								map.state.info.origin.position.y + height - (height/n_blocks_y)/2,
-								map_params_sig.connectivity_strategy)
+								connectivity_strategy)
 
 			from iy := 1 until iy > n_blocks_y
 			loop
