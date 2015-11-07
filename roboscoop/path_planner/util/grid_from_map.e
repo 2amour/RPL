@@ -43,7 +43,6 @@ feature {NONE} -- Initialization.
 								map.state.info.origin.position.y + height - (height/n_blocks_y)/2,
 								map_params_sig.connectivity_strategy)
 
-			map.inflate (map_params_sig.inflation) TODO INFLATE FROM OUTSIDE!
 			from iy := 1 until iy > n_blocks_y
 			loop
 				from ix := 1 until ix > n_blocks_x

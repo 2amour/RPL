@@ -28,6 +28,7 @@ feature {PATH_PLANNING_BEHAVIOUR} -- Execute algorithm
 		require
 			map.state.header.timestamp > map_params_sig.timestamp
 		do
+			map.inflate (map_params_sig.inflation)
 			create grid_wrapper.make_with_connectivity (map, map_params_sig)
 			map_params_sig.set_timestamp(map.state.header.timestamp)
 		end
