@@ -1,3 +1,4 @@
 map:				/map
-path:				/path_planner/path"
-marker:				/visualization_marker"
+path:				/path_planner/path
+start:				/path_planner/start
+goal:				/path_planner/goal
