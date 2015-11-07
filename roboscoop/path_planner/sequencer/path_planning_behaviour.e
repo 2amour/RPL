@@ -23,7 +23,7 @@ feature {NONE} -- Initialization
 			create stop_signaler.make
 
 			create path_planning_signaler.make_with_attributes (param_bag.path_planner_parameters.edge_cost, param_bag.path_planner_parameters.heuristic_cost, param_bag.path_planner_parameters.bfs, param_bag.path_planner_parameters.dfs, param_bag.path_planner_parameters.dijkstra, param_bag.path_planner_parameters.frame_id)
-			create map_parameters_signaler.make_with_attributes (param_bag.map_parameters.blocking, param_bag.map_parameters.inflation, param_bag.map_parameters.connectivity_strategy)
+			create map_parameters_signaler.make_with_attributes (param_bag.map_parameters.block_width, param_bag.map_parameters.block_height, param_bag.map_parameters.inflation, param_bag.map_parameters.connectivity_strategy)
 		end
 
 feature -- Access

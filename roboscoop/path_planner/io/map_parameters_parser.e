@@ -16,7 +16,7 @@ feature {ANY} -- Acces.
 	parse_file (file_path: STRING): MAP_PARAMETERS
 			-- Parse file with path `file_path'.
 		local
-			blocking: INTEGER_32
+			block_height, block_width: INTEGER_32
 			inflation: REAL_64
 			connectivity: GRID_CONNECTIVITY_STRATEGY
 			file: PLAIN_TEXT_FILE
@@ -32,9 +32,12 @@ feature {ANY} -- Acces.
 				file.read_word
 				create key.make_from_string (file.last_string)
 
-				if key.is_equal ("blocking:") then
+				if key.is_equal ("block_height:") then
 					file.read_integer
-					blocking := file.last_integer
+					block_height := file.last_integer
+				elseif key.is_equal ("block_width:") then
+					file.read_integer
+					block_width := file.last_integer
 				elseif key.is_equal ("inflation:") then
 					file.read_double
 					inflation := file.last_double
@@ -54,7 +57,7 @@ feature {ANY} -- Acces.
 			end
 			file.close
 
-			Result := create {MAP_PARAMETERS}.make_with_attributes (blocking, inflation, connectivity)
+			Result := create {MAP_PARAMETERS}.make_with_attributes (block_width, block_height, inflation, connectivity)
 		end
 
 end

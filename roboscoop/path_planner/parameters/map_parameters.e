@@ -14,18 +14,22 @@ create
 
 feature {NONE} -- Initialization
 
-	make_with_attributes (a_blocking: INTEGER_32; a_inflation: REAL_64; a_connectivity: GRID_CONNECTIVITY_STRATEGY)
+	make_with_attributes (a_blocking_width, a_blocking_height: INTEGER_32; a_inflation: REAL_64; a_connectivity: GRID_CONNECTIVITY_STRATEGY)
 			-- Create `Current' and assign given attributes.
 		do
-			blocking := a_blocking
+			block_width := a_blocking_width
+			block_height := a_blocking_height
 			inflation := a_inflation
 			connectivity_strategy := a_connectivity
 		end
 
 feature {ANY} -- Acces
 
-	blocking: INTEGER_32
-			-- Grid blocking for enhanced speed
+	block_width: INTEGER_32
+			-- width of the block in pixels.
+
+	block_height: INTEGER_32
+			-- height of the block in pixels.
 
 	inflation: REAL_64
 			-- Inflation distance for map boundaries
