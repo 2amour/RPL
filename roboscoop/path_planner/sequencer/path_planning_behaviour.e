@@ -33,14 +33,16 @@ feature -- Access
 	start
 			-- Start the behaviour.
 		local
-			a, b, c, d: separate PATH_PLANNING_CONTROLLER
+			a, b, c, d, e, f: separate PATH_PLANNING_CONTROLLER
 		do
 			create a.make (stop_signaler)
 			create b.make (stop_signaler)
 			create c.make (stop_signaler)
 			create d.make (stop_signaler)
+			create e.make (stop_signaler)
+			--create f.make (stop_signaler)
 			sep_stop (stop_signaler, False)
-			sep_start (a, b, c, d)
+			sep_start (a, b, c, d, e)
 		end
 
 	stop
@@ -72,13 +74,15 @@ feature {NONE} -- Implementation
 	stop_signaler: separate STOP_SIGNALER
 			-- Signaler for stopping the behaviour.
 
-	sep_start (a, b, c, d: separate PATH_PLANNING_CONTROLLER)
+	sep_start (a, b, c, d, e: separate PATH_PLANNING_CONTROLLER)
 			-- Start controllers asynchronously.
 		do
 			a.repeat_until_stop_requested (agent a.search (map_signaler, map_parameters_signaler, path_planning_signaler, path_publisher))
-			b.repeat_until_stop_requested (agent b.update_start_point (start_signaler, path_planning_signaler))
-			c.repeat_until_stop_requested (agent c.update_goal_point (goal_signaler, path_planning_signaler))
-			d.repeat_until_stop_requested (agent d.update_map (map_signaler, map_parameters_signaler))
+			b.repeat_until_stop_requested (agent b.update_search (map_signaler, map_parameters_signaler, path_planning_signaler, path_publisher))
+
+			c.repeat_until_stop_requested (agent c.update_start_point (start_signaler, path_planning_signaler))
+			d.repeat_until_stop_requested (agent d.update_goal_point (goal_signaler, path_planning_signaler))
+			e.repeat_until_stop_requested (agent e.update_map (map_signaler, map_parameters_signaler))
 		end
 
 	sep_stop (s_sig: separate STOP_SIGNALER; val: BOOLEAN)

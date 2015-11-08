@@ -16,14 +16,19 @@ feature {NONE} -- Initialization
 		do
 			create publisher.make_with_topic (topic_name)
 			publisher.advertize (1, True)
+			has_published := False
 		end
 
 feature {ANY} -- Access
+
+	has_published: BOOLEAN
+			-- Is the publisher used
 
 	publish_point (a_point: separate POINT)
 			-- Publishing path.
 		do
 			publisher.publish (a_point.get_msg)
+			has_published := True
 		end
 
 feature {NONE} -- Implementation

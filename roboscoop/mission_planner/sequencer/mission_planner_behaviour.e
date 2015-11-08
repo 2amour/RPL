@@ -11,7 +11,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make_with_attributes (parameters_bag: separate MISSION_PLANNER_PARAMETERS_BAG)
+	make_with_attributes (parameters_bag: MISSION_PLANNER_PARAMETERS_BAG)
 			-- Create `Current' with attributes.
 		do
 			create mission_signaler.make_with_attributes (parameters_bag.mission_planner_parameters.way_points, parameters_bag.mission_planner_parameters.way_point_threshold)
@@ -22,6 +22,7 @@ feature {NONE} -- Initialization
 			create goal_publisher.make_with_topic (parameters_bag.mission_planner_topics.path_planner_goal)
 			create target_publisher.make_with_topic (parameters_bag.mission_planner_topics.target)
 
+			--create target_path_publisher.make_with_topic("/robot_controller/path")
 			create stop_signaler.make
 		end
 
@@ -30,15 +31,13 @@ feature {ANY} -- Access
 	start
 			-- Start the behaviour.
 		local
-			a, b: separate ROBOT_TARGET_CONTROLLER
-			c, d: separate PATH_PLANNING_CONTROLLER
+			a, b, c: separate MISSION_PLANNER_CONTROLLER
 		do
 			create a.make (stop_signaler)
 			create b.make (stop_signaler)
 			create c.make (stop_signaler)
-			create d.make (stop_signaler)
 			sep_stop (stop_signaler, False)
-			sep_start (a, b, c, d)
+			sep_start (a, b, c)
 		end
 
 	stop
@@ -55,7 +54,7 @@ feature {NONE} -- Implementation
 	odometry_signaler: separate ODOMETRY_SIGNALER
 			-- Current state of the odometry.
 
-	path_signaler: separate PATH_SIGNALER
+	path_signaler: separate PATH_SIGNALER_WITH_FLAG
 			-- Current state of the path.
 
 	start_publisher: separate POINT_PUBLISHER
@@ -70,13 +69,12 @@ feature {NONE} -- Implementation
 	stop_signaler: separate STOP_SIGNALER
 			-- Signaler for stopping the behaviour.
 
-	sep_start (a, b: separate ROBOT_TARGET_CONTROLLER; c, d: separate PATH_PLANNING_CONTROLLER)
+	sep_start (a, b, c: separate MISSION_PLANNER_CONTROLLER)
 			-- Start controllers asynchronously.
 		do
-			a.send_target (mission_signaler, target_publisher)
-			b.repeat_until_stop_requested (agent b.update_target(odometry_signaler, mission_signaler, target_publisher))
-			c.repeat_until_stop_requested (agent c.update_path(path_signaler, mission_signaler))
-			d.repeat_until_stop_requested (agent d.request_path(mission_signaler, start_publisher, goal_publisher))
+			b.repeat_until_stop_requested (agent b.request_path(mission_signaler, start_publisher, goal_publisher))
+			c.repeat_until_stop_requested (agent c.update_path(mission_signaler, path_signaler))
+			a.repeat_until_stop_requested (agent a.update_target(odometry_signaler, mission_signaler, target_publisher))
 		end
 
 	sep_stop (s_sig: separate STOP_SIGNALER; val: BOOLEAN)
