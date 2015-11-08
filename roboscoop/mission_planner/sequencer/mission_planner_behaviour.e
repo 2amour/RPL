@@ -15,14 +15,17 @@ feature {NONE} -- Initialization
 			-- Create `Current' with attributes.
 		do
 			create mission_signaler.make_with_attributes (parameters_bag.mission_planner_parameters.way_points, parameters_bag.mission_planner_parameters.way_point_threshold)
+
+			create obstacle_signaler.make_with_topic (parameters_bag.mission_planner_topics.sensed_obstacle)
+			create map_signaler.make_with_topic (parameters_bag.mission_planner_topics.map)
 			create odometry_signaler.make_with_topic (parameters_bag.mission_planner_topics.odometry)
 			create path_signaler.make_with_topic (parameters_bag.mission_planner_topics.path)
 
 			create start_publisher.make_with_topic (parameters_bag.mission_planner_topics.path_planner_start)
 			create goal_publisher.make_with_topic (parameters_bag.mission_planner_topics.path_planner_goal)
 			create target_publisher.make_with_topic (parameters_bag.mission_planner_topics.target)
+			create map_publisher.make_with_topic (parameters_bag.mission_planner_topics.planner_map)
 
-			--create target_path_publisher.make_with_topic("/robot_controller/path")
 			create stop_signaler.make
 		end
 
@@ -31,13 +34,14 @@ feature {ANY} -- Access
 	start
 			-- Start the behaviour.
 		local
-			a, b, c: separate MISSION_PLANNER_CONTROLLER
+			a, b, c, d: separate MISSION_PLANNER_CONTROLLER
 		do
 			create a.make (stop_signaler)
 			create b.make (stop_signaler)
 			create c.make (stop_signaler)
+			create d.make (stop_signaler)
 			sep_stop (stop_signaler, False)
-			sep_start (a, b, c)
+			sep_start (a, b, c, d)
 		end
 
 	stop
@@ -50,6 +54,15 @@ feature {NONE} -- Implementation
 
 	mission_signaler: separate MISSION_PLANNER_SIGNALER
 			-- Mission signaler
+
+	obstacle_signaler: separate POINT_SIGNALER
+			-- Signaler with detected obstacles.
+
+	map_publisher: separate OCCUPANCY_GRID_PUBLISHER
+			-- Signaler with map data.
+
+	map_signaler: separate OCCUPANCY_GRID_SIGNALER
+			-- Signaler with map data.
 
 	odometry_signaler: separate ODOMETRY_SIGNALER
 			-- Current state of the odometry.
@@ -69,12 +82,13 @@ feature {NONE} -- Implementation
 	stop_signaler: separate STOP_SIGNALER
 			-- Signaler for stopping the behaviour.
 
-	sep_start (a, b, c: separate MISSION_PLANNER_CONTROLLER)
+	sep_start (a, b, c, d: separate MISSION_PLANNER_CONTROLLER)
 			-- Start controllers asynchronously.
 		do
-			b.repeat_until_stop_requested (agent b.request_path(mission_signaler, start_publisher, goal_publisher))
-			c.repeat_until_stop_requested (agent c.update_path(mission_signaler, path_signaler))
 			a.repeat_until_stop_requested (agent a.update_target(odometry_signaler, mission_signaler, target_publisher))
+			b.repeat_until_stop_requested (agent b.request_path(mission_signaler, obstacle_signaler, start_publisher, goal_publisher))
+			c.repeat_until_stop_requested (agent c.update_path(mission_signaler, path_signaler))
+			d.repeat_until_stop_requested (agent d.update_map (obstacle_signaler, map_signaler, map_publisher))
 		end
 
 	sep_stop (s_sig: separate STOP_SIGNALER; val: BOOLEAN)

@@ -24,6 +24,30 @@ feature {NONE} -- Initialization
 
 feature {MISSION_PLANNER_BEHAVIOUR} -- Execute algorithm
 
+	update_map (obstacle_sig: separate POINT_SIGNALER; map_sig: separate OCCUPANCY_GRID_SIGNALER; map_pub: separate OCCUPANCY_GRID_PUBLISHER)
+			-- update map from sensor measurements.
+		require
+			(obstacle_sig.is_new_val or not map_pub.has_published)
+			map_sig.state.info.resolution > 0
+		local
+			idx: INTEGER
+		do
+			if obstacle_sig.is_new_val then
+				idx := ((obstacle_sig.data.y - map_sig.state.info.origin.position.y) / map_sig.state.info.resolution).ceiling
+				idx := 1 + (idx-1) * map_sig.state.info.width.as_integer_32 + ((obstacle_sig.data.x - map_sig.state.info.origin.position.x) / map_sig.state.info.resolution).rounded
+
+				if map_sig.state.data.at (idx) < map_sig.occupancy_threshold then
+					map_sig.state.data.force( (2*map_sig.occupancy_threshold).as_integer_8, idx)
+				end
+			end
+
+			if not map_pub.has_published then
+				map_pub.publish_map (map_sig.state)
+			end
+
+			obstacle_sig.set_new_val (False)
+		end
+
 	update_target (odometry_sig: separate ODOMETRY_SIGNALER; mission_sig: separate MISSION_PLANNER_SIGNALER; target_pub: separate POINT_PUBLISHER)
 			-- update target of robot driver.
 		require
@@ -52,8 +76,6 @@ feature {MISSION_PLANNER_BEHAVIOUR} -- Execute algorithm
 			idx: INTEGER_32
 		do
 			path_sig.set_new_val (False)
-			io.put_string (mission_sig.timestamp.out + "%N")
-			io.put_string (path_sig.data.header.timestamp.out + "%N")
 
 			io.put_string ("Recieved path size: ")
 			io.put_string (path_sig.data.poses.count.out + "%N")
@@ -78,7 +100,6 @@ feature {MISSION_PLANNER_BEHAVIOUR} -- Execute algorithm
 			mission_sig.update_path (create {POINT}.make_from_msg (path_sig.data.poses[idx].pose.position))
 
 			io.put_string ("Processed path size: " + mission_sig.path.count.out + "%N")
-			mission_sig.set_timestamp (path_sig.data.header.timestamp)
 
 			if not mission_sig.way_points.islast then
 				mission_sig.request_path (True)
@@ -87,10 +108,11 @@ feature {MISSION_PLANNER_BEHAVIOUR} -- Execute algorithm
 			end
 		end
 
-	request_path (mission_sig: separate MISSION_PLANNER_SIGNALER; start_pub, goal_pub: separate POINT_PUBLISHER)
+	request_path (mission_sig: separate MISSION_PLANNER_SIGNALER; obstacle_sig: separate POINT_SIGNALER; start_pub, goal_pub: separate POINT_PUBLISHER)
 			-- request a new path to the path_planner.
 		require
 			mission_sig.is_path_requested
+			not obstacle_sig.is_new_val
 		local
 			current_idx: INTEGER_32
 		do

@@ -15,17 +15,21 @@ feature {ANY} -- Access.
 	parse_file (file_path: STRING): MISSION_PLANNER_TOPICS_PARAMETERS
 			-- Parse file with path `file_path'.
 		local
-			node_name, path, map, target, odometry, start, goal: STRING_8
+			node_name, path, map, target, odometry, obstacles, start, goal, planner_map: STRING_8
 			file: PLAIN_TEXT_FILE
 			key: STRING
 		do
 			node_name := ""
-			path := ""
+
 			map := ""
 			target := ""
 			odometry := ""
+			obstacles := ""
+
+			path := ""
 			start := ""
 			goal := ""
+			planner_map := ""
 
 			create file.make_open_read (file_path)
 			from
@@ -51,19 +55,25 @@ feature {ANY} -- Access.
 				elseif key.is_equal("odometry:") then
 					file.read_word_thread_aware
 					create odometry.make_from_string (file.last_string)
+				elseif key.is_equal("sensed_obstacles:") then
+					file.read_word_thread_aware
+					create obstacles.make_from_string (file.last_string)
 				elseif key.is_equal("start:") then
 					file.read_word_thread_aware
 					create start.make_from_string (file.last_string)
 				elseif key.is_equal("goal:") then
 					file.read_word_thread_aware
 					create goal.make_from_string (file.last_string)
+				elseif key.is_equal("planner_map:") then
+					file.read_word_thread_aware
+					create planner_map.make_from_string (file.last_string)
 				elseif not key.is_empty then
 					io.putstring ("Parser error while parsing file '" + file_path + "': Key '" + key + "' not recognized%N")
 				end
 			end
 			file.close
 
-			Result := create {MISSION_PLANNER_TOPICS_PARAMETERS}.make_with_attributes (node_name, path, map, target, odometry, start, goal)
+			Result := create {MISSION_PLANNER_TOPICS_PARAMETERS}.make_with_attributes (node_name, map, target, odometry, obstacles, path, start, goal, planner_map)
 		end
 
 end

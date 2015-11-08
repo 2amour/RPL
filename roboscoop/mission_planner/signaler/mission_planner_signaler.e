@@ -26,8 +26,6 @@ feature {NONE} -- Initialization
 			end
 			way_points.start
 
-			io.put_string (way_points.count.out + "%N")
-			timestamp := 1
 			goal_threshold := thresh
 			is_path_requested := True
 
@@ -47,21 +45,8 @@ feature {ANY} -- Access
 	path: ARRAYED_LIST [separate POINT]
 			-- Path of points to visit.
 
-	timestamp: REAL_64
-			-- Timestamp of last update.
-
 	goal_threshold: REAL_64
 			-- Threshold to switch way_points in path.
-
-	set_timestamp (time: REAL_64)
-			-- Set new timestamp
-		require
-			time > 0
-		do
-			timestamp := time
-		ensure
-			timestamp = time
-		end
 
 	reset_path
 			-- Update path of points.
