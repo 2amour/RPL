@@ -64,59 +64,59 @@ feature -- Access
 
 feature -- State
 
-	is_go_to_goal_pending: BOOLEAN
-			-- Has the state "go_to_goal" been handled by the algorithm?
+	is_go_to_goal_blocked: BOOLEAN
+			-- Is the state "go_to_goal" blocked?
 
-	is_follow_obstacle_pending: BOOLEAN
-			-- Has the state "follow_obstacle" been handled by the algorithm?
+	is_follow_obstacle_blocked: BOOLEAN
+			-- Is the state "follow_obstacle" blocked?
 
-	is_leave_obstacle_pending: BOOLEAN
-			-- Has the state "leave_obstacle" been handled by the algorithm?
+	is_leave_obstacle_blocked: BOOLEAN
+			-- Is the state "leave_obstacle" blocked?
 
-	is_reached_goal_pending: BOOLEAN
-			-- Has the state "reached_goal" been handled by the algorithm?
+	is_reached_goal_blocked: BOOLEAN
+			-- Is the state "reached_goal" blocked?
 
-	is_unreachable_goal_pending: BOOLEAN
-			-- Has the state "unreachable_goal" been handled by the algorithm?
+	is_unreachable_goal_blocked: BOOLEAN
+			-- Is the state "unreachable_goal" blocked?
 
-	set_is_go_to_goal_pending (a_val: BOOLEAN)
-			-- Set `is_go_to_goal_pending' value equal to `a_val'.
+	set_is_go_to_goal_blocked (a_val: BOOLEAN)
+			-- Set `is_go_to_goal_blocked' value equal to `a_val'.
 		do
-			is_go_to_goal_pending := a_val
+			is_go_to_goal_blocked := a_val
 		end
 
-	set_is_follow_obstacle_pending (a_val: BOOLEAN)
-			-- Set `is_follow_obstacle_pending' value equal to `a_val'.
+	set_is_follow_obstacle_blocked (a_val: BOOLEAN)
+			-- Set `is_follow_obstacle_blocked' value equal to `a_val'.
 		do
-			is_follow_obstacle_pending := a_val
+			is_follow_obstacle_blocked := a_val
 		end
 
-	set_is_leave_obstacle_pending (a_val: BOOLEAN)
-			-- Set `is_leave_obstacle_pending' value equal to `a_val'.
+	set_is_leave_obstacle_blocked (a_val: BOOLEAN)
+			-- Set `is_leave_obstacle_blocked' value equal to `a_val'.
 		do
-			is_leave_obstacle_pending := a_val
+			is_leave_obstacle_blocked := a_val
 		end
 
-	set_is_reached_goal_pending (a_val: BOOLEAN)
-			-- Set `is_reached_goal_pending' value equal to `a_val'.
+	set_is_reached_goal_blocked (a_val: BOOLEAN)
+			-- Set `is_reached_goal_blocked' value equal to `a_val'.
 		do
-			is_reached_goal_pending := a_val
+			is_reached_goal_blocked := a_val
 		end
 
-	set_is_unreachable_goal_pending (a_val: BOOLEAN)
-			-- Set `is_unreachable_goal_pending' value equal to `a_val'.
+	set_is_unreachable_goal_blocked (a_val: BOOLEAN)
+			-- Set `is_unreachable_goal_blocked' value equal to `a_val'.
 		do
-			is_unreachable_goal_pending := a_val
+			is_unreachable_goal_blocked := a_val
 		end
 
-	clear_all_pendings
-			-- Set all pending flags to False.
+	clear_all_blockeds
+			-- Set all blocked flags to False.
 		do
-			is_go_to_goal_pending := False
-			is_follow_obstacle_pending := False
-			is_leave_obstacle_pending := False
-			is_reached_goal_pending := False
-			is_unreachable_goal_pending := False
+			is_go_to_goal_blocked := False
+			is_follow_obstacle_blocked := False
+			is_leave_obstacle_blocked := False
+			is_reached_goal_blocked := False
+			is_unreachable_goal_blocked := False
 		end
 
 feature {TANGENT_BUG_BEHAVIOUR, TANGENT_BUG_CONTROLLER} -- Require check
@@ -145,13 +145,15 @@ feature {TANGENT_BUG_BEHAVIOUR, TANGENT_BUG_CONTROLLER} -- Require check
 			Result := goal.get_euclidean_distance (get_current_position (o_sig)) < point_reached_threshold
 		end
 
-	is_closer_safe_point_sensed (r_g: separate RANGE_GROUP): BOOLEAN
+	is_closer_safe_point_sensed (o_sig: separate ODOMETRY_SIGNALER; r_g: separate RANGE_GROUP): BOOLEAN
 			-- Whether there is a safe sensed point closer to the goal than minimum recorded distance.
 		local
 			safe_point: POINT_2D
+			transform: TRANSFORM_2D
 		do
-			create safe_point.make_from_separate (r_g.get_closest_safe_point_in_front (goal))
-			Result := safe_point.get_euclidean_distance (goal) < minimum_distance_to_goal -- TODO - cal? -  not (safe_point.get_x = 0 and safe_point.get_y = 0)
+			create transform.make_with_offsets (o_sig.x, o_sig.y, o_sig.theta)
+			safe_point :=  transform.project_to_parent (create {POINT_2D}.make_from_separate (r_g.get_closest_safe_point_in_front (goal)))
+			Result := safe_point.get_euclidean_distance (goal) < minimum_distance_to_goal -- TODO - safe point is not global coord but goal is  TODO - cal? -  not (safe_point.get_x = 0 and safe_point.get_y = 0)
         end
 
 	is_goal_unreachable (o_sig: separate ODOMETRY_SIGNALER): BOOLEAN
