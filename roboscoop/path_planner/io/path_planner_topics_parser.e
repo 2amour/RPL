@@ -15,15 +15,16 @@ feature {ANY} -- Access.
 	parse_file (file_path: STRING): PATH_PLANNER_TOPICS_PARAMETERS
 			-- Parse file with path `file_path'.
 		local
-			map, path, start, goal: STRING_8
+			node_name, map, path, start, goal: STRING_8
 			file: PLAIN_TEXT_FILE
 			key: STRING
 		do
+			node_name := ""
 			map := ""
 			path := ""
 			start := ""
 			goal := ""
-			
+
 			create file.make_open_read (file_path)
 			from
 				file.start
@@ -36,6 +37,9 @@ feature {ANY} -- Access.
 				if key.is_equal ("map:") then
 					file.read_word_thread_aware
 					create map.make_from_string (file.last_string)
+				elseif key.is_equal("node_name:") then
+					file.read_word_thread_aware
+					create node_name.make_from_string (file.last_string)
 				elseif key.is_equal("path:") then
 					file.read_word_thread_aware
 					create path.make_from_string (file.last_string)
@@ -51,7 +55,7 @@ feature {ANY} -- Access.
 			end
 			file.close
 
-			Result := create {PATH_PLANNER_TOPICS_PARAMETERS}.make_with_attributes (map, path, start, goal)
+			Result := create {PATH_PLANNER_TOPICS_PARAMETERS}.make_with_attributes (node_name, map, path, start, goal)
 		end
 
 end

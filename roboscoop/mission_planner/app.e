@@ -25,7 +25,7 @@ feature {NONE} -- Initialization
 			topic_parameters_parser: MISSION_PLANNER_TOPICS_PARSER
 			parameters_bag: MISSION_PLANNER_PARAMETERS_BAG
 
-			path_planner_node: separate ROBOSCOOP_NODE
+			path_planner_node: separate NAMED_ROBOSCOOP_NODE
 			ros_spinner: separate ROS_SPINNER
 			mission_behaviour: MISSION_PLANNER_BEHAVIOUR
 			mission_signaler: MISSION_PLANNER_SIGNALER
@@ -43,7 +43,7 @@ feature {NONE} -- Initialization
 			create parameters_bag.make_with_attributes (parameters, topic_parameters)
 
 				-- Initialize this application as a ROS node.
-			path_planner_node := (create {ROS_NODE_STARTER}).roboscoop_node
+			path_planner_node := (create {ROS_NAMED_NODE_STARTER}).roboscoop_node (parameters_bag.mission_planner_topics.node_name)
 			synchronize (path_planner_node)
 
 				-- Listen to ROS.

@@ -18,6 +18,7 @@ feature {NONE} -- Initialize
 	make_default
 			-- Make default
 		do
+			node_name := "mission_planner_node"
 			path := "/path"
 			map := "/map"
 			target := "/robot_controller/goal"
@@ -26,9 +27,10 @@ feature {NONE} -- Initialize
 			path_planner_goal := "/path_planner/goal"
 		end
 
-	make_with_attributes (a_path, a_map, a_target, a_odometry, a_start, a_goal: STRING_8)
+	make_with_attributes (a_name, a_path, a_map, a_target, a_odometry, a_start, a_goal: STRING_8)
 			-- Create `Current' and assign given attributes.
 		do
+			node_name := a_name
 			path := a_path
 			map := a_map
 			target := a_target
@@ -39,22 +41,25 @@ feature {NONE} -- Initialize
 
 feature {ANY} -- Constants
 
+	node_name: STRING_8
+			-- Name of node.
+
 	path: STRING_8
-			-- topic where path will be read.
+			-- Topic where path will be read.
 
 	map: STRING_8
-			-- map to be published.
+			-- Map to be published.
 
 	target: STRING_8
-			-- target goal for the driver.
+			-- Target goal for the driver.
 
 	odometry: STRING_8
-			-- odometry topic.
+			-- Odometry topic.
 
 	path_planner_start: STRING_8
-			-- start position for path_planner node.
+			-- Start position for path_planner node.
 
 	path_planner_goal: STRING_8
-			-- goal position for path_planner node.
+			-- Goal position for path_planner node.
 
 end

@@ -30,7 +30,7 @@ feature {NONE} -- Initialization
 			parameters_bag: PATH_PLANNER_PARAMETERS_BAG
 
 
-			path_planner_node: separate ROBOSCOOP_NODE
+			path_planner_node: separate NAMED_ROBOSCOOP_NODE
 			ros_spinner: separate ROS_SPINNER
 
 			path_planning_behaviour: PATH_PLANNING_BEHAVIOUR
@@ -55,7 +55,7 @@ feature {NONE} -- Initialization
 
 
 				-- Initialize this application as a ROS node.
-			path_planner_node := (create {ROS_NODE_STARTER}).roboscoop_node
+			path_planner_node := (create {ROS_NAMED_NODE_STARTER}).roboscoop_node (parameters_bag.path_planner_topics.node_name)
 			synchronize (path_planner_node)
 
 				-- Listen to ROS.

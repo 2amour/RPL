@@ -1,6 +1,7 @@
-path:						/path
-map:						/map
-target:						/robot_controller/target
-odometry:					/robot_controller/odometry
-start:						/path_planner/start
-goal:						/path_planner/goal
+node_name:			mission_planner_node
+path:				/path_planner/path
+map:				/map
+target:				/robot_controller/target
+odometry:			/robot_controller/odometry
+start:				/path_planner/start
+goal:				/path_planner/goal

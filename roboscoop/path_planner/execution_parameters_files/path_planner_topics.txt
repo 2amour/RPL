@@ -1,3 +1,4 @@
+node_name:			path_planning_node
 map:				/map
 path:				/path_planner/path
 start:				/path_planner/start

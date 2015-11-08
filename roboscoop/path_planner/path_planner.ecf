@@ -26,6 +26,7 @@
 			<cluster name="actuator" location=".\actuator\"/>
 			<cluster name="parameters" location=".\parameters\"/>
 			<cluster name="types" location=".\types\"/>
+			<cluster name="ros" location=".\ros\"/>
 		</cluster>
 	</target>
 </system>
