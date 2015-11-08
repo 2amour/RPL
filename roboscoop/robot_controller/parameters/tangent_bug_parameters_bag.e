@@ -25,6 +25,7 @@ feature {NONE} -- Implementation
 
 feature -- Access
 
+
 	goal_parameters: GOAL_PARAMETERS
 			-- Tangent bug goal parameters.
 

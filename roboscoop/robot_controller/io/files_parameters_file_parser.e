@@ -29,6 +29,9 @@ feature -- Access
 				if key.is_equal ("Goal_parameters_file_path") then
 					file.read_word
 					files_parameters.set_goal_parameters_file_path (file.last_string)
+				elseif key.is_equal ("ROS_topics_file_path") then
+					file.read_word
+					files_parameters.set_ros_topics_file_path (file.last_string)
 				elseif key.is_equal ("PID_parameters_file_path") then
 					file.read_word
 					files_parameters.set_pid_parameters_file_path (file.last_string)
