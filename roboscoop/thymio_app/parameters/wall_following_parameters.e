@@ -20,13 +20,14 @@ feature {NONE} -- Implementation
 			create safe_outer_corner_turn_offset.make
 		end
 
-	make_with_attributes (wall_following_desired_wall_distance: REAL_64; wall_following_outer_corner_angular_velocity: REAL_64;
+	make_with_attributes (wall_following_desired_wall_distance: REAL_64; wall_following_outer_corner_angular_velocity: REAL_64; wall_following_linear_velocity: REAL_64;
 							wall_following_safe_outer_corner_turn_offset: POINT_2D; wall_following_safe_outer_corner_turn_offset_threshold: REAL_64;
 							wall_following_safe_leaving_wall_vertical_distance: REAL_64)
 			-- Create wall following parameters object with attributes.
 		do
 			desired_wall_distance := wall_following_desired_wall_distance
 			outer_corner_angular_velocity := wall_following_outer_corner_angular_velocity
+			linear_velocity := wall_following_linear_velocity
 			safe_outer_corner_turn_offset := wall_following_safe_outer_corner_turn_offset
 			safe_outer_corner_turn_offset_threshold := wall_following_safe_outer_corner_turn_offset_threshold
 			safe_leaving_wall_vertical_distance := wall_following_safe_leaving_wall_vertical_distance
@@ -37,6 +38,7 @@ feature {NONE} -- Implementation
 		do
 			desired_wall_distance := other.desired_wall_distance
 			outer_corner_angular_velocity := other.outer_corner_angular_velocity
+			linear_velocity := other.linear_velocity
 			create safe_outer_corner_turn_offset.make_from_separate (other.safe_outer_corner_turn_offset)
 			safe_outer_corner_turn_offset_threshold := other.safe_outer_corner_turn_offset_threshold
 			safe_leaving_wall_vertical_distance := other.safe_leaving_wall_vertical_distance
@@ -49,6 +51,9 @@ feature -- Access
 
 	outer_corner_angular_velocity: REAL_64
 			-- Angular velocity for the robot to turn an outer corner.
+
+	linear_velocity: REAL_64
+			-- Linear velocity for the robot to follow an obstacle.
 
 	safe_outer_corner_turn_offset: POINT_2D
 			-- Position offset for a safe outer corner turn.
@@ -69,6 +74,12 @@ feature -- Access
 			-- Setter for `outer_corner_angular_velocity'.
 		do
 			outer_corner_angular_velocity := wall_following_outer_corner_angular_velocity
+		end
+
+	set_linear_velocity (wall_following_linear_velocity: REAL_64)
+			-- Setter for `wall_following_linear_velocity'.
+		do
+			linear_velocity := wall_following_linear_velocity
 		end
 
 	set_safe_outer_corner_turn_offset (wall_following_safe_outer_corner_turn_offset: POINT_2D)

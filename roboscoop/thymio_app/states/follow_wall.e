@@ -27,7 +27,7 @@ feature -- Initialization
 			create world_tf.make
 			create target_point.make
 			create orientation_controller.make_with_gains (pid_parameters.kp, pid_parameters.ki, pid_parameters.kd)
-			create speed_controller.make_with_speed (wall_following_parameters.outer_corner_angular_velocity)
+			create speed_controller.make_with_speed (wall_following_parameters.linear_velocity)
 			create time_handler.start (0.0)
 			create last_point.make
 		end
