@@ -33,11 +33,11 @@ feature {ANY} -- Access
 						iz > g.count_z
 					loop
 						connect_node (g, ix, iy, iz, ix + 1, iy, iz)
-						connect_node (g, ix, iy, iz, ix - 1, iy, iz)
+					--	connect_node (g, ix, iy, iz, ix - 1, iy, iz)
 						connect_node (g, ix, iy, iz, ix, iy + 1, iz)
-						connect_node (g, ix, iy, iz, ix, iy - 1, iz)
+					--	connect_node (g, ix, iy, iz, ix, iy - 1, iz)
 						connect_node (g, ix, iy, iz, ix, iy, iz + 1)
-						connect_node (g, ix, iy, iz, ix, iy, iz - 1)
+					--	connect_node (g, ix, iy, iz, ix, iy, iz - 1)
 						iz := iz + 1
 					end
 					iy := iy + 1
