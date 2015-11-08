@@ -12,6 +12,8 @@ inherit
 
 feature -- Access
 
+	transforms: ARRAY[TRANSFORM_2D]
+	
 	sensors: ARRAYED_LIST [RANGE_MSG]
 			-- Array of sensors.
 		deferred
