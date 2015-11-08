@@ -1,3 +1,4 @@
+name:					robot_controller
 path:					/robot_controller/path
 pose:					/robot_controller/pose
 mission_odometry:		/robot_controller/odometry
