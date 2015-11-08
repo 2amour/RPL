@@ -17,12 +17,14 @@ feature {NONE} -- Initialization
 	make
 			-- Create and launch the robot.
 		local
-			robo_node: separate ROBOSCOOP_NODE
+			robo_node: separate NAMED_ROBOSCOOP_NODE
 			ros_spinner: separate ROS_SPINNER
 			tangent_bug_behaviour: separate TANGENT_BUG_BEHAVIOUR
 			thymio: separate THYMIO_ROBOT
 
 			-- Execution parameters
+			topics: ROBOT_CONTROLLER_TOPIC_PARAMETERS
+			topics_parser: ROBOT_CONTROLLER_TOPICS_PARSER
 			files_params: FILES_PARAMETERS
 			files_params_file_parser: FILES_PARAMETERS_FILE_PARSER
 			pid_params: PID_PARAMETERS
@@ -45,6 +47,9 @@ feature {NONE} -- Initialization
 			create files_params_file_parser
 			files_params := files_params_file_parser.parse_file (arguments.argument (1).to_string_8)
 
+			create topics_parser
+			topics := topics_parser.parse_file (files_params.ros_topics_file_path)
+
 			create goal_params_file_parser
 			goal_params := goal_params_file_parser.parse_file (files_params.goal_parameters_file_path)
 
@@ -60,7 +65,7 @@ feature {NONE} -- Initialization
 			create tangent_bug_params.make_with_attributes (goal_params, pid_params, wall_following_params, range_sensors_params)
 
 			-- Initialize this application as a ROS node.
-			robo_node := (create {ROS_NODE_STARTER}).roboscoop_node
+			robo_node := (create {ROS_NAMED_NODE_STARTER}).roboscoop_node (topics.name)
 			synchronize (robo_node)
 
 			-- Listen to ROS.
@@ -71,7 +76,7 @@ feature {NONE} -- Initialization
 			create tangent_bug_behaviour.make_with_attributes (tangent_bug_params)
 
 			-- Create a robot object.
-			create thymio.make_with_attributes (range_sensors_params, tangent_bug_behaviour)
+			create thymio.make_with_attributes (topics, range_sensors_params, tangent_bug_behaviour)
 
 			-- Launch Thymio.
 			separate thymio as t do

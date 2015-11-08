@@ -170,6 +170,11 @@ feature {TANGENT_BUG_BEHAVIOUR, TANGENT_BUG_CONTROLLER} -- Require check
 			Result := distance_robot_to_obstacle_entry_point < point_reached_threshold and has_left_obstacle_entry_point
 		end
 
+	set_goal_coordinates (x, y: REAL_64)
+		do
+			create goal.make_with_coordinates (x, y)
+		end
+
 feature {NONE} -- Implementation
 
 	get_current_position (o_sig: separate ODOMETRY_SIGNALER): POINT_2D
