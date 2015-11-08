@@ -33,7 +33,7 @@ feature -- Access
 				if key.is_equal ("Sensor_count") then
 					file.read_integer
 					sensor_count := file.last_integer
-					create sensors_poses.make_filled (create {POSE_2D}.make, 0, sensor_count - 1)
+					create sensors_poses.make_filled (create {POSE_2D}.make, 1, sensor_count)
 				elseif key.is_equal ("Sensors_poses") then
 					from until sensor_count <= 0
 					loop
