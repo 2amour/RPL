@@ -26,7 +26,7 @@ feature {ANY} -- Access
 			publisher.publish (get_path_msg_from_nodes (path, frame))
 		end
 
-	publish_path_from_points (path: separate LIST [POINT]; frame: separate STRING_8)
+	publish_path_from_points (path: separate LIST [separate POINT]; frame: separate STRING_8)
 			-- Publishing path.
 		do
 			publisher.publish (get_path_msg_from_points (path, frame))
@@ -62,11 +62,12 @@ feature {NONE} -- Implementation
 			Result := msg
 		end
 
-	get_path_msg_from_points (path: separate LIST [POINT]; frame: separate STRING_8): separate PATH_MSG
+	get_path_msg_from_points (path: separate LIST [separate POINT]; frame: separate STRING_8): separate PATH_MSG
 			-- Get path_msg from a list of points.
 		local
 			msg: PATH_MSG
 			header: HEADER_MSG
+			point: POINT
 			pose: POSE_MSG
 			a_poses: ARRAY [POSE_STAMPED_MSG]
 			idx: INTEGER_32
@@ -79,7 +80,8 @@ feature {NONE} -- Implementation
 			until
 				idx > path.count
 			loop
-				pose := create {POSE_MSG}.make_with_values (create {POINT_MSG}.make_from_separate (path.item.get_msg), create {QUATERNION_MSG}.make_empty)
+				point := create {POINT}.make_from_separate (path.at (idx))
+				pose := create {POSE_MSG}.make_with_values (point.get_msg, create {QUATERNION_MSG}.make_empty)
 				a_poses.put (create {POSE_STAMPED_MSG}.make_with_values (header, pose), idx)
 				idx := idx + 1
 			end
