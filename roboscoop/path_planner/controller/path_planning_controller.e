@@ -92,8 +92,8 @@ feature {PATH_PLANNING_BEHAVIOUR} -- Execute algorithm
 
 				search_strategy.make_with_size (grid.nodes.count)
 
-				start_node := grid.node_at (((start_point.x - map.state.info.origin.position.x) / map.state.info.resolution).rounded, ((start_point.y - map.state.info.origin.position.y) / map.state.info.resolution).rounded, 1)
-				goal_node := grid.node_at (((goal_point.x - map.state.info.origin.position.x) / map.state.info.resolution).rounded, ((goal_point.y - map.state.info.origin.position.y) / map.state.info.resolution).rounded, 1)
+				start_node := grid.node_at (((start_point.x - map.state.info.origin.position.x) / (map.state.info.resolution*map_params_sig.block_width)).rounded, ((start_point.y - map.state.info.origin.position.y) / (map.state.info.resolution*map_params_sig.block_width)).rounded, 1)
+				goal_node := grid.node_at (((goal_point.x - map.state.info.origin.position.x) / (map.state.info.resolution*map_params_sig.block_height)).rounded, ((goal_point.y - map.state.info.origin.position.y) / (map.state.info.resolution*map_params_sig.block_height)).rounded, 1)
 
 				path := search_strategy.search (start_node, goal_node, path_planning_sig.edge_cost_strategy, path_planning_sig.heuristic_strategy)
 
