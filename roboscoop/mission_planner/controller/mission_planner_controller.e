@@ -72,16 +72,18 @@ feature {MISSION_PLANNER_BEHAVIOUR} -- Execute algorithm
 			path_sig.data.poses.count > 1
 			not mission_sig.is_path_requested
 		local
+			path: ARRAYED_STACK[POINT]
 			current_point, next_point, following_point: POINT
 			idx: INTEGER_32
 		do
 			path_sig.set_new_val (False)
+			create path.make (0)
 
 			io.put_string ("Recieved path size: ")
 			io.put_string (path_sig.data.poses.count.out + "%N")
-			mission_sig.update_path (create {POINT}.make_from_msg (path_sig.data.poses[1].pose.position))
-			current_point := create {POINT}.make_from_separate (mission_sig.path.item)
 
+			current_point := create {POINT}.make_from_msg (path_sig.data.poses[1].pose.position)
+			path.put (current_point)
 			from
 				idx := 2
 			until
@@ -92,13 +94,20 @@ feature {MISSION_PLANNER_BEHAVIOUR} -- Execute algorithm
 				if {DOUBLE_MATH}.dabs (current_point.get_angle (next_point) - current_point.get_angle (following_point)) < {TRIGONOMETRY_MATH}.pi_16 and
 				   current_point.euclidean_distance (next_point) > 4*mission_sig.goal_threshold
 				then
-					mission_sig.update_path (next_point)
+					--mission_sig.update_path (next_point)
+					path.put (current_point)
 					current_point := create {POINT}.make_from_separate (next_point)
 				end
 				idx := idx + 1
 			end
-			mission_sig.update_path (create {POINT}.make_from_msg (path_sig.data.poses[idx].pose.position))
+			path.put (create {POINT}.make_from_msg (path_sig.data.poses[idx].pose.position))
 
+			from
+			until path.is_empty
+			loop
+				mission_sig.update_path (path.item)
+				path.remove
+			end
 			io.put_string ("Processed path size: " + mission_sig.path.count.out + "%N")
 
 			if not mission_sig.way_points.islast then
@@ -118,8 +127,9 @@ feature {MISSION_PLANNER_BEHAVIOUR} -- Execute algorithm
 		do
 			io.put_string ("Request a path!")
 			current_idx := mission_sig.way_points.index
-			start_pub.publish_point (mission_sig.way_points.at (current_idx))
-			goal_pub.publish_point (mission_sig.way_points.at (current_idx+1))
+			-- This are inverted! also reinvert in reconstruction
+			goal_pub.publish_point (mission_sig.way_points.at (current_idx))
+			start_pub.publish_point (mission_sig.way_points.at (current_idx+1))
 			mission_sig.way_points.forth
 			mission_sig.request_path (False)
 		end

@@ -60,17 +60,6 @@ feature {PATH_PLANNING_BEHAVIOUR} -- Execute algorithm
 			map_params_sig.set_created (True)
 		end
 
-	publish_empty_path (path_planning_sig: separate PATH_PLANNING_SIGNALER; path_publisher: separate PATH_PUBLISHER)
-			-- Publish empty path.
-		local
-			path: ARRAYED_STACK [SPATIAL_GRAPH_NODE]
-		do
-			create path.make (0)
-			path_publisher.publish_path (path, path_planning_sig.frame)
-		end
-
-
-
 	search (map: separate OCCUPANCY_GRID_SIGNALER; map_params_sig: separate MAP_PARAMETERS_SIGNALER; path_planning_sig: separate PATH_PLANNING_SIGNALER; path_publisher: separate PATH_PUBLISHER)
 			-- Execute search algorithm.
 		require
@@ -108,7 +97,7 @@ feature {PATH_PLANNING_BEHAVIOUR} -- Execute algorithm
 
 				path := search_strategy.search (start_node, goal_node, path_planning_sig.edge_cost_strategy, path_planning_sig.heuristic_strategy)
 
-				path_publisher.publish_path (path, path_planning_sig.frame)
+				path_publisher.publish_path_from_nodes (path, path_planning_sig.frame)
 
 				path_planning_sig.processed_start_point
 				path_planning_sig.processed_goal_point
