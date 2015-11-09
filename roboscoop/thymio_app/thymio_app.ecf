@@ -20,6 +20,7 @@
 			<cluster name="robot" location=".\robot\"/>
 			<cluster name="actuator" location=".\actuator\"/>
 			<cluster name="sequencer" location=".\sequencer\"/>
+			<cluster name="ros" location=".\ros\"/>
 			<cluster name="signaler" location=".\signaler\"/>
 			<cluster name="control" location=".\control\"/>
 			<cluster name="io" location=".\io\"/>

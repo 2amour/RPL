@@ -9,14 +9,6 @@ deferred class
 inherit
 	BEHAVIOUR
 
-feature {NONE} -- Initialization
-
-
-	make_with_attributes (parameters_bag: separate PARAMETERS_BAG)
-			-- Create behaviour with given attributes.
-		deferred
-		end
-
 feature -- Access
 
 	set_robot_parts (odom_sig: separate ODOMETRY_SIGNALER; r_group: separate RANGE_GROUP; g_group: separate LIFTABLE; d_drive: separate DIFFERENTIAL_DRIVE)

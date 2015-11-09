@@ -99,4 +99,5 @@ feature -- Access
 		do
 			safe_leaving_wall_vertical_distance := wall_following_safe_leaving_wall_vertical_distance
 		end
+
 end

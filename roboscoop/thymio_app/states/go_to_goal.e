@@ -47,8 +47,14 @@ feature
 			error: REAL_64
 		do
 
-			error := math.atan2(t_sig.get_goal.get_y - t_sig.get_pose.get_position.get_y, t_sig.get_goal.get_x - t_sig.get_pose.get_position.get_x) - t_sig.get_pose.get_orientation
-			error := math.atan2 (math.sine (error), math.cosine (error))
+			if t_sig.get_goal.get_y - t_sig.get_pose.get_position.get_y = 0 and
+			   t_sig.get_goal.get_x - t_sig.get_pose.get_position.get_x = 0 then
+				error := 0
+			else
+				error := math.atan2(t_sig.get_goal.get_y - t_sig.get_pose.get_position.get_y, t_sig.get_goal.get_x - t_sig.get_pose.get_position.get_x) - t_sig.get_pose.get_orientation
+				error := math.atan2 (math.sine (error), math.cosine (error))
+			end
+
 			time_handler.set_time(t_sig.get_timestamp)
 			if time_handler.get_sampling_rate > 0 then
 				orientation_controller.set_sampling (time_handler.get_sampling_rate)

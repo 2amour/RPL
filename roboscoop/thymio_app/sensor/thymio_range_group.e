@@ -55,9 +55,6 @@ feature {NONE} -- Initialization.
 			end
 		end
 
-feature -- Access.
-	transforms: ARRAY[TRANSFORM_2D]
-
 	is_obstacle: BOOLEAN
 			-- Whether an obstacle is observed by any sensor in valid range?
 		local

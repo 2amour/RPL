@@ -15,7 +15,7 @@ feature {NONE} -- Initialization
 			-- Initialize signaler with attributes.
 		do
 			create current_pose.make
-			create goal.make_with_coordinates (goal_parameters.x, goal_parameters.y)
+			create goal.make_with_coordinates (0.0, 0.0)
 			goal_threshold := goal_parameters.threshold
 			initialize_states (create {PID_PARAMETERS}.make_from_separate (pid_parameters), create {WALL_FOLLOWING_PARAMETERS}.make_from_separate (wall_following_parameters))
 			set_go_to_goal
@@ -170,6 +170,13 @@ feature -- Status setting
 			goal := g
 		ensure
 			goal_set: goal = g
+		end
+
+	reset_goal_coordinates (x, y: REAL_64)
+			-- Setter for `goal'.
+		do
+			create goal.make_with_coordinates (x, y)
+			set_d_min (goal.get_euclidean_distance (current_pose.get_position))
 		end
 
 	set_goal_threshold (threshold: REAL_64)
