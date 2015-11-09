@@ -28,5 +28,4 @@ feature -- Constants
 	prox_horizontal_link_4: STRING_8 = "/thymio_prox_horizontal_4_link"
 	prox_horizontal_link_5: STRING_8 = "/thymio_prox_horizontal_5_link"
 	prox_horizontal_link_6: STRING_8 = "/thymio_prox_horizontal_6_link"
-
 end

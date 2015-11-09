@@ -171,6 +171,7 @@ feature {TANGENT_BUG_BEHAVIOUR, TANGENT_BUG_CONTROLLER} -- Require check
 		end
 
 	set_goal_coordinates (x, y: REAL_64)
+			-- Setter for `goal'.
 		do
 			create goal.make_with_coordinates (x, y)
 		end

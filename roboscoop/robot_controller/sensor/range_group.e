@@ -13,6 +13,7 @@ inherit
 feature -- Access
 
 	transforms: ARRAY[TRANSFORM_2D]
+			-- Array of transforms from sensor coordinate frame to robot coordinate frame.
 	
 	sensors: ARRAYED_LIST [RANGE_MSG]
 			-- Array of sensors.
