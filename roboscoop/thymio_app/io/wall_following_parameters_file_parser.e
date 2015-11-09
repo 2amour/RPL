@@ -46,6 +46,9 @@ feature -- Access
 				elseif key.is_equal ("Safe_leaving_wall_vertical_distance") then
 					file.read_double
 					wall_following_parameters.set_safe_leaving_wall_vertical_distance (file.last_double)
+				elseif key.is_equal ("Safe_outer_corner_turn_offset_threshold") then
+					file.read_double
+					wall_following_parameters.set_safe_outer_corner_turn_offset_threshold (file.last_double)
 				elseif not key.is_empty then
 					io.putstring ("Parser error while parsing file '" + file_path + "': Key '" + key + "' not recognized%N")
 				end
