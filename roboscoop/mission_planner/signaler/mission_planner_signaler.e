@@ -69,4 +69,17 @@ feature {ANY} -- Access
 			is_path_requested = a_val
 		end
 
+
+	get_current: POINT
+			-- Get current way_point
+		do
+			Result := create {POINT}.make_from_separate (path.item)
+		end
+
+	get_origin: POINT
+			-- Get robot's origin.
+		do
+			Result := way_points.first
+		end
+
 end

@@ -55,13 +55,13 @@ feature {MISSION_PLANNER_BEHAVIOUR} -- Execute algorithm
 			not mission_sig.path.islast
 			mission_sig.path.count > 0
 		do
-			if (create {POINT}.make_from_msg (odometry_sig.data.pose.pose.position)).euclidean_distance(mission_sig.path.item) < mission_sig.goal_threshold then
+			if (create {POINT}.make_from_msg (odometry_sig.data.pose.pose.position)).euclidean_distance(mission_sig.get_current - mission_sig.get_origin) < mission_sig.goal_threshold then
 				mission_sig.path.forth
-				target_pub.publish_point (mission_sig.path.item)
+				target_pub.publish_point (mission_sig.get_current - mission_sig.get_origin)
 			end
 
 			if not target_pub.has_published then
-				target_pub.publish_point (mission_sig.path.first)
+				target_pub.publish_point (create {POINT}.make_with_values (0.0, 0.0, 0.0))
 			end
 		end
 

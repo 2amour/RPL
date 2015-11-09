@@ -100,7 +100,19 @@ feature {ANY} -- Access
 	get_string: STRING_8
 			-- Return string representation of point
 		do
-			Result := "x: " + x.out + " y: " + y.out + " z: " + z.out 
+			Result := "x: " + x.out + " y: " + y.out + " z: " + z.out
+		end
+
+	sub alias "-" (other: separate POINT): POINT
+			-- The result abstract_2d is the addition between the original abstract_2d and `other'.
+		do
+			Result := create {POINT}.make_with_values (x - other.x, y - other.y, z - other.z)
+		end
+
+	plus alias "+" (other: separate POINT): POINT
+			-- The result abstract_2d is the addition between the original abstract_2d and `other'.
+		do
+			Result := create {POINT}.make_with_values (x + other.x, y + other.y, z + other.z)
 		end
 
 end
