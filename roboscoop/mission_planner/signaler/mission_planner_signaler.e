@@ -32,9 +32,13 @@ feature {NONE} -- Initialization
 			create path.make (0)
 			path.start
 
+			discovered_obstacle := False
 		end
 
 feature {ANY} -- Access
+
+	discovered_obstacle: BOOLEAN
+			-- Has a new obstacle been discovered?
 
 	way_points: ARRAYED_LIST[POINT]
 			-- Way points to visit.
@@ -49,20 +53,20 @@ feature {ANY} -- Access
 			-- Threshold to switch way_points in path.
 
 	reset_path
-			-- Update path of points.
+			-- Reset path of points.
 		do
 			create path.make (0)
 			path.start
 		end
 
 	update_path (point: separate POINT)
-			-- Update path of points.
+			-- Add `point' to path.
 		do
 			path.force (create{POINT}.make_from_separate (point))
 		end
 
 	request_path (a_val: BOOLEAN)
-			-- Set a_val to is_path_requested
+			-- Set `a_val' to is_path_requested
 		do
 			is_path_requested := a_val
 		ensure
@@ -71,9 +75,19 @@ feature {ANY} -- Access
 
 
 	get_current: POINT
-			-- Get current way_point
+			-- Get current path_point.
 		do
 			Result := create {POINT}.make_from_separate (path.item)
+		end
+
+	get_next: POINT
+			-- Get next path_point.
+		require
+			not path.islast
+		do
+			path.forth
+			Result := get_current
+			path.back
 		end
 
 	get_origin: POINT
@@ -82,4 +96,18 @@ feature {ANY} -- Access
 			Result := way_points.first
 		end
 
+	get_goal: POINT
+			-- Get robot's goal.
+		do
+			if not way_points.islast then
+				way_points.forth
+			end
+			Result := way_points.item
+		end
+
+	set_discovered_obstacle (a_val: BOOLEAN)
+			-- Set `a_val' to is_path_requested
+		do
+			discovered_obstacle := a_val
+		end
 end
