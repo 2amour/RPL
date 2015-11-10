@@ -18,12 +18,13 @@ create
 
 feature {NONE} -- Initialization.
 
-	make (topic_name: separate STRING; range_sensors_parameters: separate RANGE_SENSORS_PARAMETERS)
+	make(topic_name: separate STRING; range_sensors_parameters: separate RANGE_SENSORS_PARAMETERS)
 			-- Create an array of sensors and register them.
 		do
-			initialize_sensors_transforms (range_sensors_parameters)
+			register_transforms (range_sensors_parameters)
 			make_with_topic (topic_name)
 			register_ranges
+
 		end
 
 	register_ranges
@@ -38,8 +39,8 @@ feature {NONE} -- Initialization.
 			register_sensor ({THYMIO_TOPICS}.prox_horizontal_link_6)
 		end
 
-	initialize_sensors_transforms (range_sensors_parameters: separate RANGE_SENSORS_PARAMETERS)
-			-- Initialize transforms with sensors position offsets and orientation.
+	register_transforms (range_sensors_parameters: separate RANGE_SENSORS_PARAMETERS)
+			-- Register Thymio sensor offsets
 		local
 			i: INTEGER
 			pose: POSE_2D
@@ -58,7 +59,9 @@ feature -- Constants
 
 	angle_between_front_sensors: REAL_64 = 0.3927
 
-feature -- Access
+feature -- Access.
+
+	transforms: ARRAY[TRANSFORM_2D]
 
 	is_obstacle: BOOLEAN
 			-- Whether an obstacle is observed by any sensor in valid range?
@@ -149,7 +152,7 @@ feature -- Access
 	is_front_sensor (a_index: INTEGER): BOOLEAN
 			-- <Precursor>
 		do
-			Result := a_index = 2 or a_index = 3 or a_index = 4
+			Result := a_index = 3
 		end
 
 	hit_point_front (a_sensor_index: INTEGER): VECTOR_3D_MSG
@@ -179,15 +182,15 @@ feature -- Access
 			end
 		end
 
-	is_enough_space_for_changing_direction: BOOLEAN
-			-- <Precursor>
-		do
-			Result := True
-			across sensors as sensor
-			loop
+--	is_enough_space_for_changing_direction: BOOLEAN
+--			-- <Precursor>
+--		do
+--			Result := True
+--			across sensors as sensor
+--			loop
 --				Result := Result and (sensor.item.range > ({THYMIO_ROBOT}.robot_base_size - 8.0)) -- TODO, make it with transforms
-			end
-		end
+--			end
+--		end
 
 	is_all_front_sensors_open: BOOLEAN
 			-- <Precursor>
@@ -246,7 +249,7 @@ feature -- Access
 		end
 
 	get_right_wall: LINE_2D
-			-- Get right wall.
+			-- Get left wall.
 		local
 			line: LINE_2D
 		do
@@ -259,8 +262,8 @@ feature -- Access
 		end
 
 	get_estimated_line_from_sensor (i: INTEGER_32): LINE_2D
-			-- Get estimated line from sensor readings. When sensors are in valid range then its the line joining the points, else its an estimation.
---		require -- TODO - revise
+			-- Get estimated line from sensor readings. Its estimated as a prolongation of the measured point in the x direction
+--		require
 --			valid_range: (i >= 1 and i <= 7)
 		local
 			p1, p2: POINT_2D
@@ -275,7 +278,9 @@ feature -- Access
 		end
 
 	get_line_between_sensors (i, j: INTEGER_32): LINE_2D
-			-- Get Line between two sensors.
+			-- Get Line between two sensors
+--		require
+--			valid_range: (i > 0 and i < 8) and (j > 0 and j < 8) and (i /= j)
 		local
 			p1, p2: POINT_2D
 		do
@@ -286,7 +291,7 @@ feature -- Access
 		end
 
 	get_closest_wall_from_point (p: POINT_2D): LINE_2D
-			-- Find the closest wall from the measured points.
+			-- find the closest wall from the points
 		local
 			line, best_line: LINE_2D
 			p1, p2: POINT_2D
@@ -324,6 +329,27 @@ feature -- Access
 			Result := best_line
 		end
 
+--	get_closest_sensor: INTEGER_32
+--			-- Get closest measured point
+--		local
+--			i, j: INTEGER_32
+--			range: REAL_64
+--		do
+--			i := 1
+--			range := sensors[i].range
+
+--			from i:=2 until i > 7
+--  			loop
+--				if sensors[i].range < range  then
+--					range := sensors[i].range
+--					j := i
+--				end
+--  			end
+
+--			Result := j
+--		end
+
+
 	follow_wall_orientation (a_desired_distance_from_wall: REAL_64): REAL_64
 			-- Get the orientation the robot should head in order to reach the desired distance from the wall.
 	do
@@ -331,42 +357,28 @@ feature -- Access
 	end
 
 	follow_left_wall (desired_distance: REAL_64): REAL_64
-		-- Get the orientation the robot should head in order to follow the left wall.
+		-- Get the orientation the robot should head in order to reach the desired distance from the line in the line's direction.
 		do
 			Result := follow_line_ccw (desired_distance, get_left_wall)
 		end
 
 	follow_right_wall (desired_distance: REAL_64): REAL_64
-		-- Get the orientation the robot should head in order to follow the right wall.
+		-- Get the orientation the robot should head in order to reach the desired distance from the line in the line's direction.
 		do
 			Result := follow_line_cw (desired_distance, get_right_wall)
 		end
 
 	follow_closest_wall_ccw (desired_distance: REAL_64): REAL_64
-			-- Get the orientation the robot should head in order to follow the closest wall counter-clockwise.
 		do
 			Result := follow_line_ccw (desired_distance, get_closest_wall_from_point (create {POINT_2D}.make_with_coordinates (0, 0)))
 		end
 
 	follow_closest_wall_cw (desired_distance: REAL_64): REAL_64
-			-- Get the orientation the robot should head in order to follow the closest wall clockwise.
 		do
 			Result := follow_line_cw (desired_distance, get_closest_wall_from_point (create {POINT_2D}.make_with_coordinates (0, 0)))
 		end
 
 	follow_line_ccw (desired_distance: REAL_64; line: LINE_2D): REAL_64
-			-- Get the orientation the robot should head in order to reach the desired distance from the line in the line's direction when turning counter-clockwise.
-		do
-			Result := follow_line (desired_distance, line, False)
-		end
-
-	follow_line_cw (desired_distance: REAL_64; line: LINE_2D): REAL_64
-			-- Get the orientation the robot should head in order to reach the desired distance from the line in the line's direction when turning clockwise
-		do
-			Result := follow_line (desired_distance, line, True)
-		end
-
-	follow_line (desired_distance: REAL_64; line: LINE_2D; clockwise: BOOLEAN): REAL_64
 			-- Get the orientation the robot should head in order to reach the desired distance from the line in the line's direction.
 		local
 			current_distance: REAL_64
@@ -376,25 +388,41 @@ feature -- Access
 		do
 			current_distance := line.get_distance_from_point (create {POINT_2D}.make_with_coordinates (0.0, 0.0))
 			v_wall := line.get_vector.get_unitary
+			v_robot := v_wall.get_perpendicular
 
-			if clockwise then
-				v_robot := v_wall.get_perpendicular
-			else
-				v_robot := v_wall.get_perpendicular * (-1)
-			end
+			v_theta := (v_wall*desired_distance) + (v_robot*((current_distance - desired_distance))) -- TODO - Change to minus (-) for follow obstacle in the right.
+			Result := v_theta.get_angle
+		end
 
-			v_theta := (v_wall*desired_distance) + (v_robot*((current_distance - desired_distance)))
+	follow_line_cw (desired_distance: REAL_64; line: LINE_2D): REAL_64
+			-- Get the orientation the robot should head in order to reach the desired distance from the line in the line's direction.
+		local
+			current_distance: REAL_64
+			v_wall: VECTOR_2D
+			v_robot: VECTOR_2D
+			v_theta: VECTOR_2D
+		do
+			current_distance := line.get_distance_from_point (create {POINT_2D}.make_with_coordinates (0.0, 0.0))
+			v_wall := line.get_vector.get_unitary
+			v_robot := v_wall.get_perpendicular
+
+			v_theta := (v_wall*desired_distance) - (v_robot*((current_distance - desired_distance))) -- TODO - Change to minus (-) for follow obstacle in the right.
 			Result := v_theta.get_angle
 		end
 
 	get_sensor_point (sensor_index: INTEGER_32): POINT_2D
-			-- Get point measured by sensor in local coordinates.
+			-- TODO
 		do
 			if sensors[sensor_index].is_valid_range then
 				Result := transforms[sensor_index].project_to_parent (create {POINT_2D}.make_with_coordinates (sensors[sensor_index].range, 0.0))
 			else
 				Result := transforms[sensor_index].project_to_parent (create {POINT_2D}.make_with_coordinates (sensors[sensor_index].max_range, 0.0))
 			end
+		end
+
+	follow_line (desired_distance: REAL_64; line: LINE_2D; clockwise: BOOLEAN): REAL_64
+			-- Get the orientation the robot should head in order to reach the desired distance from the line in the line's direction.
+		do
 		end
 
 	get_safe_point_in_direction (orientation: REAL_64): POINT_2D
@@ -460,4 +488,6 @@ feature -- Access
 			end
 			Result := closest_point
 		end
+
+
 end
