@@ -73,10 +73,10 @@ feature {NONE} -- Initialization
 			start_spinning (ros_spinner)
 
 			-- Initialize behaviour.
-			create tangent_bug_behaviour.make_with_attributes (tangent_bug_params)
+			create tangent_bug_behaviour.make_with_attributes (topics, tangent_bug_params)
 
 			-- Create a robot object.
-			create thymio.make_with_attributes (topics, range_sensors_params, tangent_bug_behaviour)
+			create thymio.make_with_attributes (range_sensors_params, tangent_bug_behaviour)
 
 			-- Launch Thymio.
 			separate thymio as t do

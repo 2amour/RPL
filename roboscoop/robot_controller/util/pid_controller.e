@@ -4,7 +4,7 @@ note
 	date: "15.10.2015"
 
 class
-	PID
+	PID_CONTROLLER
 
 create
 	make_with_gains

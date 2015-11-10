@@ -1,13 +1,13 @@
 note
 	description: "2D vector type."
-	author: "ferran_antoni_sebastian"
+	author: "Sebastian Curi"
 	date: "18.10.15"
 
 class
 	VECTOR_2D
 
 inherit
-	ABSTRACT_2D
+	GEOMETRY_2D
 
 create
 	make, make_with_coordinates, make_from_vector_3d_msg, make_from_points, make_from_separate

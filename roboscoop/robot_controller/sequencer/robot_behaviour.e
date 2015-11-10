@@ -1,10 +1,10 @@
 note
-	description: "Behaviour of a Thymio robot."
+	description: "Behaviour of a robot."
 	author: "Ferran Pallarès"
 	date: "21.10.15"
 
 deferred class
-	THYMIO_BEHAVIOUR
+	ROBOT_BEHAVIOUR
 
 inherit
 	BEHAVIOUR

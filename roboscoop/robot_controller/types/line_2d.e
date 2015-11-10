@@ -1,6 +1,6 @@
 note
 	description: "Line in 2D."
-	author: "ferran_antoni_sebastian"
+	author: "Sebastian Curi"
 	date: "18.10.15"
 
 class

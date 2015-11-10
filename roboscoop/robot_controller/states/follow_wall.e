@@ -228,13 +228,13 @@ feature {NONE} -- Implementation
 	last_point: POINT_2D
 			-- Last point detected in the wall the robot is following.
 
-	orientation_controller: PID
+	orientation_controller: PID_CONTROLLER
 			-- Controller for the robot orientation.
 
-	speed_controller: NON_LINEAR_SPEED
+	speed_controller: NON_LINEAR_SPEED_CONTROLLER
 			-- Controller for the robot linear speed.
 
-	time_handler: TIME_PARSER
+	time_handler: TIME_HANDLER
 			-- ROS message time stamp parser.
 
 	linear_speed: REAL_64

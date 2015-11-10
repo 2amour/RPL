@@ -1,10 +1,10 @@
 note
 	description: "General class for types in 2D"
-	author: "ferran_antoni_sebastian"
+	author: "Sebastian Curi"
 	date: "18.10.2015"
 
 class
-	ABSTRACT_2D
+	GEOMETRY_2D
 
 create
 	make, make_with_coordinates, make_from_vector_3d_msg, make_from_separate
@@ -18,7 +18,7 @@ feature {ANY} -- Initialization
 			y := 0
 		end
 
-	make_from_separate (other: separate ABSTRACT_2D)
+	make_from_separate (other: separate GEOMETRY_2D)
 			-- Initialize object from separate object.
 		do
 			x := other.get_x

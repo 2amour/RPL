@@ -1,5 +1,6 @@
-Desired_wall_distance				0.18
-Outer_corner_angular_velocity		0.4
-Linear_velocity						0.08
-Safe_outer_corner_turn_offset		0.2	0.03
-Safe_leaving_wall_vertical_distance	0.08
+Desired_wall_distance					0.18
+Outer_corner_angular_velocity			0.4
+Linear_velocity							0.04
+Safe_outer_corner_turn_offset			0.2	0.03
+Safe_outer_corner_turn_offset_threshold	0.06
+Safe_leaving_wall_vertical_distance		0.09

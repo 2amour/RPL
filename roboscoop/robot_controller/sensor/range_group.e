@@ -147,14 +147,4 @@ feature -- Access
 		deferred
 		end
 
-	get_safe_point_in_direction (angle_direction: REAL_64): POINT_2D
-			-- Return a safe relative point in given relative direction.
-		deferred
-		end
-
-	get_closest_safe_point_in_front (target: separate POINT_2D): POINT_2D
-			-- Return the closest point to target which is safe in front of the robot.
-		deferred
-		end
-
 end

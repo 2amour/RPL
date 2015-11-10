@@ -1,6 +1,6 @@
 note
 	description: "Pose in 2D."
-	author: "ferran_antoni_sebastian"
+	author: "Sebastian Curi"
 	date: "18.10.2015"
 
 class

@@ -20,13 +20,14 @@
 			<cluster name="robot" location=".\robot\"/>
 			<cluster name="actuator" location=".\actuator\"/>
 			<cluster name="sequencer" location=".\sequencer\"/>
+			<cluster name="ros" location=".\ros\"/>
 			<cluster name="signaler" location=".\signaler\"/>
 			<cluster name="control" location=".\control\"/>
 			<cluster name="io" location=".\io\"/>
 			<cluster name="util" location=".\util\"/>
 			<cluster name="types" location=".\types\"/>
+			<cluster name="states" location=".\states\"/>
 			<cluster name="parameters" location=".\parameters\"/>
-			<cluster name="ros" location=".\ros\"/>
 		</cluster>
 	</target>
 </system>

@@ -1,10 +1,10 @@
 note
 	description: "Class for speed control"
-	author: "ferran_antoni_sebastian"
+	author: "Sebastian Curi"
 	date: "18.10.15"
 
 class
-	NON_LINEAR_SPEED
+	NON_LINEAR_SPEED_CONTROLLER
 
 create
 	make, make_with_speed

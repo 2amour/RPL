@@ -1,7 +1,7 @@
 note
-	description: "State of tangent bug behaviour."
-	author: "Ferran Pallarès"
-	date: "06.11.15"
+	description: "State of Tangent bug."
+	author: "Sebastian Curi"
+	date: "18.10.15"
 
 class
 	TANGENT_BUG_SIGNALER
@@ -14,178 +14,246 @@ feature {NONE} -- Initialization
 	make_with_attributes (goal_parameters: separate GOAL_PARAMETERS; pid_parameters: separate PID_PARAMETERS; wall_following_parameters: separate WALL_FOLLOWING_PARAMETERS)
 			-- Initialize signaler with attributes.
 		do
-			create goal.make_with_coordinates (goal_parameters.x, goal_parameters.y)
-			point_reached_threshold := goal_parameters.threshold -- TODO - put at the most convenient parser.
-			revisited_point_threshold := goal_parameters.threshold -- TODO - put at most convenient parser.
-			minimum_distance_to_goal := 0 -- TODO - check - {REAL_64}.positive_infinity
-			create obstacle_entry_point.make
+			create current_pose.make
+			create goal.make_with_coordinates (0.0, 0.0)
+			goal_threshold := goal_parameters.threshold
+			initialize_states (create {PID_PARAMETERS}.make_from_separate (pid_parameters), create {WALL_FOLLOWING_PARAMETERS}.make_from_separate (wall_following_parameters))
+			set_go_to_goal
+			create intial_point_wall.make
+			d_min := {REAL_64}.max_value
+		end
+
+	initialize_states (pid_parameters: PID_PARAMETERS; wall_following_parameters: WALL_FOLLOWING_PARAMETERS)
+			-- Initialize states.
+		do
+			create at_goal
+			create follow_wall.make_with_attributes (pid_parameters, wall_following_parameters)
+			create go_to_goal.make_with_attributes (pid_parameters)
+			create leave_wall.make_with_attributes (pid_parameters)
+			create unreachable_goal
 		end
 
 feature -- Access
 
-	goal: POINT_2D
-			-- Current goal point.
-
-	point_reached_threshold: REAL_64
-			-- Distance from robot to point to consider it reached.
-
-	revisited_point_threshold: REAL_64
-			-- Minimum distance from a point to begin considering having already visited it.
-
-	minimum_distance_to_goal: REAL_64
-			-- Minimum recorded distance from obstacle to goal.
-
-	obstacle_entry_point: POINT_2D
-			-- Point where robot first sensed an obstacle.
-
-	has_left_obstacle_entry_point: BOOLEAN
-			-- Whether the robot has left the current entry point.
-
-	set_minimum_distance_to_goal (min_distance: REAL_64)
-			-- Setter for `minimum_distance_to_goal'.
+	get_goal: POINT_2D
+			-- Get goal coordinates.
 		do
-			minimum_distance_to_goal := min_distance
+			Result := goal
 		end
 
-	set_obstacle_entry_point (point: separate POINT_2D)
-			-- Setter for `obstacle_entry_point'.
-		local
-			l_point: POINT_2D
+	get_goal_threshold: REAL_64
+			-- Get threshold for goal.
 		do
-			create l_point.make_from_separate (point)
-			obstacle_entry_point := l_point
+			Result := goal_threshold
 		end
 
-	set_has_left_obstacle_entry_point (value: BOOLEAN)
-			-- Setter for `has_left_obstacle_entry_point'.
+	get_d_min: REAL_64
+			-- Get minimum distance to goal.
 		do
-			has_left_obstacle_entry_point := value
+			Result := d_min
 		end
 
-feature -- State
-
-	is_go_to_goal_blocked: BOOLEAN
-			-- Is the state "go_to_goal" blocked?
-
-	is_follow_obstacle_blocked: BOOLEAN
-			-- Is the state "follow_obstacle" blocked?
-
-	is_leave_obstacle_blocked: BOOLEAN
-			-- Is the state "leave_obstacle" blocked?
-
-	is_reached_goal_blocked: BOOLEAN
-			-- Is the state "reached_goal" blocked?
-
-	is_unreachable_goal_blocked: BOOLEAN
-			-- Is the state "unreachable_goal" blocked?
-
-	set_is_go_to_goal_blocked (a_val: BOOLEAN)
-			-- Set `is_go_to_goal_blocked' value equal to `a_val'.
+	get_state: TANGENT_BUG_STATE
+			-- Get current state.
 		do
-			is_go_to_goal_blocked := a_val
+			Result := tangent_bug_state
 		end
 
-	set_is_follow_obstacle_blocked (a_val: BOOLEAN)
-			-- Set `is_follow_obstacle_blocked' value equal to `a_val'.
+	get_pose: POSE_2D
+			-- Return current pose.
 		do
-			is_follow_obstacle_blocked := a_val
+			Result := current_pose
 		end
 
-	set_is_leave_obstacle_blocked (a_val: BOOLEAN)
-			-- Set `is_leave_obstacle_blocked' value equal to `a_val'.
+	get_timestamp: REAL_64
+			-- Get timestamp of signaler.
 		do
-			is_leave_obstacle_blocked := a_val
+			Result := timestamp
 		end
 
-	set_is_reached_goal_blocked (a_val: BOOLEAN)
-			-- Set `is_reached_goal_blocked' value equal to `a_val'.
+feature -- Status report
+
+	is_go_to_goal: BOOLEAN
+			-- Check if state is 'go_to_goal'.
 		do
-			is_reached_goal_blocked := a_val
+			Result := tangent_bug_state = go_to_goal
 		end
 
-	set_is_unreachable_goal_blocked (a_val: BOOLEAN)
-			-- Set `is_unreachable_goal_blocked' value equal to `a_val'.
+	is_follow_wall: BOOLEAN
+			-- Check if state is 'follow_wall_cw'.
 		do
-			is_unreachable_goal_blocked := a_val
+			Result := tangent_bug_state = follow_wall
 		end
 
-	clear_all_blockeds
-			-- Set all blocked flags to False.
+	is_leave_wall: BOOLEAN
+			-- Check if state is 'leave_wall'.
 		do
-			is_go_to_goal_blocked := False
-			is_follow_obstacle_blocked := False
-			is_leave_obstacle_blocked := False
-			is_reached_goal_blocked := False
-			is_unreachable_goal_blocked := False
+			Result := tangent_bug_state = leave_wall
 		end
 
-feature {TANGENT_BUG_BEHAVIOUR, TANGENT_BUG_CONTROLLER} -- Require check
-
-	is_minimum_distance_recorded: BOOLEAN
-			-- TODO
+	is_at_goal: BOOLEAN
+			-- Check if state is 'at_goal'.
 		do
-			Result := minimum_distance_to_goal > 0
+			Result := tangent_bug_state = at_goal
 		end
 
-	is_closer_than_minimum_distance (o_sig: separate ODOMETRY_SIGNALER): BOOLEAN
-			-- Whether the current distance to goal is lower than minimum recorded distance.
+	is_unreachable_goal: BOOLEAN
+			-- Check if state is 'unreachable_goal'.
 		do
-			Result := goal.get_euclidean_distance (get_current_position (o_sig)) < minimum_distance_to_goal
+			Result := tangent_bug_state = unreachable_goal
 		end
 
-	is_obstacle_sensed (r_g: separate RANGE_GROUP): BOOLEAN
-			-- Whether an obstacle is sensed in front of the robot.
-		do
-			Result := r_g.is_obstacle_in_front
-		end
+feature -- Status setting -- States
 
-	is_goal_reached (o_sig: separate ODOMETRY_SIGNALER): BOOLEAN
-			-- Whether the goal has been reached.
+	set_at_goal
+			-- Set at goal state.
 		do
-			Result := goal.get_euclidean_distance (get_current_position (o_sig)) < point_reached_threshold
-		end
-
-	is_closer_safe_point_sensed (o_sig: separate ODOMETRY_SIGNALER; r_g: separate RANGE_GROUP): BOOLEAN
-			-- Whether there is a safe sensed point closer to the goal than minimum recorded distance.
-		local
-			safe_point: POINT_2D
-			transform: TRANSFORM_2D
-		do
-			create transform.make_with_offsets (o_sig.x, o_sig.y, o_sig.theta)
-			safe_point :=  transform.project_to_parent (create {POINT_2D}.make_from_separate (r_g.get_closest_safe_point_in_front (goal)))
-			Result := safe_point.get_euclidean_distance (goal) < minimum_distance_to_goal -- TODO - safe point is not global coord but goal is  TODO - cal? -  not (safe_point.get_x = 0 and safe_point.get_y = 0)
-        end
-
-	is_goal_unreachable (o_sig: separate ODOMETRY_SIGNALER): BOOLEAN
-			-- Determines whether the robot has entered the point where it started following an obstacle.
-		local
-			robot_position: POINT_2D
-			distance_robot_to_obstacle_entry_point: REAL_64
-		do
-			robot_position := create {POINT_2D}.make_with_coordinates (o_sig.x, o_sig.y)
-			distance_robot_to_obstacle_entry_point := robot_position.get_euclidean_distance (obstacle_entry_point)
-
-			if distance_robot_to_obstacle_entry_point >= revisited_point_threshold then
-				set_has_left_obstacle_entry_point (True)	-- TODO follow wall and leave wall have to handle this to set it to false each time we deal with another obstacle!
+			tangent_bug_state := at_goal
+			debug
+				io.put_string ("At Goal %N")
 			end
-
-			Result := distance_robot_to_obstacle_entry_point < point_reached_threshold and has_left_obstacle_entry_point
 		end
 
-	set_goal_coordinates (x, y: REAL_64)
+	set_follow_wall_clockwise
+			-- Set follow wall state.
+		do
+			follow_wall.set_clockwise
+			tangent_bug_state := follow_wall
+			debug
+				io.put_string ("Follow Wall Clockwise %N")
+			end
+		end
+
+	set_follow_wall_counter_clockwise
+			-- Set follow wall state.
+		do
+			follow_wall.set_counter_clockwise
+			tangent_bug_state := follow_wall
+			debug
+				io.put_string ("Follow Wall Counter Clockwise%N")
+			end
+		end
+
+	set_leave_wall_with_target (p: separate POINT_2D)
+			-- Set to leave wall state.
+		do
+			leave_wall.set_target (create {POINT_2D}.make_with_coordinates (p.get_x, p.get_y))
+			tangent_bug_state := leave_wall
+			debug
+				io.put_string ("Leave Wall %N")
+			end
+		end
+
+	set_go_to_goal
+			-- Set to go to goal state.
+		do
+			tangent_bug_state := go_to_goal
+			debug
+				io.put_string ("Go to Goal %N")
+			end
+		end
+
+	set_unreachable_goal
+			-- Set to unreachable goal state.
+		do
+			tangent_bug_state := unreachable_goal
+			debug
+				io.put_string ("Unreachable Wall %N")
+			end
+		end
+
+feature -- Status setting
+
+	set_goal (g: POINT_2D)
+			-- Set a point as a goal.
+		do
+			goal := g
+		ensure
+			goal_set: goal = g
+		end
+
+	reset_goal_coordinates (x, y: REAL_64)
 			-- Setter for `goal'.
 		do
 			create goal.make_with_coordinates (x, y)
+			set_d_min (goal.get_euclidean_distance (current_pose.get_position))
+		end
+
+	set_goal_threshold (threshold: REAL_64)
+			-- Set threshold for goal.
+		do
+			goal_threshold := threshold
+		end
+
+	set_d_min (d: REAL_64)
+			-- Set minimum distance to goal.
+		require
+			valid_d: d > 0
+		do
+			d_min := d
+		ensure
+			d_set: d = d_min
+		end
+
+	set_state (new_state: TANGENT_BUG_STATE)
+			-- Set a new state.
+		do
+			tangent_bug_state := new_state
+		ensure
+			state_set: tangent_bug_state = new_state
+		end
+
+	set_pose (pose: POSE_2D)
+			-- Set new pose.
+		do
+			current_pose := pose
+		ensure
+			pose_set: current_pose = pose
+		end
+
+	set_timestamp (t: REAL_64)
+			-- Set time
+		do
+			timestamp := t
+		ensure
+			time_set: timestamp = t
 		end
 
 feature {NONE} -- Implementation
 
-	get_current_position (o_sig: separate ODOMETRY_SIGNALER): POINT_2D
-			-- Return current pose.
-		local
-			point: POINT_2D
-		do
-			create point.make_with_coordinates (o_sig.x, o_sig.y)
-			Result := point
-		end
+	goal: POINT_2D
+			-- Goal coordinates.
+
+	goal_threshold: REAL_64
+			-- Threshold for considering when the goal is reached.
+
+	current_pose: POSE_2D
+			-- Present position and orientation.
+
+	timestamp: REAL_64
+			-- Time.
+
+	d_min: REAL_64
+			-- Minimum distance to goal.
+
+	intial_point_wall: POINT_2D
+			-- Position at the beginning of finding a wall.
+
+	tangent_bug_state: TANGENT_BUG_STATE
+			-- State of the robot.
+
+	at_goal: AT_GOAL
+			-- State "at_goal".
+
+	follow_wall: FOLLOW_WALL
+			-- State "follow_wall".
+
+	go_to_goal: GO_TO_GOAL
+			-- State "go_to_goal".
+
+	leave_wall: LEAVE_WALL
+			-- State "leave_wall".
+
+	unreachable_goal: UNREACHABLE_GOAL
+			-- State "unreachable_goal".
 end

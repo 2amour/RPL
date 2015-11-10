@@ -1,6 +1,6 @@
 note
 	description: "TRANSFORM_2D initializes a frame with a 2D offset."
-	author: "ferran_antoni_sebastian"
+	author: "Sebastian Curi"
 	date: "18.10.2015"
 
 class

@@ -55,14 +55,6 @@ feature {NONE} -- Initialization.
 			end
 		end
 
-feature -- Constants
-
-	angle_between_front_sensors: REAL_64 = 0.3927
-
-feature -- Access.
-
-	transforms: ARRAY[TRANSFORM_2D]
-
 	is_obstacle: BOOLEAN
 			-- Whether an obstacle is observed by any sensor in valid range?
 		local
@@ -182,15 +174,15 @@ feature -- Access.
 			end
 		end
 
---	is_enough_space_for_changing_direction: BOOLEAN
---			-- <Precursor>
---		do
---			Result := True
---			across sensors as sensor
---			loop
---				Result := Result and (sensor.item.range > ({THYMIO_ROBOT}.robot_base_size - 8.0)) -- TODO, make it with transforms
---			end
---		end
+	is_enough_space_for_changing_direction: BOOLEAN
+			-- <Precursor>
+		do
+			Result := True
+			across sensors as sensor
+			loop
+				Result := Result and (sensor.item.range > ({THYMIO_ROBOT}.robot_base_size - 8.0)) -- TODO, make it with transforms
+			end
+		end
 
 	is_all_front_sensors_open: BOOLEAN
 			-- <Precursor>
@@ -423,70 +415,6 @@ feature -- Access.
 	follow_line (desired_distance: REAL_64; line: LINE_2D; clockwise: BOOLEAN): REAL_64
 			-- Get the orientation the robot should head in order to reach the desired distance from the line in the line's direction.
 		do
-		end
-
-	get_safe_point_in_direction (orientation: REAL_64): POINT_2D
-			-- Return a safe relative point in given relative orientation.
-		local
-			safe: BOOLEAN
-			shortest_separation, angle_separation: REAL_64
-			closest_sensor_max_range: REAL_64
-			safe_point: POINT_2D
-			i: INTEGER
-		do
-			safe := True
-			shortest_separation := {REAL_64}.positive_infinity
-			from
-				i := 1
-			until
-				i > 5
-			loop
-				angle_separation := {DOUBLE_MATH}.dabs (transforms[i].get_heading - orientation)
-				if angle_separation < 2*angle_between_front_sensors then
-					safe := safe and not sensors[i].is_valid_range
-					if safe and angle_separation < shortest_separation then
-						shortest_separation := angle_separation
-						closest_sensor_max_range := sensors[i].max_range
-					end
-				end
-				i := i + 1
-			end
-			if safe then
-				safe_point := create {POINT_2D}.make_with_coordinates (closest_sensor_max_range*{DOUBLE_MATH}.cosine (orientation),
-																		closest_sensor_max_range*{DOUBLE_MATH}.sine (orientation))
-			else
-				safe_point := create {POINT_2D}.make
-			end
-			Result := safe_point
-		end
-
-	get_closest_safe_point_in_front (target: separate POINT_2D): POINT_2D
-			-- Return the closest point to target which is safe in front of the robot.
-		local
-			candidate: POINT_2D
-			candidate_distance: REAL_64
-			closest_point: POINT_2D
-			minimum_distance: REAL_64
-			i: INTEGER
-		do
-			create closest_point.make
-			minimum_distance := {REAL_64}.positive_infinity
-			from
-				i := sensors.lower
-			until
-				i > sensors.upper
-			loop
-				if is_front_sensor (i) then
-					candidate := get_safe_point_in_direction (transforms[i].get_heading)
-					candidate_distance := candidate.get_euclidean_distance (target)
-					if candidate_distance < minimum_distance then
-						minimum_distance := candidate_distance
-						closest_point := candidate
-					end
-				end
-				i := i + 1
-			end
-			Result := closest_point
 		end
 
 

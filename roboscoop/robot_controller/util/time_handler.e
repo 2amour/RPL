@@ -1,10 +1,10 @@
 note
 	description: "Class for timing."
-	author: "ferran_antoni_sebastian"
+	author: "Sebastian Curi"
 	date: "18.10.2015"
 
 class
-	TIME_PARSER
+	TIME_HANDLER
 
 create
 	start

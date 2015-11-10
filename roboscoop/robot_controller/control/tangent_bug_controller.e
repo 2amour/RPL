@@ -15,114 +15,38 @@ create
 feature {NONE} -- Initialization
 
 	make_with_attributes (stop_sig: separate STOP_SIGNALER)
-			-- Create controller given the attributes.
+		-- Create controller given the attributes.
 		do
 			stop_signaler := stop_sig
+			create vector_to_goal.make
+			create angular_sections_reached.make_filled (False, 0, 49)
 		end
 
 feature {TANGENT_BUG_BEHAVIOUR} -- Access
 
-	go_to_goal (s_sig: separate STOP_SIGNALER; t_sig: separate TANGENT_BUG_SIGNALER; o_sig: separate ODOMETRY_SIGNALER;
-					r_g: separate RANGE_GROUP; lift: separate LIFTABLE; orientation_sig: separate ORIENTATION_SIGNALER)
-			-- Move robot towards goal when no obstacle is sensed.
-		require
-			(not t_sig.is_minimum_distance_recorded) or t_sig.is_closer_than_minimum_distance (o_sig)
-			not t_sig.is_go_to_goal_blocked
-			not s_sig.is_stop_requested
-		local
-			orientation: REAL_64
-			math: TRIGONOMETRY_MATH
+	update_velocity(tangent_bug_sig: separate TANGENT_BUG_SIGNALER; o_sig: separate ODOMETRY_SIGNALER; r_sig: separate RANGE_GROUP;
+					g_sig: separate LIFTABLE; s_sig: separate STOP_SIGNALER;
+					drive: separate DIFFERENTIAL_DRIVE)
+					-- Update velocity settings.
 		do
-			create math
-			orientation := math.atan2 (t_sig.goal.get_y - o_sig.y, t_sig.goal.get_x - o_sig.x)
-			orientation := math.atan2 (math.sine (orientation), math.cosine (orientation))
-			orientation_sig.follow_orientation (orientation)
+			if s_sig.is_stop_requested then
+				drive.stop
+			else
 
-			io.put_string ("GO TO GOAL%N")
-			t_sig.clear_all_blockeds
-			t_sig.set_is_go_to_goal_blocked (True)
-		end
+				tangent_bug_sig.get_pose.get_position.set_coordinates (o_sig.x, o_sig.y) -- TODO expanded class POSE?
+				tangent_bug_sig.get_pose.set_orientation (o_sig.theta)
+				tangent_bug_sig.set_timestamp (o_sig.timestamp)
 
-	follow_obstacle (s_sig: separate STOP_SIGNALER; t_sig: separate TANGENT_BUG_SIGNALER; o_sig: separate ODOMETRY_SIGNALER;
-						r_g: separate RANGE_GROUP; lift: separate LIFTABLE; orientation_sig: separate ORIENTATION_SIGNALER)
-			-- Move robot arround sensed obstacle.
-		require
-			t_sig.is_obstacle_sensed (r_g)
-			not t_sig.is_leave_obstacle_blocked
-			not s_sig.is_stop_requested
-		local
-			current_position: POINT_2D
-			current_distance: REAL_64
-		do
-			io.put_string ("OBSTACLE%N")
-			current_position := get_current_position (o_sig)
-			current_distance := t_sig.goal.get_euclidean_distance (current_position)
-			if not t_sig.is_follow_obstacle_blocked then
-				t_sig.set_is_follow_obstacle_blocked (True)
-				-- Save entry point and reset minimum distance.
-				t_sig.set_obstacle_entry_point (current_position)
-				t_sig.set_has_left_obstacle_entry_point (False)
-				t_sig.set_minimum_distance_to_goal (current_distance)
+				vector_to_goal.make_from_points (tangent_bug_sig.get_goal, tangent_bug_sig.get_pose.get_position)
+				angle_to_goal := change_interval (vector_to_goal.get_angle, vector_to_goal.get_x)
+				if has_turned_around_goal (angle_to_goal)  then
+					tangent_bug_sig.set_unreachable_goal
+				end
+
+				tangent_bug_sig.get_state.set_readings(tangent_bug_sig, r_sig)
+				tangent_bug_sig.get_state.update_velocity (drive)
+				tangent_bug_sig.get_state.update_state(tangent_bug_sig, o_sig, r_sig)
 			end
-			-- Record distance to goal and update minimum.
-			if current_distance < t_sig.minimum_distance_to_goal then
-				t_sig.set_minimum_distance_to_goal (current_distance)
-			end
-		end
-
-	leave_obstacle (s_sig: separate STOP_SIGNALER; t_sig: separate TANGENT_BUG_SIGNALER; o_sig: separate ODOMETRY_SIGNALER;
-						r_g: separate RANGE_GROUP; lift: separate LIFTABLE; orientation_sig: separate ORIENTATION_SIGNALER)
-			-- Move robot towards a sensend safe point in space.
-		require
-			t_sig.is_closer_safe_point_sensed (o_sig, r_g)
-			t_sig.is_follow_obstacle_blocked
-			not t_sig.is_leave_obstacle_blocked and t_sig.is_leave_obstacle_blocked
-			not s_sig.is_stop_requested
-		local
-			orientation: REAL_64
-			math: TRIGONOMETRY_MATH
-			safe_point: POINT_2D
-		do
-			create safe_point.make_from_separate (r_g.get_closest_safe_point_in_front (t_sig.goal))
-			create math
-			orientation := math.atan2 (safe_point.get_y - o_sig.y, safe_point.get_x - o_sig.x)
-			orientation := math.atan2 (math.sine (orientation), math.cosine (orientation))
-			orientation_sig.follow_orientation (orientation)
-
-			io.put_string ("LEAVE OBSTACLE%N")
-			io.put_string((create {POINT_2D}.make_from_separate (r_g.get_closest_safe_point_in_front (t_sig.goal))).get_string + "%N")
-
-			t_sig.set_is_leave_obstacle_blocked (True)
-			t_sig.set_is_go_to_goal_blocked (False)
-
---			if t_sig.goal.get_euclidean_distance (get_current_position (o_sig)) < t_sig.minimum_distance_to_goal then
---				t_sig.set_is_go_to_goal_blocked (False)
---			end
-		end
-
-	reached_goal (s_sig: separate STOP_SIGNALER; t_sig: separate TANGENT_BUG_SIGNALER; o_sig: separate ODOMETRY_SIGNALER;
-					r_g: separate RANGE_GROUP; lift: separate LIFTABLE; orientation_sig: separate ORIENTATION_SIGNALER)
-			-- Proceed when the robot has reached the goal.
-		require
-			t_sig.is_goal_reached (o_sig)
-			not t_sig.is_reached_goal_blocked
-			not s_sig.is_stop_requested
-		do
-			orientation_sig.stop
-			io.put_string ("REACHED GOAL%N")
-			t_sig.set_is_reached_goal_blocked (True)
-		end
-
-	unreachable_goal (s_sig: separate STOP_SIGNALER; t_sig: separate TANGENT_BUG_SIGNALER; o_sig: separate ODOMETRY_SIGNALER;
-						r_g: separate RANGE_GROUP; lift: separate LIFTABLE; orientation_sig: separate ORIENTATION_SIGNALER)
-			-- Proceed when the goal is unreachable.
-		require
-			t_sig.is_goal_unreachable (o_sig)
-			not t_sig.is_unreachable_goal_blocked
-			not s_sig.is_stop_requested
-		do
-			orientation_sig.stop
-			io.put_string ("UNREACHABLE GOAL%N")
 		end
 
 	publish_odometry (o_sig: separate ODOMETRY_SIGNALER; o_pub: separate ODOMETRY_PUBLISHER)
@@ -160,18 +84,62 @@ feature {TANGENT_BUG_BEHAVIOUR} -- Access
 		require
 			goal_sig.is_new_val
 		do
-			t_sig.set_goal_coordinates (goal_sig.data.x, goal_sig.data.y)
+			t_sig.reset_goal_coordinates (goal_sig.data.x, goal_sig.data.y)
 			goal_sig.set_new_val (False)
 		end
 
 feature {NONE} -- Implementation
 
-	get_current_position (o_sig: separate ODOMETRY_SIGNALER): POINT_2D
-			-- Return current pose.
+	angle_to_goal: REAL_64
+			-- Angle of vector from robot to goal with respect to the global frame.
+
+	vector_to_goal: VECTOR_2D
+			-- Vector to goal from robot with respect to odometry frame.
+
+	angular_sections_reached: ARRAY[BOOLEAN]
+			-- Angular sections with respect to goal that are crossed by robot
+
+	change_interval (theta: REAL_64; x_vector: REAL_64): REAL_64
+			-- Change the interval of definition of `theta', now it will be from 0 to 2*pi.
 		local
-			point: POINT_2D
+			theta_res: REAL_64
+			math: TRIGONOMETRY_MATH
 		do
-			create point.make_with_coordinates (o_sig.x, o_sig.y)
-			Result := point
+			theta_res := theta
+			create math
+			if (x_vector <= 0) then
+					theta_res := theta + math.pi
+			else
+				if (theta <= 0) then
+					theta_res := theta + (2 * math.pi)
+				end
+			end
+			Result := theta_res
+		end
+
+	has_turned_around_goal (theta: REAL_64): BOOLEAN
+			-- Check if robot has turned 360 degrees with respect to the goal.
+		local
+			math: TRIGONOMETRY_MATH
+			angular_section: REAL_64
+			truncated: INTEGER_32
+			vector_of_trues: ARRAY[BOOLEAN]
+		do
+			create math
+			create vector_of_trues.make_filled (True, 0, 49)
+			angular_section := 50 * (theta / (2 * math.pi))
+			if angular_section.truncated_to_integer >= 50 then
+				truncated := 49
+			elseif angular_section.truncated_to_integer <= 0  then
+				truncated := 0
+			else
+				truncated := angular_section.truncated_to_integer
+			end
+			angular_sections_reached.put (True, truncated)
+			if (angular_sections_reached.is_equal (vector_of_trues)) then
+				Result := True
+			else
+				Result := False
+			end
 		end
 end

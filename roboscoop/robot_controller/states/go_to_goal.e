@@ -13,9 +13,9 @@ create
 	make_with_attributes
 
 feature{NONE}
-	orientation_controller: PID
-	speed_controller: NON_LINEAR_SPEED
-	time_handler: TIME_PARSER
+	orientation_controller: PID_CONTROLLER
+	speed_controller: NON_LINEAR_SPEED_CONTROLLER
+	time_handler: TIME_HANDLER
 	math: TRIGONOMETRY_MATH
 
 feature

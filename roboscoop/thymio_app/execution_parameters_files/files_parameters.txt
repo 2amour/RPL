@@ -1,5 +1,0 @@
-Goal_parameters_file_path				./execution_parameters_files/goal_parameters.txt
-PID_parameters_file_path				./execution_parameters_files/pid_parameters.txt
-Wall_following_parameters_file_path		./execution_parameters_files/wall_following_parameters.txt
-Range_sensors_parameters_file_path		./execution_parameters_files/range_sensors_parameters.txt
-ROS_topics_file_path					./execution_parameters_files/ros_topics.txt
