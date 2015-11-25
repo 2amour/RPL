@@ -1,0 +1,11 @@
+<launch>
+	<arg name="output" default="screen" />
+	<arg name="class" default="duck"/>
+	
+	<arg name="model_path" default="$(find object_recognition)/image_models/$(arg class).txt" />
+	<arg name="output_path" default="$(find object_recognition)/image_classes/" />
+	
+	<rosparam command="load" file="$(find object_recognition)/parameters/object_recognition_parameters.yaml" />
+	<node name="spin_training" pkg="object_recognition" type="spin_training" args="$(arg model_path) $(arg output_path)" output="$(arg output)"/>
+	
+</launch>

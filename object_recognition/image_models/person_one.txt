@@ -1,0 +1,1 @@
+/home/parallels/catkin_ws/src/scuri/object_recognition/image_models/firefighter/firefighter_close_90.pcd

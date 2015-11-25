@@ -1,0 +1,4 @@
+min_correlation 0.95
+match_threshold 0.75
+K 1
+lambda 1.0
