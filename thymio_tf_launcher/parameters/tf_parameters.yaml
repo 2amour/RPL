@@ -1,0 +1,21 @@
+camera:
+    parent: "base_link"
+    origin:
+        x: 0.0
+        y: 0.0
+        z: 0.0
+    rotation:
+        yaw: 0.0
+        pitch: 0.0
+        roll: 0.0
+      
+base_link:
+    parent: "map"
+    origin:
+        x: 0.5
+        y: 0.5
+        z: 0.0
+    rotation:
+        yaw: 0.0
+        pitch: 0.0
+        roll: 0.0
