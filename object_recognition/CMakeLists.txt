@@ -1,11 +1,28 @@
 cmake_minimum_required(VERSION 2.8.3)
 project(object_recognition)
 
+set(CMAKE_BUILD_TYPE Release)
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Ofast")
+
 ## Find catkin macros and libraries
 ## if COMPONENTS list like find_package(catkin REQUIRED COMPONENTS xyz)
 ## is used, also find other catkin packages
-find_package(catkin REQUIRED)
+find_package(catkin REQUIRED COMPONENTS
+  pcl_conversions
+  pcl_ros
+  sensor_msgs
+  roscpp
+  rospy
+  std_msgs
+)
 
+find_package(PCL 1.7 REQUIRED)
+
+include_directories(${PCL_INCLUDE_DIRS})
+link_directories(${PCL_LIBRARY_DIRS})
+add_definitions(${PCL_DEFINITIONS})
+
+# set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
 ## System dependencies are found with CMake's conventions
 # find_package(Boost REQUIRED COMPONENTS system)
 
@@ -63,7 +80,7 @@ find_package(catkin REQUIRED)
 ## Generate added messages and services with any dependencies listed here
 # generate_messages(
 #   DEPENDENCIES
-#   std_msgs  # Or other packages containing msgs
+#   std_msgs
 # )
 
 ###################################
@@ -78,7 +95,7 @@ find_package(catkin REQUIRED)
 catkin_package(
 #  INCLUDE_DIRS include
 #  LIBRARIES object_recognition
-#  CATKIN_DEPENDS other_catkin_pkg
+#  CATKIN_DEPENDS roscpp rospy std_msgs
 #  DEPENDS system_lib
 )
 
@@ -89,6 +106,9 @@ catkin_package(
 ## Specify additional locations of header files
 ## Your package locations should be listed before other locations
 # include_directories(include)
+include_directories(
+  ${catkin_INCLUDE_DIRS}
+)
 
 ## Declare a cpp library
 # add_library(object_recognition
@@ -97,6 +117,77 @@ catkin_package(
 
 ## Declare a cpp executable
 # add_executable(object_recognition_node src/object_recognition_node.cpp)
+#add_library(ros_parameters src/parameters/ros_parameters.cpp)
+#add_library(object_recognition_parameters src/parameters/object_recognition_parameters.cpp)
+#target_link_libraries(object_recognition_parameters ros_parameters)
+
+add_library(filter src/filtering_strategies/filter.cpp)
+add_library(pass_through_filter src/filtering_strategies/pass_through_filter.cpp)
+add_library(statistical_filter src/filtering_strategies/statistical_filter.cpp)
+add_library(voxel_grid_filter src/filtering_strategies/voxel_grid_filter.cpp)
+add_library(extract_filter src/filtering_strategies/extract_filter.cpp)
+target_link_libraries(filter ${PCL_LIBRARIES} statistical_filter pass_through_filter voxel_grid_filter extract_filter)
+
+add_library(segmentation src/segmentation_strategies/segmentation.cpp)
+target_link_libraries(segmentation extract_filter)
+add_library(plane_segmentation src/segmentation_strategies/plane_segmentation.cpp)
+target_link_libraries(plane_segmentation extract_filter)
+
+add_library(euclidean_segmentation src/segmentation_strategies/euclidean_segmentation.cpp)
+target_link_libraries(euclidean_segmentation ${PCL_LIBRARIES})
+add_library(region_growing_segmentation src/segmentation_strategies/region_growing_segmentation.cpp)
+target_link_libraries(segmentation ${PCL_LIBRARIES} plane_segmentation euclidean_segmentation region_growing_segmentation)
+
+add_library(spin_image src/descriptors/spin_image.cpp)
+target_link_libraries(spin_image ${PCL_LIBRARIES} filter)
+
+add_library(histogram_math src/util/histogram_math.cpp)
+
+add_library(correspondence src/correspondence_strategies/correspondence.cpp)
+add_library(correlation_correspondence src/correspondence_strategies/correlation_correspondence.cpp)
+add_library(eigenimage_correspondence src/correspondence_strategies/eigenimage_correspondence.cpp)
+target_link_libraries(eigenimage_correspondence ${PCL_LIBRARIES})
+
+
+target_link_libraries(correspondence ${PCL_LIBRARIES} correlation_correspondence eigenimage_correspondence histogram_math)
+
+
+add_library(point_cloud_listener src/listeners/point_cloud_listener.cpp)
+add_library(visualization_marker src/msg/visualization_marker.cpp)
+
+add_library(category src/util/category.cpp)
+target_link_libraries(category  ${PCL_LIBRARIES} visualization_marker)
+
+add_library(object_recognition_behaviour src/behaviour/object_recognition_behaviour.cpp)
+target_link_libraries(object_recognition_behaviour 
+                        point_cloud_listener visualization_marker 
+                        category 
+                        filter 
+                        segmentation 
+                        spin_image
+                        correspondence)
+                        
+add_library(training_files_parser src/parsers/training_files_parser.cpp)
+add_library(model_parser src/parsers/model_parser.cpp)
+target_link_libraries(model_parser training_files_parser)
+add_library(ros_parameters_parser src/parsers/ros_parameters_parser.cpp)
+
+target_link_libraries(ros_parameters_parser ${catkin_LIBRARIES} ${PCL_LIBRARIES}
+                        category
+                        filter 
+                        segmentation 
+                        spin_image
+                        correspondence)
+
+add_executable(spin_recognition src/spin_recognition.cpp)
+target_link_libraries(spin_recognition ${catkin_LIBRARIES} ${PCL_LIBRARIES} 
+                      object_recognition_behaviour 
+                      ros_parameters_parser model_parser training_files_parser)
+
+add_executable(spin_training src/spin_training.cpp)
+target_link_libraries(spin_training ${PCL_LIBRARIES} ros_parameters_parser model_parser training_files_parser)
+
+# add_dependencies(talker beginner_tutorials_generate_messages_cpp)
 
 ## Add cmake target dependencies of the executable/library
 ## as an example, message headers may need to be generated before nodes
