@@ -76,11 +76,22 @@ feature {NONE} -- Initialization
 			create tangent_bug_behaviour.make_with_attributes (topics, tangent_bug_params)
 
 			-- Create a robot object.
-			create thymio.make_with_attributes (range_sensors_params, tangent_bug_behaviour)
+			create thymio.make_with_attributes (range_sensors_params)
+
+			-- Set robot behaviour
+			set_robot_behaviour (thymio, tangent_bug_behaviour)
 
 			-- Launch Thymio.
 			separate thymio as t do
 				t.dispatch
 			end
+		end
+
+feature {NONE} -- Implementation
+
+	set_robot_behaviour (robot: separate THYMIO_ROBOT; behaviour: separate ROBOT_BEHAVIOUR)
+			-- Set a thymio robot's behaviour.
+		do
+			robot.set_behaviour(behaviour)
 		end
 end

@@ -15,7 +15,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make_with_attributes (range_sensors_parameters: separate RANGE_SENSORS_PARAMETERS; thymio_robot_behaviour: separate ROBOT_BEHAVIOUR)
+	make_with_attributes (range_sensors_parameters: separate RANGE_SENSORS_PARAMETERS)
 			-- Create a robot with range sensors parameters.
 		do
 			-- Initialize sensors.
@@ -25,10 +25,6 @@ feature {NONE} -- Initialization
 
 			-- Initialize actuators.
 			create diff_drive.make_with_topic ({THYMIO_TOPICS}.velocity)
-
-			-- Assign behaviour.
-			thymio_robot_behaviour.set_robot_parts (odometry_signaler, range_sensors, ground_sensors, diff_drive)
-			behaviour := thymio_robot_behaviour
 		end
 
 feature -- Constants
@@ -41,16 +37,27 @@ feature -- Constants
 
 feature -- Access
 
+	set_behaviour (thymio_robot_behaviour: separate ROBOT_BEHAVIOUR)
+			-- Set a behaviour for the robot to follow.
+		do
+			thymio_robot_behaviour.set_robot_parts (odometry_signaler, range_sensors, ground_sensors, diff_drive)
+			behaviour := thymio_robot_behaviour
+		end
+
 	dispatch
 			-- Start assigned behaviour.
 		do
-			start_behaviour (behaviour)
+			if attached behaviour as a_behaviour then
+				start_behaviour (a_behaviour)
+			end
 		end
 
 	stop
 			-- Stop assigned behaviour.
 		do
-			stop_behaviour (behaviour)
+			if attached behaviour as a_behaviour then
+				stop_behaviour (a_behaviour)
+			end
 		end
 
 feature {NONE} -- Robot parts
@@ -69,7 +76,7 @@ feature {NONE} -- Robot parts
 
 feature {NONE} -- Implementation
 
-	behaviour: separate BEHAVIOUR
+	behaviour: detachable separate BEHAVIOUR
 
 	start_behaviour (b: separate BEHAVIOUR)
 			-- Launch `b'.
