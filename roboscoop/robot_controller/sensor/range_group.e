@@ -14,7 +14,7 @@ feature -- Access
 
 	transforms: ARRAY[TRANSFORM_2D]
 			-- Array of transforms from sensor coordinate frame to robot coordinate frame.
-	
+
 	sensors: ARRAYED_LIST [RANGE_MSG]
 			-- Array of sensors.
 		deferred
@@ -52,11 +52,6 @@ feature -- Access
 
 	is_all_front_sensors_open: BOOLEAN
 			-- Whether all front sensors are not blocked.
-		deferred
-		end
-
-	follow_wall_orientation (a_desired_distance_from_wall: REAL_64): REAL_64
-			-- Orientation which the robot should take in order to follow the current wall obstacle.
 		deferred
 		end
 

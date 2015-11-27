@@ -1,6 +1,6 @@
 note
 	description: "Files parameters file parser."
-	author: "Ferran PallarÃ¨s"
+	author: "Ferran Pallarès"
 	date: "21.10.15"
 
 class

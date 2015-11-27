@@ -33,19 +33,19 @@ feature {TANGENT_BUG_BEHAVIOUR} -- Access
 				drive.stop
 			else
 
-				tangent_bug_sig.get_pose.get_position.set_coordinates (o_sig.x, o_sig.y) -- TODO expanded class POSE?
-				tangent_bug_sig.get_pose.set_orientation (o_sig.theta)
+				tangent_bug_sig.current_pose.get_position.set_coordinates (o_sig.x, o_sig.y) -- TODO expanded class POSE?
+				tangent_bug_sig.current_pose.set_orientation (o_sig.theta) -- TODO - Hola? get pose?
 				tangent_bug_sig.set_timestamp (o_sig.timestamp)
 
-				vector_to_goal.make_from_points (tangent_bug_sig.get_goal, tangent_bug_sig.get_pose.get_position)
+				vector_to_goal.make_from_points (tangent_bug_sig.goal, tangent_bug_sig.current_pose.get_position)
 				angle_to_goal := change_interval (vector_to_goal.get_angle, vector_to_goal.get_x)
 				if has_turned_around_goal (angle_to_goal)  then
 					tangent_bug_sig.set_unreachable_goal
 				end
 
-				tangent_bug_sig.get_state.set_readings(tangent_bug_sig, r_sig)
-				tangent_bug_sig.get_state.update_velocity (drive)
-				tangent_bug_sig.get_state.update_state(tangent_bug_sig, o_sig, r_sig)
+				tangent_bug_sig.state.set_readings(tangent_bug_sig, r_sig)
+				tangent_bug_sig.state.update_velocity (drive)
+				tangent_bug_sig.state.update_state(tangent_bug_sig, o_sig, r_sig)
 			end
 		end
 

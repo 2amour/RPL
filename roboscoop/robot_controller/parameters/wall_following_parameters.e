@@ -1,6 +1,6 @@
 note
 	description: "Wall following parameters."
-	author: "Ferran PallarÃ¨s"
+	author: "Ferran Pallarès"
 	date: "20.10.2015"
 
 class

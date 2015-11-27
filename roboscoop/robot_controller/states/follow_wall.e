@@ -44,7 +44,7 @@ feature -- Access
 			-- <Precursor>
 		do
 
-			time_handler.set_time (t_sig.get_timestamp)
+			time_handler.set_time (t_sig.timestamp)
 			orientation_controller.set_sampling (time_handler.get_sampling_rate)
 
 			if time_handler.get_sampling_rate > 0 then
@@ -80,7 +80,7 @@ feature -- Access
 
 			min_distance: REAL_64
 		do
-			create world_coordinates.make_with_offsets (t_sig.get_pose.get_position.get_x, t_sig.get_pose.get_position.get_y, t_sig.get_pose.get_orientation)
+			create world_coordinates.make_with_offsets (t_sig.current_pose.get_position.get_x, t_sig.current_pose.get_position.get_y, t_sig.current_pose.get_orientation)
 			create best_point.make
 			create v_leave_point.make
 			min_distance :=  {REAL_64}.max_value
@@ -92,18 +92,18 @@ feature -- Access
 					{DOUBLE_MATH}.dabs (r_sig.get_sensor_point (5).get_y) > safe_leaving_wall_vertical_distance) then
 					v_leave_point := world_coordinates.project_to_parent (create {POINT_2D}.make_with_coordinates (r_sig.get_sensor_point (i).get_x, r_sig.get_sensor_point (i).get_y))
 				end
-				if v_leave_point.get_euclidean_distance (t_sig.get_goal) < min_distance then
-					min_distance := v_leave_point.get_euclidean_distance (t_sig.get_goal)
+				if v_leave_point.get_euclidean_distance (t_sig.goal) < min_distance then
+					min_distance := v_leave_point.get_euclidean_distance (t_sig.goal)
 					best_point := v_leave_point
 				end
 				i := i + 1
 			end
 
-			if min_distance < t_sig.get_d_min then
+			if min_distance < t_sig.min_distance then
 				t_sig.set_leave_wall_with_target (best_point)
 			end
 
-			if t_sig.get_goal.get_euclidean_distance (t_sig.get_pose.get_position) < t_sig.get_goal_threshold then
+			if t_sig.goal.get_euclidean_distance (t_sig.current_pose.get_position) < t_sig.goal_threshold then
 				t_sig.set_at_goal
 			end
 
@@ -129,7 +129,7 @@ feature -- Access
 		local
 			error: REAL_64
 		do
-			world_tf.make_with_offsets (t_sig.get_pose.get_position.get_x, t_sig.get_pose.get_position.get_y, t_sig.get_pose.get_orientation)
+			world_tf.make_with_offsets (t_sig.current_pose.get_position.get_x, t_sig.current_pose.get_position.get_y, t_sig.current_pose.get_orientation)
 			target_point := world_tf.project_to_parent (corner_offset)
 
 			if clockwise then
@@ -176,8 +176,8 @@ feature -- Access
 			math: TRIGONOMETRY_MATH
 		do
 			create math
-			if target_point.get_euclidean_distance (t_sig.get_pose.get_position) > target_threshold then
-				error := math.atan2 (target_point.get_y - t_sig.get_pose.get_position.get_y, target_point.get_x - t_sig.get_pose.get_position.get_x)  - t_sig.get_pose.get_orientation
+			if target_point.get_euclidean_distance (t_sig.current_pose.get_position) > target_threshold then
+				error := math.atan2 (target_point.get_y - t_sig.current_pose.get_position.get_y, target_point.get_x - t_sig.current_pose.get_position.get_x)  - t_sig.current_pose.get_orientation
 				error := math.atan2 (math.sine (error), math.cosine (error))
 				orientation_controller.set_error (error)
 				angular_velocity := orientation_controller.get_output
@@ -192,8 +192,8 @@ feature -- Access
 	update_minimum_distance_to_goal (t_sig: separate TANGENT_BUG_SIGNALER)
 			-- Check if current distance to goal is smaller than the minimum
 		do
-			if t_sig.get_goal.get_euclidean_distance (t_sig.get_pose.get_position) < t_sig.get_d_min then
-				t_sig.set_d_min (t_sig.get_goal.get_euclidean_distance (t_sig.get_pose.get_position))
+			if t_sig.goal.get_euclidean_distance (t_sig.current_pose.get_position) < t_sig.min_distance then
+				t_sig.set_min_distance (t_sig.goal.get_euclidean_distance (t_sig.current_pose.get_position))
 			end
 		end
 

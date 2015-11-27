@@ -52,9 +52,9 @@ feature
 			error: REAL_64
 		do
 
-			error := math.atan2(target.get_y - t_sig.get_pose.get_position.get_y, target.get_x - t_sig.get_pose.get_position.get_x) - t_sig.get_pose.get_orientation
+			error := math.atan2(target.get_y - t_sig.current_pose.get_position.get_y, target.get_x - t_sig.current_pose.get_position.get_x) - t_sig.current_pose.get_orientation
 			error := math.atan2 (math.sine (error), math.cosine (error))
-			time_handler.set_time(t_sig.get_timestamp)
+			time_handler.set_time(t_sig.timestamp)
 			if time_handler.get_sampling_rate > 0 then
 				orientation_controller.set_sampling (time_handler.get_sampling_rate)
 				orientation_controller.set_error (error)
@@ -77,8 +77,8 @@ feature
 					else
 						t_sig.set_follow_wall_clockwise
 					end
-			elseif t_sig.get_goal.get_euclidean_distance (t_sig.get_pose.get_position) < t_sig.get_d_min and
-				target.get_euclidean_distance (t_sig.get_pose.get_position) < 0.1 then
+			elseif t_sig.goal.get_euclidean_distance (t_sig.current_pose.get_position) < t_sig.min_distance and
+				target.get_euclidean_distance (t_sig.current_pose.get_position) < 0.1 then
 				t_sig.set_go_to_goal
 			end
 		end

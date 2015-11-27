@@ -47,15 +47,15 @@ feature
 			error: REAL_64
 		do
 
-			if t_sig.get_goal.get_y - t_sig.get_pose.get_position.get_y = 0 and
-			   t_sig.get_goal.get_x - t_sig.get_pose.get_position.get_x = 0 then
+			if t_sig.goal.get_y - t_sig.current_pose.get_position.get_y = 0 and
+			   t_sig.goal.get_x - t_sig.current_pose.get_position.get_x = 0 then
 				error := 0
 			else
-				error := math.atan2(t_sig.get_goal.get_y - t_sig.get_pose.get_position.get_y, t_sig.get_goal.get_x - t_sig.get_pose.get_position.get_x) - t_sig.get_pose.get_orientation
+				error := math.atan2(t_sig.goal.get_y - t_sig.current_pose.get_position.get_y, t_sig.goal.get_x - t_sig.current_pose.get_position.get_x) - t_sig.current_pose.get_orientation
 				error := math.atan2 (math.sine (error), math.cosine (error))
 			end
 
-			time_handler.set_time(t_sig.get_timestamp)
+			time_handler.set_time(t_sig.timestamp)
 			if time_handler.get_sampling_rate > 0 then
 				orientation_controller.set_sampling (time_handler.get_sampling_rate)
 				orientation_controller.set_error (error)
@@ -74,7 +74,7 @@ feature
 					t_sig.set_follow_wall_clockwise
 				end
 			end
-			if t_sig.get_goal.get_euclidean_distance (t_sig.get_pose.get_position) < t_sig.get_goal_threshold then
+			if t_sig.goal.get_euclidean_distance (t_sig.current_pose.get_position) < t_sig.goal_threshold then
 				t_sig.set_at_goal
 			end
 		end

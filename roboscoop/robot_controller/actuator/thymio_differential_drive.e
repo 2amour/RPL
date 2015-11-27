@@ -17,8 +17,8 @@ feature {NONE} -- Initialization
 	make_with_topic (topic_name: separate STRING)
 			-- Create Current.
 		do
-			base_size := 0.11
-			max_linear_speed := 0.5
+			base_size := {THYMIO_ROBOT}.robot_base_size
+			max_linear_speed := {THYMIO_ROBOT}.max_linear_speed
 			create publisher.make_with_topic (topic_name)
 			publisher.advertize (1, False)
 		end
@@ -27,10 +27,22 @@ feature -- Access
 
 	set_velocity (a_vx: REAL_64; a_vtheta: REAL_64)
 			-- Publishing speed.
+		local
+			linear_speed: REAL_64
+			angular_speed: REAL_64
 		do
+			linear_speed := a_vx
+			angular_speed := a_vtheta
+
+			if linear_speed > max_linear_speed then
+				linear_speed := max_linear_speed
+			end
+			if angular_speed > 2.0*max_linear_speed/base_size then
+				angular_speed := 2.0*max_linear_speed/base_size
+			end
 			publisher.publish (create {TWIST_MSG}.make_with_values (
-							create {VECTOR_3D_MSG}.make_with_values (a_vx, 0, 0),
-							create {VECTOR_3D_MSG}.make_with_values (0, 0, a_vtheta)))
+							create {VECTOR_3D_MSG}.make_with_values (linear_speed, 0, 0),
+							create {VECTOR_3D_MSG}.make_with_values (0, 0, angular_speed)))
 		end
 
 	stop

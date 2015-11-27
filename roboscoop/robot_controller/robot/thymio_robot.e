@@ -29,11 +29,11 @@ feature {NONE} -- Initialization
 
 feature -- Constants
 
-	robot_base_size: REAL_64 = 0.11 -- TODO remove
+	robot_base_size: REAL_64 = 0.11
 			-- Robot's width.
 
-	default_linear_speed: REAL_64 = 0.08 -- TODO remove
-			-- Default linear speed of the robot.
+	max_linear_speed: REAL_64 = 0.08
+			-- Maximum linear speed of the robot.
 
 feature -- Access
 
@@ -43,6 +43,7 @@ feature -- Access
 			thymio_robot_behaviour.set_robot_parts (odometry_signaler, range_sensors, ground_sensors, diff_drive)
 			behaviour := thymio_robot_behaviour
 		end
+
 
 	dispatch
 			-- Start assigned behaviour.

@@ -35,9 +35,6 @@ feature {NONE} -- Implementation
 	stop_signaler: separate STOP_SIGNALER
 			-- Signaler for stopping the behaviour.
 
-	tangent_bug_signaler: separate TANGENT_BUG_SIGNALER
-			-- Signaler for controlling the tangent bug state.
-
 	odometry_sig: detachable separate ODOMETRY_SIGNALER
 			-- Current state of the odometry.
 
