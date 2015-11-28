@@ -85,10 +85,10 @@ feature {NONE} -- Implementation
 	sep_start (a, b, c, d: separate MISSION_PLANNER_CONTROLLER)
 			-- Start controllers asynchronously.
 		do
-			a.repeat_until_stop_requested (agent a.update_target(odometry_signaler, mission_signaler, target_publisher))
-			b.repeat_until_stop_requested (agent b.request_path(mission_signaler, obstacle_signaler, start_publisher, goal_publisher))
-			c.repeat_until_stop_requested (agent c.update_path(mission_signaler, path_signaler))
-			d.repeat_until_stop_requested (agent d.update_map (obstacle_signaler, mission_signaler, map_signaler, map_publisher))
+			a.repeat_until_stop_requested (agent a.update_target(odometry_signaler, mission_signaler, target_publisher, stop_signaler))
+			b.repeat_until_stop_requested (agent b.request_path(mission_signaler, obstacle_signaler, start_publisher, goal_publisher, stop_signaler))
+			c.repeat_until_stop_requested (agent c.update_path(mission_signaler, path_signaler, stop_signaler))
+			d.repeat_until_stop_requested (agent d.update_map (obstacle_signaler, mission_signaler, map_signaler, map_publisher, stop_signaler))
 		end
 
 	sep_stop (s_sig: separate STOP_SIGNALER; val: BOOLEAN)
