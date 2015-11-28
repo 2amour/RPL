@@ -143,25 +143,11 @@ feature -- Status setting
 
 feature -- Element change
 
-	set_goal (g: POINT_2D)
-			-- Set a point as a goal.
-		do
-			goal := g
-		ensure
-			goal_set: goal = g
-		end
-
-	reset_goal_coordinates (x, y: REAL_64)
+	set_goal (x, y: REAL_64)
 			-- Setter for `goal'.
 		do
 			create goal.make_with_coordinates (x, y)
-			set_min_distance (goal.get_euclidean_distance (current_pose.get_position))
-		end
-
-	set_goal_threshold (threshold: REAL_64)
-			-- Set threshold for goal.
-		do
-			goal_threshold := threshold
+			min_distance := {REAL_64}.max_value
 		end
 
 	set_min_distance (d: REAL_64)
@@ -174,18 +160,10 @@ feature -- Element change
 			d_set: d = min_distance
 		end
 
-	set_state (new_state: TANGENT_BUG_STATE)
-			-- Set a new state.
-		do
-			state := new_state
-		ensure
-			state_set: state = new_state
-		end
-
-	set_pose (pose: POSE_2D)
+	set_pose (pose: separate POSE_2D)
 			-- Set new pose.
 		do
-			current_pose := pose
+			current_pose := create {POSE_2D}.make_from_separate (pose)
 		ensure
 			pose_set: current_pose = pose
 		end

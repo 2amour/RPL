@@ -47,7 +47,7 @@ feature -- Access
 	get_perpendicular: VECTOR_2D
 			-- Get perpendicular to this vector.
 		do
-			Result := create {VECTOR_2D}.make_with_coordinates (-y, x) -- TODO - NOTE, if vector points RIGHT, perpendicular points UP
+			Result := create {VECTOR_2D}.make_with_coordinates (-y, x)
 		end
 
 	dot (other: VECTOR_2D): REAL_64
