@@ -66,9 +66,9 @@ feature {ANY} -- Access
 		local
 			dx, dy, dz: REAL_64
 		do
-			dx := Current.x - other.x
-			dy := Current.y - other.y
-			dz := Current.z - other.z
+			dx := x - other.x
+			dy := y - other.y
+			dz := z - other.z
 			Result := {DOUBLE_MATH}.sqrt (dx * dx + dy * dy + dz * dz)
 		end
 
@@ -77,22 +77,22 @@ feature {ANY} -- Access
 		local
 			dx, dy, dz: REAL_64
 		do
-			dx := {DOUBLE_MATH}.dabs (Current.x - other.x)
-			dy := {DOUBLE_MATH}.dabs (Current.y - other.y)
-			dz := {DOUBLE_MATH}.dabs (Current.z - other.z)
+			dx := {DOUBLE_MATH}.dabs (x - other.x)
+			dy := {DOUBLE_MATH}.dabs (y - other.y)
+			dz := {DOUBLE_MATH}.dabs (z - other.z)
 			Result := dx + dy + dz
 		end
 
 	get_angle (other: separate POINT): REAL_64
 			-- Return angle of the vector (in 2D only) connecting two points
 		require
-			other.z = 0
+			other.z = z
 		local
 			tmath:TRIGONOMETRY_MATH
 			dx, dy: REAL_64
 		do
-			dx := Current.x - other.x
-			dy := Current.y - other.y
+			dx := x - other.x
+			dy := y - other.y
 			create tmath
 			Result := tmath.atan2 (dy, dx)
 		end

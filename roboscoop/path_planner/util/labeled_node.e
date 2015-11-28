@@ -43,7 +43,7 @@ feature {ANY} --Access
 	is_less alias "<" (other: like Current): BOOLEAN
 			-- Check if other's label is less than current.
 		do
-			Result := other.label < Current.label
+			Result := other.label < label
 		end
 
 end
