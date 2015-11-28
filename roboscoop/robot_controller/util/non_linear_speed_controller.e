@@ -7,18 +7,11 @@ class
 	NON_LINEAR_SPEED_CONTROLLER
 
 create
-	make, make_with_speed
+	make_with_attributes
 
 feature -- Initialization
 
-	make
-			-- Initialize object with default values.
-		do
-			max_speed := 0.08 -- Initialized by default
-			output := 0.0
-		end
-
-	make_with_speed (v: REAL_64)
+	make_with_attributes (v: REAL_64)
 			-- Initialize object with max speed.
 		do
 			max_speed := v

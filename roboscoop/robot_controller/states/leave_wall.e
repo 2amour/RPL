@@ -27,7 +27,7 @@ feature -- Initializer
 		do
 			create math
 			create time_handler.start (0.0)
-			create speed_controller.make_with_speed (0.05)
+			create speed_controller.make_with_attributes (0.05)
 			create orientation_controller.make_with_gains (pid_parameters.kp, pid_parameters.ki, pid_parameters.kd)
 			create target.make
 		end

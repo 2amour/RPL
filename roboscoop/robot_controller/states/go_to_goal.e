@@ -24,7 +24,7 @@ feature
 		do
 			create math
 			create time_handler.start (0.0)
-			create speed_controller.make
+			create speed_controller.make_with_attributes (0.08)
 			create orientation_controller.make_with_gains (pid_parameters.kp, pid_parameters.ki, pid_parameters.kd)
 		end
 
