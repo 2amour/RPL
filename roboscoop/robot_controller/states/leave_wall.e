@@ -1,8 +1,7 @@
 note
-	description: "Summary description for {LEAVE_WALL}."
-	author: ""
-	date: "$Date$"
-	revision: "$Revision$"
+	description: "In this state the robot heads a safe point closer to the goal than has ever been."
+	author: "Ferran Pallarès"
+	date: "28.11.2015"
 
 class
 	LEAVE_WALL
@@ -12,38 +11,37 @@ inherit
 
 create
 	make_with_attributes
-feature {NONE} --Atributes
+
+feature {NONE} -- Implementation
+
 	target: POINT_2D
 
 	orientation_controller: PID_CONTROLLER
+
 	speed_controller: NON_LINEAR_SPEED_CONTROLLER
+
 	time_handler: TIME_HANDLER
+
 	math: TRIGONOMETRY_MATH
 
-
 feature -- Initializer
-	make_with_attributes (pid_parameters: PID_PARAMETERS)
+
+	make_with_attributes (pid_parameters: separate PID_PARAMETERS; nlsc_parameters: separate NON_LINEAR_SPEED_CONTROLLER_PARAMETERS)
 		-- Make
 		do
 			create math
 			create time_handler.start (0.0)
-			create speed_controller.make_with_attributes (0.05)
+			create speed_controller.make_with_attributes (0.05, 2)
 			create orientation_controller.make_with_gains (pid_parameters.kp, pid_parameters.ki, pid_parameters.kd)
 			create target.make
 		end
 
-
 feature
+
 	update_velocity(drive: separate DIFFERENTIAL_DRIVE)
 			-- <Precursor>
 		do
 			drive.set_velocity (speed_controller.get_output, orientation_controller.get_output)
-		end
-
-	update_leds(leds: separate RGB_COLOR_ACTUATOR)
-			-- <Precursor>
-		do
-			leds.set_to_blue
 		end
 
 	set_readings(t_sig: separate TANGENT_BUG_SIGNALER; range_signaler:separate RANGE_GROUP)
@@ -90,5 +88,4 @@ feature
 		ensure
 			target_set: target = t
 		end
-
 end

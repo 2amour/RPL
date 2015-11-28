@@ -11,10 +11,14 @@ create
 
 feature {NONE} -- Initialization
 
-	make_with_attributes (goal_parameters: separate GOAL_PARAMETERS; pid_parameters: separate PID_PARAMETERS; wall_following_parameters: separate WALL_FOLLOWING_PARAMETERS)
+	make_with_attributes (parameters_bag: separate TANGENT_BUG_PARAMETERS_BAG)
 			-- Initialize signaler with attributes.
+		local
+			goal_parameters: GOAL_PARAMETERS
 		do
-			create goal.make_with_coordinates (0.0, 0.0)
+			goal_parameters := create {GOAL_PARAMETERS}.make_from_separate (parameters_bag.goal_parameters)
+
+			create goal.make_with_coordinates (goal_parameters.x, goal_parameters.y)
 			create current_pose.make
 			create intial_point_wall.make
 
@@ -22,17 +26,17 @@ feature {NONE} -- Initialization
 			timestamp := 0.0
 			min_distance := {REAL_64}.max_value
 
-			initialize_states (create {PID_PARAMETERS}.make_from_separate (pid_parameters), create {WALL_FOLLOWING_PARAMETERS}.make_from_separate (wall_following_parameters))
+			initialize_states (parameters_bag)
 			set_go_to_goal
 		end
 
-	initialize_states (pid_parameters: PID_PARAMETERS; wall_following_parameters: WALL_FOLLOWING_PARAMETERS)
+	initialize_states (parameters_bag: separate TANGENT_BUG_PARAMETERS_BAG)
 			-- Initialize states.
 		do
+			create go_to_goal.make_with_attributes (parameters_bag.go_to_goal_pid_parameters, parameters_bag.go_to_goal_nlsc_parameters)
+			create follow_wall.make_with_attributes (parameters_bag.follow_wall_pid_parameters, parameters_bag.follow_wall_nlsc_parameters, parameters_bag.wall_following_parameters)
+			create leave_wall.make_with_attributes (parameters_bag.leave_wall_pid_parameters, parameters_bag.leave_wall_nlsc_parameters)
 			create at_goal
-			create follow_wall.make_with_attributes (pid_parameters, wall_following_parameters)
-			create go_to_goal.make_with_attributes (pid_parameters)
-			create leave_wall.make_with_attributes (pid_parameters)
 			create unreachable_goal
 		end
 

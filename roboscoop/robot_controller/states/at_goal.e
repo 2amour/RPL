@@ -1,8 +1,7 @@
 note
-	description: "Summary description for {AT_GOAL}."
-	author: ""
-	date: "$Date$"
-
+	description: "In this state the robot has already reached the goal."
+	author: "Ferran Pallarès"
+	date: "28.11.2015"
 
 class
 	AT_GOAL
@@ -11,16 +10,11 @@ inherit
 	TANGENT_BUG_STATE
 
 feature -- Access
+
 	update_velocity(drive: separate DIFFERENTIAL_DRIVE)
 			-- <Precursor>
 		do
 			drive.stop
-		end
-
-	update_leds(leds: separate RGB_COLOR_ACTUATOR)
-			-- <Precursor>
-		do
-			leds.set_to_green
 		end
 
 	set_readings(t_sig: separate TANGENT_BUG_SIGNALER; range_signaler:separate RANGE_GROUP)

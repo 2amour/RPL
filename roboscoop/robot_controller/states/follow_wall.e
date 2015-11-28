@@ -14,7 +14,7 @@ create
 
 feature -- Initialization
 
-	make_with_attributes (pid_parameters: PID_PARAMETERS; wall_following_parameters: WALL_FOLLOWING_PARAMETERS)
+	make_with_attributes (pid_parameters: separate PID_PARAMETERS; nlsc_parameters: separate NON_LINEAR_SPEED_CONTROLLER_PARAMETERS; wall_following_parameters: separate WALL_FOLLOWING_PARAMETERS)
 			-- Create self.
 		do
 			clockwise := False
@@ -22,12 +22,12 @@ feature -- Initialization
 			turning_angular_velocity := wall_following_parameters.outer_corner_angular_velocity
 			target_threshold := wall_following_parameters.safe_outer_corner_turn_offset_threshold
 			distance_from_wall := wall_following_parameters.desired_wall_distance
-			corner_offset := wall_following_parameters.safe_outer_corner_turn_offset
+			corner_offset := create {POINT_2D}.make_from_separate (wall_following_parameters.safe_outer_corner_turn_offset)
 
 			create world_tf.make
 			create target_point.make
 			create orientation_controller.make_with_gains (pid_parameters.kp, pid_parameters.ki, pid_parameters.kd)
-			create speed_controller.make_with_attributes (wall_following_parameters.linear_velocity)
+			create speed_controller.make_with_attributes (nlsc_parameters.maximum_speed, nlsc_parameters.angular_decay_rate)
 			create time_handler.start (0.0)
 			create last_point.make
 		end

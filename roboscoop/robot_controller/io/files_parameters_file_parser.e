@@ -32,9 +32,24 @@ feature -- Access
 				elseif key.is_equal ("ROS_topics_file_path") then
 					file.read_word
 					files_parameters.set_ros_topics_file_path (file.last_string)
-				elseif key.is_equal ("PID_parameters_file_path") then
+				elseif key.is_equal ("Go_to_goal_PID_parameters_file_path") then
 					file.read_word
-					files_parameters.set_pid_parameters_file_path (file.last_string)
+					files_parameters.set_go_to_goal_pid_parameters_file_path (file.last_string)
+				elseif key.is_equal ("Follow_wall_PID_parameters_file_path") then
+					file.read_word
+					files_parameters.set_follow_wall_pid_parameters_file_path (file.last_string)
+				elseif key.is_equal ("Leave_wall_PID_parameters_file_path") then
+					file.read_word
+					files_parameters.set_leave_wall_pid_parameters_file_path (file.last_string)
+				elseif key.is_equal ("Go_to_goal_non_linear_speed_controller_parameters_file_path") then
+					file.read_word
+					files_parameters.set_go_to_goal_nlsc_parameters_file_path (file.last_string)
+				elseif key.is_equal ("Follow_wall_non_linear_speed_controller_parameters_file_path") then
+					file.read_word
+					files_parameters.set_follow_wall_nlsc_parameters_file_path (file.last_string)
+				elseif key.is_equal ("Leave_wall_non_linear_speed_controller_parameters_file_path") then
+					file.read_word
+					files_parameters.set_leave_wall_nlsc_parameters_file_path (file.last_string)
 				elseif key.is_equal ("Wall_following_parameters_file_path") then
 					file.read_word
 					files_parameters.set_wall_following_parameters_file_path (file.last_string)

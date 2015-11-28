@@ -18,7 +18,7 @@ feature {NONE} -- Initialization
 			-- Create behaviour with given attributes.
 		do
 			create stop_signaler.make
-			create tangent_bug_signaler.make_with_attributes (parameters_bag.goal_parameters, parameters_bag.pid_parameters, parameters_bag.wall_following_parameters)
+			create tangent_bug_signaler.make_with_attributes (parameters_bag)
 
 			create goal_signaler.make_with_topic (ros_topics_params.goal)
 
