@@ -1,26 +1,16 @@
 #include "object_recognition_behaviour.h"
 
-ObjectRecognitionBehaviour::ObjectRecognitionBehaviour(std::vector<FilterPtr> filters, SegmentationPtr segmentator,
-                                                       DescriptorPtr spin_image, CorrespondencePtr correspondence)
-{
-  _recognition_pipeline = ObjectRecognitionController(filters, segmentator, spin_image, correspondence);
+ObjectRecognitionBehaviour::ObjectRecognitionBehaviour() {
   is_requested = false;
+  _requested_number = 0;
 }
 
-void ObjectRecognitionBehaviour::set_filters(std::vector<FilterPtr> filters){
-  _recognition_pipeline.set_filters(filters);
-}
-
-void ObjectRecognitionBehaviour::set_segmentator(SegmentationPtr segmentator){
-  _recognition_pipeline.set_segmentator(segmentator);
-}
-
-void ObjectRecognitionBehaviour::set_descriptor(DescriptorPtr spin_image){
-  _recognition_pipeline.set_descriptor(spin_image);
-}
-
-void ObjectRecognitionBehaviour::set_correspondence(CorrespondencePtr correspondence){
-  _recognition_pipeline.set_correspondence(correspondence);
+ObjectRecognitionBehaviour::ObjectRecognitionBehaviour(ObjectRecognitionPipeline recognition_pipeline)
+{
+  ROS_INFO("Pipeline set!");
+  _recognition_pipeline = recognition_pipeline;
+  is_requested = false;
+  _requested_number = 0;
 }
 
 void ObjectRecognitionBehaviour::image_callback(const PointCloud::ConstPtr& msg)
@@ -38,8 +28,8 @@ void ObjectRecognitionBehaviour::image_callback(const PointCloud::ConstPtr& msg)
       mean = 0.5 * (min + max);
       difference = max - min;
 
-      _recognition_pipeline.recognize_image(*it, 1);
-      publish(mean, difference, 1);
+      _recognition_pipeline.recognize_image(*it);
+      publish(mean, difference, _requested_number++);
     }
     ROS_INFO("Finished processing point cloud");
     is_requested = false;
@@ -64,10 +54,10 @@ void ObjectRecognitionBehaviour::set_marker_publisher(ros::Publisher marker_publ
   _marker_publisher = marker_publisher;
 }
 
-void ObjectRecognitionBehaviour::set_models(std::vector<Category> categories)
+void ObjectRecognitionBehaviour::set_pipeline(ObjectRecognitionPipeline recognition_pipeline)
 {
-  _recognition_pipeline.set_models(categories);
-  ROS_INFO("Categories set!");
+  _recognition_pipeline = recognition_pipeline;
+  ROS_INFO("Pipeline set!");
 }
 
 void ObjectRecognitionBehaviour::publish(Eigen::Vector4f position, Eigen::Vector4f scale, int cluster_number)
@@ -104,5 +94,9 @@ void ObjectRecognitionBehaviour::set_image_frame(const std::string frame)
 }
 
 void ObjectRecognitionBehaviour::request_callback(const std_msgs::EmptyPtr & msg){
-  is_requested = true;
+  if (!is_requested){
+    ROS_INFO("Request processing");
+    is_requested = true;
+    ++_requested_number;
+  }
 }

@@ -158,8 +158,8 @@ add_library(visualization_marker src/msg/visualization_marker.cpp)
 add_library(category src/util/category.cpp)
 target_link_libraries(category  ${PCL_LIBRARIES} visualization_marker)
 
-add_library(object_recognition_controller src/controller/object_recognition_controller.cpp)
-target_link_libraries(object_recognition_controller 
+add_library(object_recognition_pipeline src/pipeline/object_recognition_pipeline.cpp)
+target_link_libraries(object_recognition_pipeline 
                         category 
                         filter 
                         segmentation 
@@ -169,7 +169,7 @@ target_link_libraries(object_recognition_controller
 add_library(object_recognition_behaviour src/behaviour/object_recognition_behaviour.cpp)
 target_link_libraries(object_recognition_behaviour 
                         point_cloud_listener visualization_marker 
-                        object_recognition_controller)
+                        object_recognition_pipeline)
   
 add_library(training_files_parser src/parsers/training_files_parser.cpp)
 add_library(model_parser src/parsers/model_parser.cpp)

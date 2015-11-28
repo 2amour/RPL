@@ -45,17 +45,20 @@ int main(int argc, char** argv)
 
   /* ROS BEHAVIOUR */
 
-  ObjectRecognitionBehaviour behaviour;
-  behaviour.set_filters(filters);
-  behaviour.set_segmentator(segmentator);
-  behaviour.set_descriptor(spin_image);
-  behaviour.set_correspondence(correspondence);
-  behaviour.set_models(models);
+  ObjectRecognitionPipeline pipeline;
+  pipeline.set_filters(filters);
+  pipeline.set_segmentator(segmentator);
+  pipeline.set_descriptor(spin_image);
+  pipeline.set_correspondence(correspondence);
+  pipeline.set_models(models);
+
+
+  ObjectRecognitionBehaviour behaviour(pipeline);
+  //behaviour.set_pipeline(pipeline);
   behaviour.set_image_frame(frame);
 
   ros::Publisher marker_pub = nh.advertise<visualization_msgs::Marker>( MARKER_TOPIC, MARKER_QUEUE_SIZE);
   behaviour.set_marker_publisher(marker_pub);
-
 
   ros::Subscriber im_sub = nh.subscribe(IMAGE_TOPIC, IMAGE_QUEUE_SIZE, &ObjectRecognitionBehaviour::image_callback,
                                      &behaviour);
