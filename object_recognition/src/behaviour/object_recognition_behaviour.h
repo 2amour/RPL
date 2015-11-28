@@ -8,19 +8,16 @@
 
 
 #include <ros/ros.h>
+#include <std_msgs/Empty.h>
 #include <vector>
 #include <string>
 #include <pcl/common/common.h>
 #include <pcl/common/transforms.h>
 
-#include "../filtering_strategies/filter.h"
-#include "../segmentation_strategies/segmentation.h"
-#include "../correspondence_strategies/correspondence.h"
-#include "../descriptors/spin_image.h"
 #include "../types/points.h"
 #include "../listeners/point_cloud_listener.h"
 #include "../msg/visualization_marker.h"
-#include "../util/category.h"
+#include "../controller/object_recognition_controller.h"
 
 static const int DELETE_ALL = 3; ///< @brief Key to delete all markers. It should be implemented in visualization_msgs::Marker::DELETEALL.
 
@@ -31,17 +28,24 @@ class ObjectRecognitionBehaviour {
 private:
   ros::Publisher _marker_publisher; ///< Publisher of ROS Messages
   PointCloudListener _listener; ///< Listener of ROS Messages.
+
+  ObjectRecognitionController _recognition_pipeline; ///< Object recognition pipeline.
+  /*
   std::vector<FilterPtr> _filters; ///< Array of pointers to abstract filters strategy.
   SegmentationPtr _segmentator; ///<Pointer to abstract segmentation strategy.
   DescriptorPtr _spin_image; ///<Pointer to SpinImage generator.
   std::vector<Category> _categories; ///< Array of categories
   CorrespondencePtr _correspondence;  ///< Pointer to abstract correspondence strategy.
+  */
+
   std::vector<MarkerMessage> _markers; ///< Vector of Marker messages.
   void publish(Eigen::Vector4f position, Eigen::Vector4f scale, int cluster_number); ///< Publisher wrapper.
   void reset_publisher(void); ///< Reset publisher objects
   std::string _frame; ///< Image frame
+
+  bool is_requested;
 public:
-  ObjectRecognitionBehaviour() {}; ///< Default constructor.
+  ObjectRecognitionBehaviour() {is_requested = false;}; ///< Default constructor.
   /**
    * Class constructor.
    * @param filters Array of pointers to implemented filters strategy.
@@ -111,4 +115,10 @@ public:
    * @param frame image frame.
    */
   void set_image_frame(const std::string frame);
+
+  /** Callback to handle request msgs
+   * ROS msg.
+   * @param msg
+   */
+  void request_callback(const std_msgs::EmptyPtr & msg);
 };

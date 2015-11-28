@@ -57,8 +57,10 @@ int main(int argc, char** argv)
   behaviour.set_marker_publisher(marker_pub);
 
 
-  ros::Subscriber sub = nh.subscribe(IMAGE_TOPIC, IMAGE_QUEUE_SIZE, &ObjectRecognitionBehaviour::image_callback,
+  ros::Subscriber im_sub = nh.subscribe(IMAGE_TOPIC, IMAGE_QUEUE_SIZE, &ObjectRecognitionBehaviour::image_callback,
                                      &behaviour);
+  ros::Subscriber re_sub = nh.subscribe(REQUEST_TOPIC, REQUEST_QUEUE_SIZE, &ObjectRecognitionBehaviour::request_callback,
+                                       &behaviour);
 
   ros::spin();
 
