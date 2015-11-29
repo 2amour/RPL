@@ -10,31 +10,55 @@ inherit
 	PARAMETERS
 
 create
-	make_with_attributes
+	make_default
 
 feature {NONE} -- Initialization
 
-	make_with_attributes (a_blocking_width, a_blocking_height: INTEGER_32; a_inflation: REAL_64; a_connectivity: GRID_CONNECTIVITY_STRATEGY)
-			-- Create `Current' and assign given attributes.
+	make_default
+			-- Create `Current' with default values
 		do
-			block_width := a_blocking_width
-			block_height := a_blocking_height
-			inflation := a_inflation
-			connectivity_strategy := a_connectivity
+			block_width := 1
+			block_height := 1
+			inflation := 0.0
+			connectivity_strategy := create {FULL_CONNECTIVITY_STRATEGY}
 		end
 
 feature {ANY} -- Acces
 
-	block_width: INTEGER_32
+	block_width: INTEGER
 			-- width of the block in pixels.
 
-	block_height: INTEGER_32
+	set_block_width(a_block_width: INTEGER)
+			-- Set block width.
+		do
+			block_width := a_block_width
+		end
+
+	block_height: INTEGER
 			-- height of the block in pixels.
+
+	set_block_height(a_block_height: INTEGER)
+			-- Set block height.
+		do
+			block_height := a_block_height
+		end
 
 	inflation: REAL_64
 			-- Inflation distance for map boundaries
 
+	set_inflation(a_inflation: REAL_64)
+			-- Set map inflation.
+		do
+			inflation := a_inflation
+		end
+
 	connectivity_strategy: GRID_CONNECTIVITY_STRATEGY
 			-- Grid connectivity used.
+
+	set_connectivity_strategy(a_strategy: GRID_CONNECTIVITY_STRATEGY)
+			-- Set connectivity strategy.
+		do
+			connectivity_strategy := a_strategy
+		end
 
 end
