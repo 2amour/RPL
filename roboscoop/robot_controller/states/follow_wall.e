@@ -84,14 +84,14 @@ feature -- Access
 			create best_point.make
 			create v_leave_point.make
 			min_distance :=  {REAL_64}.max_value
-			-- TODO - move to range_sensors
-			from i := 2
-			until i >= 4
+
+			from i := r_sig.sensors.lower
+			until i >= r_sig.sensors.upper
 			loop
 				if not r_sig.is_obstacle_in_front and
-					({DOUBLE_MATH}.dabs (r_sig.get_sensor_point (1).get_y) > safe_leaving_wall_vertical_distance and
-					{DOUBLE_MATH}.dabs (r_sig.get_sensor_point (5).get_y) > safe_leaving_wall_vertical_distance) then
-					v_leave_point := world_coordinates.project_to_parent (create {POINT_2D}.make_with_coordinates (r_sig.get_sensor_point (i).get_x, r_sig.get_sensor_point (i).get_y))
+					r_sig.is_sensor_at_front (i) and
+					r_sig.get_perpendicular_minimum_distance_to_wall > safe_leaving_wall_vertical_distance then
+						v_leave_point := world_coordinates.project_to_parent (create {POINT_2D}.make_with_coordinates (r_sig.get_sensor_point (i).get_x, r_sig.get_sensor_point (i).get_y))
 				end
 
 				if v_leave_point.get_euclidean_distance (t_sig.goal) < min_distance then
@@ -100,7 +100,6 @@ feature -- Access
 				end
 				i := i + 1
 			end
-			-- TODO - move to range_sensors end
 
 			if min_distance < t_sig.min_distance then
 				t_sig.set_leave_wall_with_target (best_point)

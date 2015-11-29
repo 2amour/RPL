@@ -153,12 +153,6 @@ feature -- Access
 						(sensors[6].is_valid_range and sensors[7].is_valid_range)
 		end
 
-	is_front_sensor (a_index: INTEGER): BOOLEAN
-			-- <Precursor>
-		do
-			Result := a_index = 3
-		end
-
 	is_all_front_sensors_open: BOOLEAN
 			-- <Precursor>
 		do
@@ -227,7 +221,7 @@ feature -- Access
 			p1, p2: POINT_2D
 		do
 			p1 := transforms[i].project_to_parent (create {POINT_2D}.make_with_coordinates (sensors[i].range, 0))
-			if not is_front_sensor (i) then
+			if i /= 3 then
 				create p2.make_with_coordinates (p1.get_x + 1, p1.get_y)
 			else
 				create p2.make_with_coordinates (p1.get_x, p1.get_y + 1)
@@ -354,6 +348,26 @@ feature -- Access
 			else
 				Result := transforms[sensor_index].project_to_parent (create {POINT_2D}.make_with_coordinates (sensors[sensor_index].max_range, 0.0))
 			end
+		end
+
+	get_perpendicular_minimum_distance_to_wall: REAL_64
+			-- <Precursor>
+		local
+			left_distance, right_distance: REAL_64
+		do
+			left_distance := {DOUBLE_MATH}.dabs (get_sensor_point (1).get_y)
+			right_distance := {DOUBLE_MATH}.dabs (get_sensor_point (5).get_y)
+			if left_distance < right_distance then
+				Result := left_distance
+			else
+				Result := right_distance
+			end
+		end
+
+	is_sensor_at_front (sensor_index: INTEGER_32): BOOLEAN
+			-- <Precursor>
+		do
+			Result := (sensor_index > 1 and sensor_index < 5)
 		end
 
 feature {NONE} -- Implementation

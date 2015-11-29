@@ -147,4 +147,13 @@ feature -- Access
 		deferred
 		end
 
+	get_perpendicular_minimum_distance_to_wall: REAL_64
+			-- Get minimum perpendicular distance from robot to wall.
+		deferred
+		end
+
+	is_sensor_at_front (sensor_index: INTEGER_32): BOOLEAN
+			-- Whether the sensor is at front of the robot.
+		deferred
+		end
 end
