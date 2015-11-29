@@ -19,7 +19,7 @@ feature {NONE} -- Initialization
 		do
 			create math
 			create time_handler.start (0.0)
-			create speed_controller.make_with_attributes (0.08, 2)
+			create speed_controller.make_with_attributes (nlsc_parameters.maximum_speed, nlsc_parameters.angular_decay_rate)
 			create orientation_controller.make_with_gains (pid_parameters.kp, pid_parameters.ki, pid_parameters.kd)
 		end
 
@@ -64,7 +64,7 @@ feature
 					t_sig.set_follow_wall_clockwise
 				end
 			end
-			if t_sig.goal.get_euclidean_distance (t_sig.current_pose.get_position) < t_sig.goal_threshold then
+			if t_sig.goal.get_euclidean_distance (t_sig.current_pose.get_position) < t_sig.reached_point_threshold then
 				t_sig.set_at_goal
 			end
 		end
@@ -72,10 +72,14 @@ feature
 feature {NONE} -- Implementation
 
 	orientation_controller: PID_CONTROLLER
+			-- Orientation controller.
 
 	speed_controller: NON_LINEAR_SPEED_CONTROLLER
+			-- Speed controller.
 
 	time_handler: TIME_HANDLER
+			-- Object for time stamp managing.
 
 	math: TRIGONOMETRY_MATH
+			-- Math object.
 end

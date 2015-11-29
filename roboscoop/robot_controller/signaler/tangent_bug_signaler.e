@@ -22,7 +22,7 @@ feature {NONE} -- Initialization
 			create current_pose.make
 			create intial_point_wall.make
 
-			goal_threshold := goal_parameters.threshold
+			reached_point_threshold := goal_parameters.threshold
 			timestamp := 0.0
 			min_distance := {REAL_64}.max_value
 
@@ -45,8 +45,8 @@ feature -- Access
 	goal: POINT_2D
 			-- Goal coordinates.
 
-	goal_threshold: REAL_64
-			-- Threshold for considering when the goal is reached.
+	reached_point_threshold: REAL_64
+			-- Threshold for considering when a point is reached.
 
 	current_pose: POSE_2D
 			-- Present position and orientation.
@@ -117,7 +117,7 @@ feature -- Status setting
 	set_leave_wall_with_target (p: separate POINT_2D)
 			-- Set to leave wall state.
 		do
-			leave_wall.set_target (create {POINT_2D}.make_with_coordinates (p.get_x, p.get_y))
+			leave_wall.set_safe_sensed_point (p)
 			state := leave_wall
 			is_leave_wall := True
 			debug

@@ -25,7 +25,7 @@ feature -- Access
 	update_state(t_sig: separate TANGENT_BUG_SIGNALER; o_sig: separate ODOMETRY_SIGNALER; r_sig: separate RANGE_GROUP)
 			-- <Precursor>
 		do
-			if t_sig.goal.get_euclidean_distance (t_sig.current_pose.get_position) > t_sig.goal_threshold then
+			if t_sig.goal.get_euclidean_distance (t_sig.current_pose.get_position) > t_sig.reached_point_threshold then
 				t_sig.set_go_to_goal
 			end
 		end

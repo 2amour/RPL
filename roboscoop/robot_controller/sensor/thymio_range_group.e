@@ -24,7 +24,7 @@ feature {NONE} -- Initialization.
 			register_transforms (range_sensors_parameters)
 			make_with_topic (topic_name)
 			register_ranges
-
+			close_obstacle_threshold := range_sensors_parameters.close_obstacle_threshold
 		end
 
 	register_ranges
@@ -55,6 +55,8 @@ feature {NONE} -- Initialization.
 			end
 		end
 
+feature -- Access
+
 	is_obstacle: BOOLEAN
 			-- <Precursor>
 		local
@@ -75,6 +77,16 @@ feature {NONE} -- Initialization.
 		do
 			Result := 	sensors[1].is_valid_range or sensors[2].is_valid_range or sensors[3].is_valid_range or
 						sensors[4].is_valid_range or sensors[5].is_valid_range
+		end
+
+	is_front_obstacle_close: BOOLEAN
+			-- <Precursor>
+		do
+			Result := {DOUBLE_MATH}.dabs (sensors[1].range) < close_obstacle_threshold or
+						{DOUBLE_MATH}.dabs (sensors[2].range) < close_obstacle_threshold or
+						{DOUBLE_MATH}.dabs (sensors[3].range) < close_obstacle_threshold or
+						{DOUBLE_MATH}.dabs (sensors[4].range) < close_obstacle_threshold or
+						{DOUBLE_MATH}.dabs (sensors[5].range) < close_obstacle_threshold
 		end
 
 	is_obstacle_at_back: BOOLEAN
@@ -343,4 +355,9 @@ feature {NONE} -- Initialization.
 				Result := transforms[sensor_index].project_to_parent (create {POINT_2D}.make_with_coordinates (sensors[sensor_index].max_range, 0.0))
 			end
 		end
+
+feature {NONE} -- Implementation
+
+	close_obstacle_threshold: REAL_64
+			-- Distance for considering an obstacle to be close.
 end

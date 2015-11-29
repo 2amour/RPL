@@ -30,6 +30,11 @@ feature -- Access
 		deferred
 		end
 
+	is_front_obstacle_close: BOOLEAN
+			-- Whether the front obstacle is close to the robot.
+		deferred
+		end
+
 	is_obstacle_at_back: BOOLEAN
 			-- Whether an obstacle is observed at back.
 		deferred

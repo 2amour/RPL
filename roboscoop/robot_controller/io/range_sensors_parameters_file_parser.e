@@ -34,6 +34,9 @@ feature -- Access
 					file.read_integer
 					sensor_count := file.last_integer
 					create sensors_poses.make_filled (create {POSE_2D}.make, 1, sensor_count)
+				elseif key.is_equal ("Close_obstacle_threshold") then
+					file.read_double
+					range_sensors_parameters.set_close_obstacle_threshold (file.last_double)
 				elseif key.is_equal ("Sensors_poses") then
 					from until sensor_count <= 0
 					loop
