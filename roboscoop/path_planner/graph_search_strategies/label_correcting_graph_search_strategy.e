@@ -85,8 +85,8 @@ feature {NONE} -- Implementation
 				end
 			else
 				io.put_string ("Goal not found! %N")
-				path_stack.put (start_node)
 			end
+			path_stack.put (start_node)
 		end
 
 end
