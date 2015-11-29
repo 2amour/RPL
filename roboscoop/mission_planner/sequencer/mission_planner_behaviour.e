@@ -20,13 +20,14 @@ feature {NONE} -- Initialization
 			create map_signaler.make_with_topic (parameters_bag.mission_planner_topics.map)
 			create odometry_signaler.make_with_topic (parameters_bag.mission_planner_topics.odometry)
 			create path_signaler.make_with_topic (parameters_bag.mission_planner_topics.path)
-			create marker_signaler.make_with_topic ("tet")
+			create marker_signaler.make_with_topic (parameters_bag.mission_planner_topics.marker_signaler)
 
 			create start_publisher.make_with_topic (parameters_bag.mission_planner_topics.path_planner_start)
 			create goal_publisher.make_with_topic (parameters_bag.mission_planner_topics.path_planner_goal)
 			create target_publisher.make_with_topic (parameters_bag.mission_planner_topics.target)
 			create map_publisher.make_with_topic (parameters_bag.mission_planner_topics.planner_map)
-			create object_recognition_publisher.make_with_topic("shit")
+			set_map_frame (map_publisher, parameters_bag.mission_planner_topics.planner_map_frame)
+			create object_recognition_publisher.make_with_topic (parameters_bag.mission_planner_topics.object_recognition_request)
 
 
 			create stop_signaler.make
@@ -108,4 +109,9 @@ feature {NONE} -- Implementation
 			s_sig.set_stop_requested (val)
 		end
 
+	set_map_frame(map_pub: separate OCCUPANCY_GRID_PUBLISHER; a_frame: separate STRING)
+			-- Set the frame of the occupancy grid publisher
+		do
+			map_pub.set_frame (a_frame)
+		end
 end

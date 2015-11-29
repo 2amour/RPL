@@ -17,9 +17,13 @@ feature {NONE} -- Initialization
 			create publisher.make_with_topic (topic_name)
 			publisher.advertize (1, True)
 			has_published := False
+			frame := ""
 		end
 
 feature {ANY} -- Access
+
+	frame: STRING
+			-- Frame of map msg.
 
 	has_published: BOOLEAN
 			-- Is the publisher used
@@ -31,9 +35,15 @@ feature {ANY} -- Access
 		do
 			create a_msg.make_from_separate (sep_msg)
 			msg := create {OCCUPANCY_GRID_MSG}.make_from_values (
-				create {HEADER_MSG}.make_now ("/map"), a_msg.info, a_msg.data)
+				create {HEADER_MSG}.make_now (frame), a_msg.info, a_msg.data)
 			publisher.publish (msg)
 			has_published := True
+		end
+
+	set_frame(a_frame: separate STRING)
+			-- Set the frame's name
+		do
+			frame := create {STRING}.make_from_separate (a_frame)
 		end
 
 feature {NONE} -- Implementation

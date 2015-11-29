@@ -11,12 +11,12 @@ inherit
 	TOPIC_PARAMETERS
 
 create
-	make_default, make_with_attributes
+	make_default
 
 feature {NONE} -- Initialize
 
 	make_default
-			-- Make default
+			-- Make with default values.
 		do
 			node_name := "mission_planner_node"
 			map := "/map"
@@ -29,52 +29,119 @@ feature {NONE} -- Initialize
 			path_planner_start := "/path_planner/start"
 			path_planner_goal := "/path_planner/goal"
 			planner_map := "/path_planner/map"
-
-		end
-
-	make_with_attributes (a_name, a_map, a_target, a_odometry, a_obstacle, a_path, a_start, a_goal, b_map: STRING_8)
-			-- Create `Current' and assign given attributes.
-		do
-			node_name := a_name
-			map := a_map
-
-			target := a_target
-			odometry := a_odometry
-			sensed_obstacle := a_obstacle
-
-			path := a_path
-			path_planner_start := a_start
-			path_planner_goal := a_goal
-			planner_map := b_map
+			planner_map_frame := "/map"
+			marker_signaler := "/visualization_marker"
+			object_recognition_request := "/request"
 		end
 
 feature {ANY} -- Constants
 
-	node_name: STRING_8
+	node_name: STRING
 			-- Name of node.
 
-	map: STRING_8
+	set_node_name(a_node_name: separate STRING)
+			-- Set the node name.
+		do
+			node_name := create {STRING}.make_from_separate (a_node_name)
+		end
+
+	map: STRING
 			-- Map to be published.
 
-	target: STRING_8
+	set_map(a_map: separate STRING)
+			-- Set the map name.
+		do
+			map := create {STRING}.make_from_separate (a_map)
+		end
+
+	target: STRING
 			-- Target goal for the driver.
 
-	odometry: STRING_8
+	set_target(a_target: separate STRING)
+			-- Set the target topic.
+		do
+			target := create {STRING}.make_from_separate (a_target)
+		end
+
+	odometry: STRING
 			-- Odometry topic.
 
-	sensed_obstacle: STRING_8
+	set_odometry(a_odometry: separate STRING)
+			-- Set the odometry topic.
+		do
+			odometry := create {STRING}.make_from_separate (a_odometry)
+		end
+
+	sensed_obstacle: STRING
 			-- Sensed obstacles topic.
 
-	path: STRING_8
+	set_sensed_obstacle(a_sensed_obstacle: separate STRING)
+			-- Set the sensed_obstacle topic.
+		do
+			sensed_obstacle := create {STRING}.make_from_separate (a_sensed_obstacle)
+		end
+
+	path: STRING
 			-- Topic where path will be read.
 
-	path_planner_start: STRING_8
+	set_path(a_path: separate STRING)
+			-- Set the path topic.
+		do
+			path := create {STRING}.make_from_separate (a_path)
+		end
+
+	path_planner_start: STRING
 			-- Start position for path_planner node.
 
-	path_planner_goal: STRING_8
+	set_path_planner_start(a_path_planner_start: separate STRING)
+			-- Set the path_planner_start topic.
+		do
+			path_planner_start := create {STRING}.make_from_separate (a_path_planner_start)
+		end
+
+	path_planner_goal: STRING
 			-- Goal position for path_planner node.
 
-	planner_map: STRING_8
-			-- Map for path_planner node. 
+	set_path_planner_goal(a_path_planner_goal: separate STRING)
+			-- Set the path_planner_goal topic.
+		do
+			path_planner_goal := create {STRING}.make_from_separate (a_path_planner_goal)
+		end
+
+	planner_map: STRING
+			-- Map topic for path_planner node.
+
+	set_planner_map(a_planner_map: separate STRING)
+			-- Set the planner_map topic.
+		do
+			planner_map := create {STRING}.make_from_separate (a_planner_map)
+		end
+
+	planner_map_frame: STRING
+			-- Frame of the map for the path_planner node.
+
+	set_planner_map_frame(a_frame: separate STRING)
+			-- Set frame name for map of the path_planner node.
+		do
+			planner_map_frame := create {STRING}.make_from_separate (a_frame)
+		end
+
+	marker_signaler: STRING
+			-- Topic name of the markers.
+
+	set_marker_signaler(a_marker_signaler: separate STRING)
+			-- Set the marker_signaler topic.
+		do
+			marker_signaler := create {STRING}.make_from_separate (a_marker_signaler)
+		end
+
+	object_recognition_request: STRING
+			-- Topic for requesting the object_recognition module.
+
+	set_object_recognition_request(a_object_recognition_request: separate STRING)
+			-- Set the path topic.
+		do
+			object_recognition_request := create {STRING}.make_from_separate (a_object_recognition_request)
+		end
 
 end
