@@ -1,8 +1,7 @@
 note
-	description: "Summary description for {TANGENT_BUG_STATE}."
-	author: ""
-	date: "$Date$"
-	revision: "$Revision$"
+    description: "Tangent bug generic state class."
+	author: "Ferran Pallarès"
+	date: "28.11.2015"
 
 deferred class
 	TANGENT_BUG_STATE
@@ -23,5 +22,4 @@ feature
 		-- update the signaler to the next state.
 	deferred
 	end
-
 end

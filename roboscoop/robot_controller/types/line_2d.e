@@ -30,7 +30,7 @@ feature -- Access
 	get_vector: VECTOR_2D
 			-- Get vector with line direction starting starting at first point.
 		do
-			Result := create {VECTOR_2D}.make_with_coordinates (p_2.get_x - p_1.get_x, p_2.get_y - p_1.get_y) -- TODO - Larger X point - smaller X point; If equal smaller Y - larger Y
+			Result := create {VECTOR_2D}.make_with_coordinates (p_2.get_x - p_1.get_x, p_2.get_y - p_1.get_y)
 		end
 
 	get_distance_from_point (p: POINT_2D): REAL_64

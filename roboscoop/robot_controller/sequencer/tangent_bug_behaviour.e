@@ -1,6 +1,6 @@
 note
 	description: "Behaviour of the robot implementing tangent bug algorithm."
-	author: "Sebastián Curi"
+	author: "Sebastian Curi"
 	date: "18.10.15"
 
 class
@@ -18,7 +18,7 @@ feature {NONE} -- Initialization
 			-- Create behaviour with given attributes.
 		do
 			create stop_signaler.make
-			create tangent_bug_signaler.make_with_attributes (parameters_bag.goal_parameters, parameters_bag.pid_parameters, parameters_bag.wall_following_parameters)
+			create tangent_bug_signaler.make_with_attributes (parameters_bag)
 
 			create goal_signaler.make_with_topic (ros_topics_params.goal)
 
@@ -33,7 +33,8 @@ feature -- Access
 	start
 			-- Start the behaviour.
 		local
-			a, b, c, d: separate TANGENT_BUG_CONTROLLER
+			a: separate TANGENT_BUG_CONTROLLER
+			b, c, d: separate COMMUNICATION_CONTROLLER
 		do
 			create a.make_with_attributes (stop_signaler)
 			create b.make_with_attributes (stop_signaler)
@@ -52,6 +53,9 @@ feature -- Access
 
 feature {NONE} -- Implementation
 
+	tangent_bug_signaler: separate TANGENT_BUG_SIGNALER
+			-- Signaler for controlling the tangent bug state.
+
 	odometry_publisher: separate ODOMETRY_PUBLISHER
 			-- Publisher of current state of the odometry publisher.
 
@@ -61,7 +65,7 @@ feature {NONE} -- Implementation
 	goal_signaler: separate POINT_SIGNALER
 			-- Signaler to register the goal.
 
-	sep_start (a, b, c, d: separate TANGENT_BUG_CONTROLLER)
+	sep_start (a: separate TANGENT_BUG_CONTROLLER; b, c, d: separate COMMUNICATION_CONTROLLER)
 			-- Start behaviour controllers.
 		do
 			if attached odometry_sig as a_odometry_sig and
@@ -71,7 +75,7 @@ feature {NONE} -- Implementation
 				a.repeat_until_stop_requested (
 					agent a.update_velocity (tangent_bug_signaler, a_odometry_sig, a_range_group, a_ground_group, stop_signaler, a_diff_drive))
 				b.repeat_until_stop_requested (
-					agent b.update_goal (goal_signaler, tangent_bug_signaler))
+					agent b.update_goal (goal_signaler, tangent_bug_signaler)) -- TODO - different controllers
 				c.repeat_until_stop_requested (
 					agent c.publish_odometry (a_odometry_sig, odometry_publisher))
 				d.repeat_until_stop_requested (
@@ -80,7 +84,7 @@ feature {NONE} -- Implementation
 		end
 
 	sep_stop (stop_sig: separate STOP_SIGNALER; val: BOOLEAN)
-			-- Signal behavior for move_toa stop.
+			-- Manage stop signaler.
 		do
 			stop_sig.set_stop_requested (val)
 		end

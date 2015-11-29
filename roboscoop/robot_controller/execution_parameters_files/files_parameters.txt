@@ -1,5 +1,10 @@
-Goal_parameters_file_path				./execution_parameters_files/goal_parameters.txt
-PID_parameters_file_path				./execution_parameters_files/pid_parameters.txt
-Wall_following_parameters_file_path		./execution_parameters_files/wall_following_parameters.txt
-Range_sensors_parameters_file_path		./execution_parameters_files/range_sensors_parameters.txt
-ROS_topics_file_path					./execution_parameters_files/ros_topics.txt
+Goal_parameters_file_path										./execution_parameters_files/goal_parameters.txt
+Go_to_goal_PID_parameters_file_path								./execution_parameters_files/go_to_goal_pid_parameters.txt
+Follow_wall_PID_parameters_file_path							./execution_parameters_files/follow_wall_pid_parameters.txt
+Leave_wall_PID_parameters_file_path								./execution_parameters_files/leave_wall_pid_parameters.txt
+Go_to_goal_non_linear_speed_controller_parameters_file_path		./execution_parameters_files/go_to_goal_non_linear_speed_controller_parameters.txt
+Follow_wall_non_linear_speed_controller_parameters_file_path	./execution_parameters_files/follow_wall_non_linear_speed_controller_parameters.txt
+Leave_wall_non_linear_speed_controller_parameters_file_path		./execution_parameters_files/leave_wall_non_linear_speed_controller_parameters.txt
+Wall_following_parameters_file_path								./execution_parameters_files/wall_following_parameters.txt
+Range_sensors_parameters_file_path								./execution_parameters_files/range_sensors_parameters.txt
+ROS_topics_file_path											./execution_parameters_files/ros_topics.txt

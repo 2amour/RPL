@@ -11,104 +11,82 @@ create
 
 feature {NONE} -- Initialization
 
-	make_with_attributes (goal_parameters: separate GOAL_PARAMETERS; pid_parameters: separate PID_PARAMETERS; wall_following_parameters: separate WALL_FOLLOWING_PARAMETERS)
+	make_with_attributes (parameters_bag: separate TANGENT_BUG_PARAMETERS_BAG)
 			-- Initialize signaler with attributes.
+		local
+			goal_parameters: GOAL_PARAMETERS
 		do
+			goal_parameters := create {GOAL_PARAMETERS}.make_from_separate (parameters_bag.goal_parameters)
+
+			create goal.make_with_coordinates (goal_parameters.x, goal_parameters.y)
 			create current_pose.make
-			create goal.make_with_coordinates (0.0, 0.0)
-			goal_threshold := goal_parameters.threshold
-			initialize_states (create {PID_PARAMETERS}.make_from_separate (pid_parameters), create {WALL_FOLLOWING_PARAMETERS}.make_from_separate (wall_following_parameters))
-			set_go_to_goal
 			create intial_point_wall.make
-			d_min := {REAL_64}.max_value
+
+			reached_point_threshold := goal_parameters.threshold
+			timestamp := 0.0
+			min_distance := {REAL_64}.max_value
+
+			initialize_states (parameters_bag)
+			set_go_to_goal
 		end
 
-	initialize_states (pid_parameters: PID_PARAMETERS; wall_following_parameters: WALL_FOLLOWING_PARAMETERS)
+	initialize_states (parameters_bag: separate TANGENT_BUG_PARAMETERS_BAG)
 			-- Initialize states.
 		do
+			create go_to_goal.make_with_attributes (parameters_bag.go_to_goal_pid_parameters, parameters_bag.go_to_goal_nlsc_parameters)
+			create follow_wall.make_with_attributes (parameters_bag.follow_wall_pid_parameters, parameters_bag.follow_wall_nlsc_parameters, parameters_bag.wall_following_parameters)
+			create leave_wall.make_with_attributes (parameters_bag.leave_wall_pid_parameters, parameters_bag.leave_wall_nlsc_parameters)
 			create at_goal
-			create follow_wall.make_with_attributes (pid_parameters, wall_following_parameters)
-			create go_to_goal.make_with_attributes (pid_parameters)
-			create leave_wall.make_with_attributes (pid_parameters)
 			create unreachable_goal
 		end
 
 feature -- Access
 
-	get_goal: POINT_2D
-			-- Get goal coordinates.
-		do
-			Result := goal
-		end
+	goal: POINT_2D
+			-- Goal coordinates.
 
-	get_goal_threshold: REAL_64
-			-- Get threshold for goal.
-		do
-			Result := goal_threshold
-		end
+	reached_point_threshold: REAL_64
+			-- Threshold for considering when a point is reached.
 
-	get_d_min: REAL_64
-			-- Get minimum distance to goal.
-		do
-			Result := d_min
-		end
+	current_pose: POSE_2D
+			-- Present position and orientation.
 
-	get_state: TANGENT_BUG_STATE
-			-- Get current state.
-		do
-			Result := tangent_bug_state
-		end
+	timestamp: REAL_64
+			-- Time.
 
-	get_pose: POSE_2D
-			-- Return current pose.
-		do
-			Result := current_pose
-		end
+	min_distance: REAL_64
+			-- Minimum recorded distance to goal.
 
-	get_timestamp: REAL_64
-			-- Get timestamp of signaler.
-		do
-			Result := timestamp
-		end
+	intial_point_wall: POINT_2D
+			-- Position at the beginning of finding a wall.
+
+	state: TANGENT_BUG_STATE
+			-- State of the robot.
 
 feature -- Status report
 
 	is_go_to_goal: BOOLEAN
-			-- Check if state is 'go_to_goal'.
-		do
-			Result := tangent_bug_state = go_to_goal
-		end
+			-- Whether state is 'go_to_goal'.
 
 	is_follow_wall: BOOLEAN
-			-- Check if state is 'follow_wall_cw'.
-		do
-			Result := tangent_bug_state = follow_wall
-		end
+			-- Whether state is 'follow_wall_cw'.
 
 	is_leave_wall: BOOLEAN
-			-- Check if state is 'leave_wall'.
-		do
-			Result := tangent_bug_state = leave_wall
-		end
+			-- Whether state is 'leave_wall'.
 
 	is_at_goal: BOOLEAN
-			-- Check if state is 'at_goal'.
-		do
-			Result := tangent_bug_state = at_goal
-		end
+			-- Whether state is 'at_goal'.
 
 	is_unreachable_goal: BOOLEAN
-			-- Check if state is 'unreachable_goal'.
-		do
-			Result := tangent_bug_state = unreachable_goal
-		end
+			-- Whether state is 'unreachable_goal'.
 
-feature -- Status setting -- States
+feature -- Status setting
 
 	set_at_goal
 			-- Set at goal state.
 		do
-			tangent_bug_state := at_goal
+			state := at_goal
+			is_at_goal := True
 			debug
 				io.put_string ("At Goal %N")
 			end
@@ -118,7 +96,8 @@ feature -- Status setting -- States
 			-- Set follow wall state.
 		do
 			follow_wall.set_clockwise
-			tangent_bug_state := follow_wall
+			state := follow_wall
+			is_follow_wall := True
 			debug
 				io.put_string ("Follow Wall Clockwise %N")
 			end
@@ -128,7 +107,8 @@ feature -- Status setting -- States
 			-- Set follow wall state.
 		do
 			follow_wall.set_counter_clockwise
-			tangent_bug_state := follow_wall
+			state := follow_wall
+			is_follow_wall := True
 			debug
 				io.put_string ("Follow Wall Counter Clockwise%N")
 			end
@@ -137,8 +117,9 @@ feature -- Status setting -- States
 	set_leave_wall_with_target (p: separate POINT_2D)
 			-- Set to leave wall state.
 		do
-			leave_wall.set_target (create {POINT_2D}.make_with_coordinates (p.get_x, p.get_y))
-			tangent_bug_state := leave_wall
+			leave_wall.set_safe_sensed_point (p)
+			state := leave_wall
+			is_leave_wall := True
 			debug
 				io.put_string ("Leave Wall %N")
 			end
@@ -147,7 +128,8 @@ feature -- Status setting -- States
 	set_go_to_goal
 			-- Set to go to goal state.
 		do
-			tangent_bug_state := go_to_goal
+			state := go_to_goal
+			is_go_to_goal := True
 			debug
 				io.put_string ("Go to Goal %N")
 			end
@@ -156,57 +138,36 @@ feature -- Status setting -- States
 	set_unreachable_goal
 			-- Set to unreachable goal state.
 		do
-			tangent_bug_state := unreachable_goal
+			state := unreachable_goal
+			is_unreachable_goal := True
 			debug
 				io.put_string ("Unreachable Wall %N")
 			end
 		end
 
-feature -- Status setting
+feature -- Element change
 
-	set_goal (g: POINT_2D)
-			-- Set a point as a goal.
-		do
-			goal := g
-		ensure
-			goal_set: goal = g
-		end
-
-	reset_goal_coordinates (x, y: REAL_64)
+	set_goal (x, y: REAL_64)
 			-- Setter for `goal'.
 		do
 			create goal.make_with_coordinates (x, y)
-			set_d_min (goal.get_euclidean_distance (current_pose.get_position))
+			min_distance := {REAL_64}.max_value
 		end
 
-	set_goal_threshold (threshold: REAL_64)
-			-- Set threshold for goal.
-		do
-			goal_threshold := threshold
-		end
-
-	set_d_min (d: REAL_64)
+	set_min_distance (d: REAL_64)
 			-- Set minimum distance to goal.
 		require
 			valid_d: d > 0
 		do
-			d_min := d
+			min_distance := d
 		ensure
-			d_set: d = d_min
+			d_set: d = min_distance
 		end
 
-	set_state (new_state: TANGENT_BUG_STATE)
-			-- Set a new state.
-		do
-			tangent_bug_state := new_state
-		ensure
-			state_set: tangent_bug_state = new_state
-		end
-
-	set_pose (pose: POSE_2D)
+	set_pose (pose: separate POSE_2D)
 			-- Set new pose.
 		do
-			current_pose := pose
+			current_pose := create {POSE_2D}.make_from_separate (pose)
 		ensure
 			pose_set: current_pose = pose
 		end
@@ -220,27 +181,6 @@ feature -- Status setting
 		end
 
 feature {NONE} -- Implementation
-
-	goal: POINT_2D
-			-- Goal coordinates.
-
-	goal_threshold: REAL_64
-			-- Threshold for considering when the goal is reached.
-
-	current_pose: POSE_2D
-			-- Present position and orientation.
-
-	timestamp: REAL_64
-			-- Time.
-
-	d_min: REAL_64
-			-- Minimum distance to goal.
-
-	intial_point_wall: POINT_2D
-			-- Position at the beginning of finding a wall.
-
-	tangent_bug_state: TANGENT_BUG_STATE
-			-- State of the robot.
 
 	at_goal: AT_GOAL
 			-- State "at_goal".

@@ -1,6 +1,6 @@
 note
 	description: "Wall following parameters file parser."
-	author: "Ferran PallarÃ¨s"
+	author: "Ferran Pallarès"
 	date: "21.10.15"
 
 class
@@ -31,12 +31,6 @@ feature -- Access
 				if key.is_equal ("Desired_wall_distance") then
 					file.read_double
 					wall_following_parameters.set_desired_wall_distance (file.last_double)
-				elseif key.is_equal ("Outer_corner_angular_velocity") then
-					file.read_double
-					wall_following_parameters.set_outer_corner_angular_velocity (file.last_double)
-				elseif key.is_equal ("Linear_velocity") then
-					file.read_double
-					wall_following_parameters.set_linear_velocity (file.last_double)
 				elseif key.is_equal ("Safe_outer_corner_turn_offset") then
 					file.read_double
 					x := file.last_double

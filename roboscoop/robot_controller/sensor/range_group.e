@@ -14,7 +14,7 @@ feature -- Access
 
 	transforms: ARRAY[TRANSFORM_2D]
 			-- Array of transforms from sensor coordinate frame to robot coordinate frame.
-	
+
 	sensors: ARRAYED_LIST [RANGE_MSG]
 			-- Array of sensors.
 		deferred
@@ -27,6 +27,11 @@ feature -- Access
 
 	is_obstacle_in_front: BOOLEAN
 			-- Whether an obstacle is observed in front.
+		deferred
+		end
+
+	is_front_obstacle_close: BOOLEAN
+			-- Whether the front obstacle is close to the robot.
 		deferred
 		end
 
@@ -55,11 +60,6 @@ feature -- Access
 		deferred
 		end
 
-	follow_wall_orientation (a_desired_distance_from_wall: REAL_64): REAL_64
-			-- Orientation which the robot should take in order to follow the current wall obstacle.
-		deferred
-		end
-
 	is_wall_only_at_left: BOOLEAN
 			-- Check if there is a wall only at left.
 		deferred
@@ -77,6 +77,11 @@ feature -- Access
 
 	is_huge_at_right: BOOLEAN
 			-- Check if there is an obstacle in left and right sensors
+		deferred
+		end
+
+	is_sensor_at_front (sensor_index: INTEGER_32): BOOLEAN
+			-- Whether the sensor is at front of the robot.
 		deferred
 		end
 
@@ -147,4 +152,13 @@ feature -- Access
 		deferred
 		end
 
+	get_perpendicular_minimum_distance_to_wall: REAL_64
+			-- Get minimum perpendicular distance from robot to wall.
+		deferred
+		end
+
+	get_closest_obstacle_point: POINT_2D
+			-- Get closest sensed obstacle point.
+		deferred
+		end
 end

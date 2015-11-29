@@ -7,21 +7,15 @@ class
 	NON_LINEAR_SPEED_CONTROLLER
 
 create
-	make, make_with_speed
+	make_with_attributes
 
 feature -- Initialization
 
-	make
-			-- Initialize object with default values.
-		do
-			max_speed := 0.08 -- Initialized by default
-			output := 0.0
-		end
-
-	make_with_speed (v: REAL_64)
+	make_with_attributes (nlsc_maximum_speed, nlsc_angular_decay_rate: REAL_64)
 			-- Initialize object with max speed.
 		do
-			max_speed := v
+			max_speed := nlsc_maximum_speed
+			angular_decay_rate := nlsc_angular_decay_rate
 			output := 0.0
 		end
 
@@ -38,7 +32,7 @@ feature -- Access
 	set_angular_velocity (w: REAL_64)
 			-- Set Input to controller.
 		do
-			output := max_speed / (1 + {DOUBLE_MATH}.log ({DOUBLE_MATH}.dabs (w) + 2.0) )
+			output := max_speed / (1 + angular_decay_rate*({DOUBLE_MATH}.log (1 + {DOUBLE_MATH}.dabs (w))))
 		end
 
 	get_output: REAL_64
@@ -51,6 +45,9 @@ feature {NONE} -- Implementation
 
 	max_speed: REAL_64
 			-- Maximal speed.
+
+	angular_decay_rate: REAL_64
+			-- Angular decay rate.
 
 	output: REAL_64
 			-- Output speed.
