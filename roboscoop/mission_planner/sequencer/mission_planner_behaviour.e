@@ -20,11 +20,15 @@ feature {NONE} -- Initialization
 			create map_signaler.make_with_topic (parameters_bag.mission_planner_topics.map)
 			create odometry_signaler.make_with_topic (parameters_bag.mission_planner_topics.odometry)
 			create path_signaler.make_with_topic (parameters_bag.mission_planner_topics.path)
+			create marker_signaler.make_with_topic (parameters_bag.mission_planner_topics.marker_signaler)
 
 			create start_publisher.make_with_topic (parameters_bag.mission_planner_topics.path_planner_start)
 			create goal_publisher.make_with_topic (parameters_bag.mission_planner_topics.path_planner_goal)
 			create target_publisher.make_with_topic (parameters_bag.mission_planner_topics.target)
 			create map_publisher.make_with_topic (parameters_bag.mission_planner_topics.planner_map)
+			set_map_frame (map_publisher, parameters_bag.mission_planner_topics.planner_map_frame)
+			create object_recognition_publisher.make_with_topic (parameters_bag.mission_planner_topics.object_recognition_request)
+
 
 			create stop_signaler.make
 		end
@@ -34,14 +38,15 @@ feature {ANY} -- Access
 	start
 			-- Start the behaviour.
 		local
-			a, b, c, d: separate MISSION_PLANNER_CONTROLLER
+			a, b, c, d, e: separate MISSION_PLANNER_CONTROLLER
 		do
 			create a.make (stop_signaler)
 			create b.make (stop_signaler)
 			create c.make (stop_signaler)
 			create d.make (stop_signaler)
+			create e.make (stop_signaler)
 			sep_stop (stop_signaler, False)
-			sep_start (a, b, c, d)
+			sep_start (a, b, c, d, e)
 		end
 
 	stop
@@ -70,6 +75,9 @@ feature {NONE} -- Implementation
 	path_signaler: separate PATH_SIGNALER_WITH_FLAG
 			-- Current state of the path.
 
+	marker_signaler: separate MARKER_SIGNALER
+			-- Current state of the markers.
+
 	start_publisher: separate POINT_PUBLISHER
 			-- Publisher of start point.
 
@@ -79,16 +87,20 @@ feature {NONE} -- Implementation
 	target_publisher: separate POINT_PUBLISHER
 			-- Publisher of current target point.
 
+	object_recognition_publisher: separate EMPTY_PUBLISHER
+			-- Publisher to request object recognition procedure.
+
 	stop_signaler: separate STOP_SIGNALER
 			-- Signaler for stopping the behaviour.
 
-	sep_start (a, b, c, d: separate MISSION_PLANNER_CONTROLLER)
+	sep_start (a, b, c, d, e: separate MISSION_PLANNER_CONTROLLER)
 			-- Start controllers asynchronously.
 		do
-			a.repeat_until_stop_requested (agent a.update_target(odometry_signaler, mission_signaler, target_publisher))
-			b.repeat_until_stop_requested (agent b.request_path(mission_signaler, obstacle_signaler, start_publisher, goal_publisher))
-			c.repeat_until_stop_requested (agent c.update_path(mission_signaler, path_signaler))
-			d.repeat_until_stop_requested (agent d.update_map (obstacle_signaler, mission_signaler, map_signaler, map_publisher))
+			a.repeat_until_stop_requested (agent a.update_target(odometry_signaler, marker_signaler, mission_signaler, target_publisher, stop_signaler))
+			b.repeat_until_stop_requested (agent b.request_path(mission_signaler, obstacle_signaler, start_publisher, goal_publisher, stop_signaler))
+			c.repeat_until_stop_requested (agent c.update_path(mission_signaler, path_signaler, stop_signaler))
+			d.repeat_until_stop_requested (agent d.update_map (obstacle_signaler, mission_signaler, map_signaler, map_publisher, stop_signaler))
+			e.repeat_until_stop_requested (agent e.request_recognition (object_recognition_publisher, marker_signaler, mission_signaler, stop_signaler))
 		end
 
 	sep_stop (s_sig: separate STOP_SIGNALER; val: BOOLEAN)
@@ -97,4 +109,9 @@ feature {NONE} -- Implementation
 			s_sig.set_stop_requested (val)
 		end
 
+	set_map_frame(map_pub: separate OCCUPANCY_GRID_PUBLISHER; a_frame: separate STRING)
+			-- Set the frame of the occupancy grid publisher
+		do
+			map_pub.set_frame (a_frame)
+		end
 end

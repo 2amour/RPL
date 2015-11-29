@@ -28,8 +28,10 @@ feature {NONE} -- Initialization
 
 			goal_threshold := thresh
 			is_path_requested := True
+			is_obj_recognition_requested := False
 
 			create path.make (0)
+			create way_points_idx.make (0)
 			path.start
 
 			discovered_obstacle := False
@@ -43,8 +45,14 @@ feature {ANY} -- Access
 	way_points: ARRAYED_LIST[POINT]
 			-- Way points to visit.
 
+	way_points_idx: ARRAYED_LIST[INTEGER]
+			-- Array that match idx of path to way point.
+
 	is_path_requested: BOOLEAN
 			-- Is a new path requested?
+
+	is_obj_recognition_requested: BOOLEAN
+			-- Is a new object recognition requested?
 
 	path: ARRAYED_LIST [separate POINT]
 			-- Path of points to visit.
@@ -56,6 +64,7 @@ feature {ANY} -- Access
 			-- Reset path of points.
 		do
 			create path.make (0)
+			create way_points_idx.make(0)
 			path.start
 		end
 
@@ -73,21 +82,35 @@ feature {ANY} -- Access
 			is_path_requested = a_val
 		end
 
+	request_object_recognition (a_val: BOOLEAN)
+			-- Set `a_val' to is_obj_recognition_requested
+		do
+			is_obj_recognition_requested := a_val
+		ensure
+			is_obj_recognition_requested = a_val
+		end
 
-	get_current: POINT
+
+	get_current_path_point: POINT
 			-- Get current path_point.
 		do
 			Result := create {POINT}.make_from_separate (path.item)
 		end
 
-	get_next: POINT
+	get_next_path_point: POINT
 			-- Get next path_point.
 		require
 			not path.islast
 		do
 			path.forth
-			Result := get_current
+			Result := get_current_path_point
 			path.back
+		end
+
+	get_next_way_point: POINT
+			-- Get next path_point.
+		do
+			Result := create {POINT}.make_from_separate (path.at(way_points_idx.item))
 		end
 
 	get_origin: POINT
@@ -99,15 +122,38 @@ feature {ANY} -- Access
 	get_goal: POINT
 			-- Get robot's goal.
 		do
-			if not way_points.islast then
-				way_points.forth
-			end
 			Result := way_points.item
+		end
+
+	set_way_point_idx
+			-- Set way point index in vector
+		do
+			way_points_idx.force (path.count)
 		end
 
 	set_discovered_obstacle (a_val: BOOLEAN)
 			-- Set `a_val' to is_path_requested
 		do
 			discovered_obstacle := a_val
+		end
+
+	at_ith_way_point(test_point: separate POINT; way_point_idx: INTEGER): BOOLEAN
+			-- Check if the point is at one of the way points
+		do
+			Result := way_points.at (way_point_idx).euclidean_distance (test_point) < goal_threshold
+		end
+
+	at_a_way_point(test_point: separate POINT): BOOLEAN
+			-- Check if the point is at one of the way points
+		local
+			i: INTEGER
+		do
+			Result := False
+			from i := 1
+			until i > way_points.count
+			loop
+				Result := at_ith_way_point(test_point, i)
+				i := i + 1
+			end
 		end
 end

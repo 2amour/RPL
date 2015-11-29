@@ -27,31 +27,34 @@ feature {NONE} -- Initialization
 
 feature {PATH_PLANNING_BEHAVIOUR} -- Execute algorithm
 
-	update_start_point (start_sig: separate POINT_SIGNALER; path_planning_sig: separate PATH_PLANNING_SIGNALER)
+	update_start_point (start_sig: separate POINT_SIGNALER; path_planning_sig: separate PATH_PLANNING_SIGNALER; s_sig: separate STOP_SIGNALER)
 			-- Update start point.
 		require
 			start_sig.new_point
+			not s_sig.is_stop_requested
 		do
 			io.put_string ("Recieved start point %N")
 			path_planning_sig.set_start (start_sig.point)
 			start_sig.set_new_point(False)
 		end
 
-	update_goal_point (goal_sig: separate POINT_SIGNALER; path_planning_sig: separate PATH_PLANNING_SIGNALER)
+	update_goal_point (goal_sig: separate POINT_SIGNALER; path_planning_sig: separate PATH_PLANNING_SIGNALER; s_sig: separate STOP_SIGNALER)
 			-- Update goal point.
 		require
 			goal_sig.new_point
+			not s_sig.is_stop_requested
 		do
 			io.put_string ("Recieved goal point %N")
 			path_planning_sig.set_goal (goal_sig.point)
 			goal_sig.set_new_point(False)
 		end
 
-	update_map (map: separate OCCUPANCY_GRID_SIGNALER; map_params_sig: separate MAP_PARAMETERS_SIGNALER)
+	update_map (map: separate OCCUPANCY_GRID_SIGNALER; map_params_sig: separate MAP_PARAMETERS_SIGNALER; s_sig: separate STOP_SIGNALER)
 			-- Update map.
 		require
 			map.state.info.resolution > 0
 			map.state.header.timestamp > map_params_sig.timestamp
+			not s_sig.is_stop_requested
 		do
 			io.put_string ("Recieved map %N")
 			map.inflate (map_params_sig.inflation)
@@ -60,13 +63,14 @@ feature {PATH_PLANNING_BEHAVIOUR} -- Execute algorithm
 			map_params_sig.set_created (True)
 		end
 
-	search (map: separate OCCUPANCY_GRID_SIGNALER; map_params_sig: separate MAP_PARAMETERS_SIGNALER; path_planning_sig: separate PATH_PLANNING_SIGNALER; path_publisher: separate PATH_PUBLISHER)
+	search (map: separate OCCUPANCY_GRID_SIGNALER; map_params_sig: separate MAP_PARAMETERS_SIGNALER; path_planning_sig: separate PATH_PLANNING_SIGNALER; path_publisher: separate PATH_PUBLISHER; s_sig: separate STOP_SIGNALER)
 			-- Execute search algorithm.
 		require
 			map_params_sig.is_created
 			attached path_planning_sig.start_point
 			attached path_planning_sig.goal_point
 			map_params_sig.is_changed or (path_planning_sig.changed_start and path_planning_sig.changed_goal)
+			not s_sig.is_stop_requested
 		local
 			start_point: POINT
 			goal_point: POINT

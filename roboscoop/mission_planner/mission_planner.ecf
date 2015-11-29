@@ -23,6 +23,7 @@
 			<cluster name="types" location=".\types\"/>
 			<cluster name="parameters" location=".\parameters\"/>
 			<cluster name="ros" location=".\ros\"/>
+			<cluster name="msg" location=".\msg\"/>
 		</cluster>
 	</target>
 </system>

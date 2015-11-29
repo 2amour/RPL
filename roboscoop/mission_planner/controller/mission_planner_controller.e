@@ -24,11 +24,12 @@ feature {NONE} -- Initialization
 
 feature {MISSION_PLANNER_BEHAVIOUR} -- Execute algorithm
 
-	update_map (obstacle_sig: separate POINT_SIGNALER; mission_sig: separate MISSION_PLANNER_SIGNALER; map_sig: separate OCCUPANCY_GRID_SIGNALER; map_pub: separate OCCUPANCY_GRID_PUBLISHER)
+	update_map (obstacle_sig: separate POINT_SIGNALER; mission_sig: separate MISSION_PLANNER_SIGNALER; map_sig: separate OCCUPANCY_GRID_SIGNALER; map_pub: separate OCCUPANCY_GRID_PUBLISHER; s_sig: separate STOP_SIGNALER)
 			-- update map from sensor measurements.
 		require
 			(obstacle_sig.is_new_val or not map_pub.has_published)
 			map_sig.state.info.resolution > 0
+			not s_sig.is_stop_requested
 		local
 			idx: INTEGER
 		do
@@ -49,28 +50,36 @@ feature {MISSION_PLANNER_BEHAVIOUR} -- Execute algorithm
 			obstacle_sig.set_new_val (False)
 		end
 
-	update_target (odometry_sig: separate ODOMETRY_SIGNALER; mission_sig: separate MISSION_PLANNER_SIGNALER; target_pub: separate POINT_PUBLISHER)
+	update_target (odometry_sig: separate ODOMETRY_SIGNALER; marker_sig: separate MARKER_SIGNALER; mission_sig: separate MISSION_PLANNER_SIGNALER; target_pub: separate POINT_PUBLISHER; s_sig: separate STOP_SIGNALER)
 			-- update target of robot driver.
 		require
 			not mission_sig.is_path_requested
 			not mission_sig.path.islast
 			mission_sig.path.count > 0
+			marker_sig.is_new_val
+			not s_sig.is_stop_requested
 		local
 			current_point: POINT
 		do
+			create current_point.make_from_msg (odometry_sig.data.pose.pose.position)
+			if 	mission_sig.at_a_way_point (current_point+mission_sig.get_origin) then
+				mission_sig.request_object_recognition (True)
+			end
+
+			if current_point.euclidean_distance(mission_sig.get_next_way_point - mission_sig.get_origin) < mission_sig.goal_threshold then
+				mission_sig.way_points_idx.forth
+			end
+
 			if mission_sig.discovered_obstacle then
-				target_pub.publish_point (mission_sig.get_goal - mission_sig.get_origin)
-				mission_sig.path.go_i_th (mission_sig.path.count)
---				create current_point.make_with_values (odometry_sig.x + mission_sig.get_origin.x, odometry_sig.y + mission_sig.get_origin.y, odometry_sig.z + mission_sig.get_origin.z)
---				if {DOUBLE_MATH}.dabs (current_point.get_angle (mission_sig.get_current) - mission_sig.get_next.get_angle (mission_sig.get_current)) < {DOUBLE_MATH}.pi_2 then
---					mission_sig.path.forth
---					target_pub.publish_point (mission_sig.get_current - mission_sig.get_origin)
---				end
+				--target_pub.publish_point (mission_sig.get_goal - mission_sig.get_origin)
+				--mission_sig.path.go_i_th (mission_sig.path.count)
+				target_pub.publish_point (mission_sig.get_next_way_point - mission_sig.get_origin)
+				mission_sig.path.go_i_th (mission_sig.way_points_idx.item)
 				mission_sig.set_discovered_obstacle (False)
 			else
-				if (create {POINT}.make_from_msg (odometry_sig.data.pose.pose.position)).euclidean_distance(mission_sig.get_current - mission_sig.get_origin) < mission_sig.goal_threshold then
+				if current_point.euclidean_distance(mission_sig.get_current_path_point - mission_sig.get_origin) < mission_sig.goal_threshold then
 					mission_sig.path.forth
-					target_pub.publish_point (mission_sig.get_current - mission_sig.get_origin)
+					target_pub.publish_point (mission_sig.get_current_path_point - mission_sig.get_origin)
 				end
 			end
 
@@ -79,12 +88,13 @@ feature {MISSION_PLANNER_BEHAVIOUR} -- Execute algorithm
 			end
 		end
 
-	update_path (mission_sig: separate MISSION_PLANNER_SIGNALER; path_sig: separate PATH_SIGNALER_WITH_FLAG)
+	update_path (mission_sig: separate MISSION_PLANNER_SIGNALER; path_sig: separate PATH_SIGNALER_WITH_FLAG; s_sig: separate STOP_SIGNALER)
 			-- update recieved path.
 		require
 			path_sig.is_new_val
 			path_sig.data.poses.count > 1
 			not mission_sig.is_path_requested
+			not s_sig.is_stop_requested
 		local
 			path: ARRAYED_STACK[POINT]
 			current_point, next_point, following_point: POINT
@@ -123,6 +133,7 @@ feature {MISSION_PLANNER_BEHAVIOUR} -- Execute algorithm
 				path.remove
 			end
 			mission_sig.update_path(mission_sig.get_goal)
+			mission_sig.set_way_point_idx
 			io.put_string ("Processed path size: " + mission_sig.path.count.out + "%N")
 
 			if not mission_sig.way_points.islast then
@@ -132,12 +143,13 @@ feature {MISSION_PLANNER_BEHAVIOUR} -- Execute algorithm
 			end
 		end
 
-	request_path (mission_sig: separate MISSION_PLANNER_SIGNALER; obstacle_sig: separate POINT_SIGNALER; start_pub, goal_pub: separate POINT_PUBLISHER)
+	request_path (mission_sig: separate MISSION_PLANNER_SIGNALER; obstacle_sig: separate POINT_SIGNALER; start_pub, goal_pub: separate POINT_PUBLISHER; s_sig: separate STOP_SIGNALER)
 			-- request a new path to the path_planner.
 		require
 			not mission_sig.path.islast
 			mission_sig.is_path_requested
 			not obstacle_sig.is_new_val
+			not s_sig.is_stop_requested
 		local
 			current_idx: INTEGER_32
 		do
@@ -148,6 +160,17 @@ feature {MISSION_PLANNER_BEHAVIOUR} -- Execute algorithm
 			start_pub.publish_point (mission_sig.way_points.at (current_idx+1))
 			mission_sig.way_points.forth
 			mission_sig.request_path (False)
+		end
+
+	request_recognition (object_rec_pub: separate EMPTY_PUBLISHER; marker_sig: separate MARKER_SIGNALER; mission_sig: separate MISSION_PLANNER_SIGNALER; s_sig: separate STOP_SIGNALER)
+			-- Request the obstacle recognition
+		require
+			not s_sig.is_stop_requested
+			mission_sig.is_obj_recognition_requested
+		do
+			object_rec_pub.publish
+			mission_sig.request_object_recognition (False)
+			marker_sig.set_new_val (False)
 		end
 
 end

@@ -13,17 +13,19 @@ inherit
 
 feature {ANY} -- Acces.
 
-	parse_file (file_path: STRING): MISSION_PLANNER_PARAMETERS
+	parse_file (file_path: separate STRING): MISSION_PLANNER_PARAMETERS
 			-- Parse file with path `file_path'.
 		local
 			point_array: ARRAYED_LIST[POINT]
-			x, y, z: REAL_64
-			way_point_threshold: REAL_64
+			parameters: MISSION_PLANNER_PARAMETERS
+			x, y: REAL_64
 			file: PLAIN_TEXT_FILE
 			key: STRING
 		do
+			create parameters.make_default
+
 			create point_array.make (0)
-			create file.make_open_read (file_path)
+			create file.make_open_read (create {STRING}.make_from_separate (file_path))
 			from
 				file.start
 			until
@@ -40,14 +42,16 @@ feature {ANY} -- Acces.
 					point_array.force (create {POINT}.make_with_values (x, y, 0))
 				elseif key.is_equal ("way_point_threshold:") then
 					file.read_double
-					way_point_threshold := file.last_double
+					parameters.set_threshold (file.last_double)
 				elseif not key.is_empty then
-					io.putstring ("Parser error while parsing file '" + file_path + "': Key '" + key + "' not recognized%N")
+					io.putstring ("Parser error while parsing file '" + file.name + "': Key '" + key + "' not recognized%N")
 				end
 			end
 			file.close
 			point_array.start
-			Result := create {MISSION_PLANNER_PARAMETERS}.make_with_attributes (point_array, way_point_threshold)
+
+			parameters.set_way_points (point_array)
+			Result := parameters
 		end
 
 end

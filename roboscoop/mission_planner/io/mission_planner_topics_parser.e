@@ -12,26 +12,16 @@ inherit
 
 feature {ANY} -- Access.
 
-	parse_file (file_path: STRING): MISSION_PLANNER_TOPICS_PARAMETERS
+	parse_file (file_path: separate STRING): MISSION_PLANNER_TOPICS_PARAMETERS
 			-- Parse file with path `file_path'.
 		local
-			node_name, path, map, target, odometry, obstacles, start, goal, planner_map: STRING_8
+			--node_name, path, map, target, odometry, obstacles, start, goal, planner_map: STRING
 			file: PLAIN_TEXT_FILE
 			key: STRING
+			topics: MISSION_PLANNER_TOPICS_PARAMETERS
 		do
-			node_name := ""
-
-			map := ""
-			target := ""
-			odometry := ""
-			obstacles := ""
-
-			path := ""
-			start := ""
-			goal := ""
-			planner_map := ""
-
-			create file.make_open_read (file_path)
+			create topics.make_default
+			create file.make_open_read (create {STRING}.make_from_separate (file_path))
 			from
 				file.start
 			until
@@ -42,38 +32,47 @@ feature {ANY} -- Access.
 
 				if key.is_equal ("path:") then
 					file.read_word_thread_aware
-					create path.make_from_string (file.last_string)
+					topics.set_path (file.last_string)
 				elseif key.is_equal("node_name:") then
 					file.read_word_thread_aware
-					create node_name.make_from_string (file.last_string)
+					topics.set_node_name (file.last_string)
 				elseif key.is_equal("map:") then
 					file.read_word_thread_aware
-					create map.make_from_string (file.last_string)
+					topics.set_map (file.last_string)
 				elseif key.is_equal("target:") then
 					file.read_word_thread_aware
-					create target.make_from_string (file.last_string)
+					topics.set_target (file.last_string)
 				elseif key.is_equal("odometry:") then
 					file.read_word_thread_aware
-					create odometry.make_from_string (file.last_string)
+					topics.set_odometry (file.last_string)
 				elseif key.is_equal("sensed_obstacles:") then
 					file.read_word_thread_aware
-					create obstacles.make_from_string (file.last_string)
+					topics.set_sensed_obstacle (file.last_string)
 				elseif key.is_equal("start:") then
 					file.read_word_thread_aware
-					create start.make_from_string (file.last_string)
+					topics.set_path_planner_start (file.last_string)
 				elseif key.is_equal("goal:") then
 					file.read_word_thread_aware
-					create goal.make_from_string (file.last_string)
+					topics.set_path_planner_goal (file.last_string)
 				elseif key.is_equal("planner_map:") then
 					file.read_word_thread_aware
-					create planner_map.make_from_string (file.last_string)
+					topics.set_planner_map (file.last_string)
+				elseif key.is_equal("planner_map_frame:") then
+					file.read_word_thread_aware
+					topics.set_planner_map_frame (file.last_string)
+				elseif key.is_equal("marker_signaler:") then
+					file.read_word_thread_aware
+					topics.set_marker_signaler (file.last_string)
+				elseif key.is_equal("recognize_object:") then
+					file.read_word_thread_aware
+					topics.set_object_recognition_request (file.last_string)
 				elseif not key.is_empty then
-					io.putstring ("Parser error while parsing file '" + file_path + "': Key '" + key + "' not recognized%N")
+					io.putstring ("Parser error while parsing file '" + file.name + "': Key '" + key + "' not recognized%N")
 				end
 			end
 			file.close
 
-			Result := create {MISSION_PLANNER_TOPICS_PARAMETERS}.make_with_attributes (node_name, map, target, odometry, obstacles, path, start, goal, planner_map)
+			Result := topics
 		end
 
 end
