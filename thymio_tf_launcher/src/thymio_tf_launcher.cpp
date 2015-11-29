@@ -12,9 +12,9 @@
 #include "publisher/tf_broadcaster.h"
 
 
-static const std::string NODE_NAME = "thymio_tf_launcher.cpp";
-static const std::string CAMERA_FRAME = "camera";
-static const std::string BASE_LINK_FRAME = "base_link";
+static const std::string NODE_NAME = "thymio_tf_launcher";
+static const std::string CAMERA_FRAME = "camera_link";
+static const std::string ODOMETRY_LINK_FRAME = "odometry_link";
 static const double DURATION = 1.0;
 
 int main(int argc, char** argv){
@@ -27,7 +27,7 @@ int main(int argc, char** argv){
   tf::StampedTransform camera_tf = tf_parser.get_stamped_transform();
   tfs.push_back(camera_tf);
 
-  tf_parser = TfParameterParser(nh, BASE_LINK_FRAME);
+  tf_parser = TfParameterParser(nh, ODOMETRY_LINK_FRAME);
   tf::StampedTransform thymio_tf = tf_parser.get_stamped_transform();
   tfs.push_back(thymio_tf);
 

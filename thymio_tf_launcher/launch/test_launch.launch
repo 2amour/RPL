@@ -1,0 +1,18 @@
+<launch>
+	<arg name="map_file" default="/home/parallels/data/testenvironment.yaml"/>
+	<node name="map_server" pkg="map_server" type="map_server" args="$(arg map_file)" />
+	<rosparam command="load" file="$(find thymio_tf_launcher)/parameters/tf_parameters.yaml" />
+	<node name="thymio_tf_launcher" pkg="thymio_tf_launcher" type="thymio_tf_launcher" output="screen"/>
+	
+	<arg name="config_file" default="$(find thymio_tf_launcher)/config/project.rviz" />
+	<node name="rviz" pkg="rviz" type="rviz" args="-d $(arg config_file)"/>
+	<include file="$(find openni2_launch)/launch/openni2.launch"/>
+	<include file="$(find thymio_navigation_driver)/launch/aseba_thymio.launch"/>
+	
+	<arg name="output" default="screen" />	
+	<arg name="model_file" default="stack_classes.txt" />
+	<arg name="model_path" default="$(find object_recognition)/image_classes/$(arg model_file)" />
+	<rosparam command="load" file="$(find object_recognition)/parameters/object_recognition_parameters.yaml" />
+	<node name="spin_recognition" pkg="object_recognition" type="spin_recognition" args="$(arg model_path)" output="$(arg output)"/>	
+	
+</launch>
