@@ -1,2 +1,0 @@
-duck /home/parallels/catkin_ws/src/scuri/object_recognition/image_classes/duck.pcd
-human /home/parallels/catkin_ws/src/scuri/object_recognition/image_classes/person.pcd

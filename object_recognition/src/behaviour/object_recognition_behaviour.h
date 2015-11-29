@@ -8,19 +8,16 @@
 
 
 #include <ros/ros.h>
+#include <std_msgs/Empty.h>
 #include <vector>
 #include <string>
 #include <pcl/common/common.h>
 #include <pcl/common/transforms.h>
 
-#include "../filtering_strategies/filter.h"
-#include "../segmentation_strategies/segmentation.h"
-#include "../correspondence_strategies/correspondence.h"
-#include "../descriptors/spin_image.h"
 #include "../types/points.h"
 #include "../listeners/point_cloud_listener.h"
 #include "../msg/visualization_marker.h"
-#include "../util/category.h"
+#include "../pipeline/object_recognition_pipeline.h"
 
 static const int DELETE_ALL = 3; ///< @brief Key to delete all markers. It should be implemented in visualization_msgs::Marker::DELETEALL.
 
@@ -31,17 +28,18 @@ class ObjectRecognitionBehaviour {
 private:
   ros::Publisher _marker_publisher; ///< Publisher of ROS Messages
   PointCloudListener _listener; ///< Listener of ROS Messages.
-  std::vector<FilterPtr> _filters; ///< Array of pointers to abstract filters strategy.
-  SegmentationPtr _segmentator; ///<Pointer to abstract segmentation strategy.
-  DescriptorPtr _spin_image; ///<Pointer to SpinImage generator.
-  std::vector<Category> _categories; ///< Array of categories
-  CorrespondencePtr _correspondence;  ///< Pointer to abstract correspondence strategy.
+
+  ObjectRecognitionPipeline _recognition_pipeline; ///< Object recognition pipeline.
+
   std::vector<MarkerMessage> _markers; ///< Vector of Marker messages.
   void publish(Eigen::Vector4f position, Eigen::Vector4f scale, int cluster_number); ///< Publisher wrapper.
   void reset_publisher(void); ///< Reset publisher objects
   std::string _frame; ///< Image frame
+
+  bool is_requested; ///< flag to request a new recognition.
+  int _requested_number;
 public:
-  ObjectRecognitionBehaviour() {}; ///< Default constructor.
+  ObjectRecognitionBehaviour(); ///< Default constructor.
   /**
    * Class constructor.
    * @param filters Array of pointers to implemented filters strategy.
@@ -49,31 +47,7 @@ public:
    * @param spin_image Pointer to SpinImage generator.
    * @param correspondence Pointer to implemented correspondence strategy.
    */
-  ObjectRecognitionBehaviour(std::vector<FilterPtr> filters, SegmentationPtr segmentator, DescriptorPtr spin_image, CorrespondencePtr correspondence);
-
-  /**
-   * Set sequence of filters to pre-process the image
-   * @param filters vector of filters
-   */
-  void set_filters(std::vector<FilterPtr> filters);
-
-  /**
-   * Set segmentation strategy to cluster the filtered cloud
-   * @param segmentator
-   */
-  void set_segmentator(SegmentationPtr segmentator);
-
-  /**
-   * Set the descriptor for the image recognition
-   * @param spin_image
-   */
-  void set_descriptor(DescriptorPtr spin_image);
-
-  /**
-   * Set the correspondence strategy to match descriptors
-   * @param correspondence
-   */
-  void set_correspondence(CorrespondencePtr correspondence);
+  ObjectRecognitionBehaviour(ObjectRecognitionPipeline recognition_pipeline);
 
   /**
    * Set an advertised marker publisher.
@@ -82,10 +56,10 @@ public:
   void set_marker_publisher(ros::Publisher marker_publisher);
 
   /**
-   * Set vector of known models
-   * @param categories
+   * Set the used recognition pipeline
+   * @param recognition_pipeline
    */
-  void set_models(std::vector<Category> categories);
+  void set_pipeline(ObjectRecognitionPipeline recognition_pipeline);
 
   /**
    * Callback when a new image is recieved.
@@ -111,4 +85,10 @@ public:
    * @param frame image frame.
    */
   void set_image_frame(const std::string frame);
+
+  /** Callback to handle request msgs
+   * ROS msg.
+   * @param msg
+   */
+  void request_callback(const std_msgs::EmptyPtr & msg);
 };

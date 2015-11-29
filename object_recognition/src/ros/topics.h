@@ -16,4 +16,7 @@ static const int IMAGE_QUEUE_SIZE = 1; ///< @brief image msg queue size
 static const std::string MARKER_TOPIC = "/visualization_marker"; ///< @brief visualization msg topic
 static const int MARKER_QUEUE_SIZE = 1; ///< @brief visualization msg queue size
 
+static const std::string REQUEST_TOPIC = "/object_recognition/request_recognition"; ///< @brief request a recognition msg topic
+static const int REQUEST_QUEUE_SIZE = 1; ///< @brief request_recognition msg queue size.
+
 #endif /* _ROS_TOPICS_H_ */
