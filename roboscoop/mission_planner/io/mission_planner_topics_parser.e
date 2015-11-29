@@ -12,7 +12,7 @@ inherit
 
 feature {ANY} -- Access.
 
-	parse_file (file_path: STRING): MISSION_PLANNER_TOPICS_PARAMETERS
+	parse_file (file_path: separate STRING): MISSION_PLANNER_TOPICS_PARAMETERS
 			-- Parse file with path `file_path'.
 		local
 			--node_name, path, map, target, odometry, obstacles, start, goal, planner_map: STRING
@@ -21,7 +21,7 @@ feature {ANY} -- Access.
 			topics: MISSION_PLANNER_TOPICS_PARAMETERS
 		do
 			create topics.make_default
-			create file.make_open_read (file_path)
+			create file.make_open_read (create {STRING}.make_from_separate (file_path))
 			from
 				file.start
 			until
@@ -67,7 +67,7 @@ feature {ANY} -- Access.
 					file.read_word_thread_aware
 					topics.set_object_recognition_request (file.last_string)
 				elseif not key.is_empty then
-					io.putstring ("Parser error while parsing file '" + file_path + "': Key '" + key + "' not recognized%N")
+					io.putstring ("Parser error while parsing file '" + file.name + "': Key '" + key + "' not recognized%N")
 				end
 			end
 			file.close
