@@ -12,7 +12,7 @@ inherit
 	TOPIC_PARAMETERS
 
 create
-	make_default, make_with_attributes
+	make_default --, make_with_attributes
 
 feature {NONE} -- Initialize
 
@@ -26,32 +26,51 @@ feature {NONE} -- Initialize
 			goal := "/path_planner/goal"
 		end
 
-	make_with_attributes (a_name, a_map, a_path, a_start, a_goal: STRING_8)
-			-- Create `Current' and assign given attributes.
-		do
-			node_name := a_name
-			map := a_map
-			path := a_path
-			start := a_start
-			goal := a_goal
-		end
-
-
 feature {ANY} -- Access
 
-	node_name: STRING_8
+	node_name: STRING
 			-- Name of node.
 
-	map: STRING_8
+	set_node_name (a_name: separate STRING)
+			-- Set the node name.
+		do
+			node_name := create{STRING}.make_from_separate (a_name)
+		end
+
+	map: STRING
 			-- Map to be read.
 
-	path: STRING_8
+	set_map (a_map: separate STRING)
+			-- Set the node name.
+		do
+			map := create{STRING}.make_from_separate (a_map)
+		end
+
+	path: STRING
 			-- Topic where path must be published.
 
-	start: STRING_8
+	set_path (a_path: separate STRING)
+			-- Set the path topic.
+		do
+			path := create{STRING}.make_from_separate (a_path)
+		end
+
+	start: STRING
 			-- Topic where start position must be read.
 
-	goal: STRING_8
+	set_start (a_start: separate STRING)
+			-- Set the start topic.
+		do
+			start := create{STRING}.make_from_separate (a_start)
+		end
+
+	goal: STRING
 			-- Topic where goal position must be read.
+
+	set_goal (a_goal: separate STRING)
+			-- Set the goal topic.
+		do
+			goal := create{STRING}.make_from_separate (a_goal)
+		end
 
 end

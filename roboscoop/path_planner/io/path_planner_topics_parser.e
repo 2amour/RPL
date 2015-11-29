@@ -12,20 +12,16 @@ inherit
 
 feature {ANY} -- Access.
 
-	parse_file (file_path: STRING): PATH_PLANNER_TOPICS_PARAMETERS
+	parse_file (file_path: separate STRING): PATH_PLANNER_TOPICS_PARAMETERS
 			-- Parse file with path `file_path'.
 		local
-			node_name, map, path, start, goal: STRING_8
+			params: PATH_PLANNER_TOPICS_PARAMETERS
 			file: PLAIN_TEXT_FILE
 			key: STRING
 		do
-			node_name := ""
-			map := ""
-			path := ""
-			start := ""
-			goal := ""
+			create params.make_default
 
-			create file.make_open_read (file_path)
+			create file.make_open_read (create {STRING}.make_from_separate (file_path))
 			from
 				file.start
 			until
@@ -36,26 +32,26 @@ feature {ANY} -- Access.
 
 				if key.is_equal ("map:") then
 					file.read_word_thread_aware
-					create map.make_from_string (file.last_string)
+					params.set_map (file.last_string)
 				elseif key.is_equal("node_name:") then
 					file.read_word_thread_aware
-					create node_name.make_from_string (file.last_string)
+					params.set_node_name (file.last_string)
 				elseif key.is_equal("path:") then
 					file.read_word_thread_aware
-					create path.make_from_string (file.last_string)
+					params.set_path (file.last_string)
 				elseif key.is_equal("start:") then
 					file.read_word_thread_aware
-					create start.make_from_string (file.last_string)
+					params.set_start (file.last_string)
 				elseif key.is_equal("goal:") then
 					file.read_word_thread_aware
-					create goal.make_from_string (file.last_string)
+					params.set_goal (file.last_string)
 				elseif not key.is_empty then
-					io.putstring ("Parser error while parsing file '" + file_path + "': Key '" + key + "' not recognized%N")
+					io.putstring ("Parser error while parsing file '" + file.name + "': Key '" + key + "' not recognized%N")
 				end
 			end
 			file.close
 
-			Result := create {PATH_PLANNER_TOPICS_PARAMETERS}.make_with_attributes (node_name, map, path, start, goal)
+			Result := params
 		end
 
 end

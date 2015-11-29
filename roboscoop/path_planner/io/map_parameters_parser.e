@@ -13,17 +13,15 @@ inherit
 
 feature {ANY} -- Acces.
 
-	parse_file (file_path: STRING): MAP_PARAMETERS
+	parse_file (file_path: separate STRING): MAP_PARAMETERS
 			-- Parse file with path `file_path'.
 		local
-			block_height, block_width: INTEGER_32
-			inflation: REAL_64
-			connectivity: GRID_CONNECTIVITY_STRATEGY
+			parameters: MAP_PARAMETERS
 			file: PLAIN_TEXT_FILE
 			key: STRING
 		do
-			connectivity := create {FULL_CONNECTIVITY_STRATEGY}
-			create file.make_open_read (file_path)
+			create parameters.make_default
+			create file.make_open_read (create {STRING}.make_from_separate (file_path))
 			from
 				file.start
 			until
@@ -34,30 +32,30 @@ feature {ANY} -- Acces.
 
 				if key.is_equal ("block_height:") then
 					file.read_integer
-					block_height := file.last_integer
+					parameters.set_block_height (file.last_integer)
 				elseif key.is_equal ("block_width:") then
 					file.read_integer
-					block_width := file.last_integer
+					parameters.set_block_width (file.last_integer)
 				elseif key.is_equal ("inflation:") then
 					file.read_double
-					inflation := file.last_double
+					parameters.set_inflation (file.last_double)
 				elseif key.is_equal ("connectivity:") then
 					file.read_integer
 					inspect file.last_integer
 					when 4 then
-						connectivity := create {MANHATTAN_CONNECTIVITY_STRATEGY}
+						parameters.set_connectivity_strategy (create {MANHATTAN_CONNECTIVITY_STRATEGY})
 					when 8 then
-						connectivity := create {FULL_CONNECTIVITY_STRATEGY}
+						parameters.set_connectivity_strategy (create {FULL_CONNECTIVITY_STRATEGY})
 					else
-						io.putstring ("Parser error while parsing file '" + file_path + "': Value '" + file.last_integer.out + "' not recognized%N")
+						io.putstring ("Parser error while parsing file '" + file.name + "': Value '" + file.last_integer.out + "' not recognized%N")
 					end
 				elseif not key.is_empty then
-					io.putstring ("Parser error while parsing file '" + file_path + "': Key '" + key + "' not recognized%N")
+					io.putstring ("Parser error while parsing file '" + file.name + "': Key '" + key + "' not recognized%N")
 				end
 			end
 			file.close
 
-			Result := create {MAP_PARAMETERS}.make_with_attributes (block_width, block_height, inflation, connectivity)
+			Result := parameters
 		end
 
 end
