@@ -151,7 +151,7 @@ feature -- Element change
 			-- Setter for `goal'.
 		do
 			create goal.make_with_coordinates (x, y)
-			min_distance := {REAL_64}.max_value
+			min_distance := goal.get_euclidean_distance (current_pose.get_position)
 		end
 
 	set_min_distance (d: REAL_64)
