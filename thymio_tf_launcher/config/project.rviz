@@ -9,7 +9,7 @@ Panels:
         - /TF1
         - /Path1
       Splitter Ratio: 0.3829
-    Tree Height: 747
+    Tree Height: 359
   - Class: rviz/Selection
     Name: Selection
   - Class: rviz/Tool Properties
@@ -125,7 +125,32 @@ Visualization Manager:
       Tree:
         map:
           odometry_link:
-            {}
+            base_link:
+              camera_link:
+                camera_depth_frame:
+                  camera_depth_optical_frame:
+                    {}
+                camera_rgb_frame:
+                  camera_rgb_optical_frame:
+                    {}
+              thymio_prox_ground_0_link:
+                {}
+              thymio_prox_ground_1_link:
+                {}
+              thymio_prox_horizontal_0_link:
+                {}
+              thymio_prox_horizontal_1_link:
+                {}
+              thymio_prox_horizontal_2_link:
+                {}
+              thymio_prox_horizontal_3_link:
+                {}
+              thymio_prox_horizontal_4_link:
+                {}
+              thymio_prox_horizontal_5_link:
+                {}
+              thymio_prox_horizontal_6_link:
+                {}
       Update Interval: 0
       Value: true
     - Alpha: 1

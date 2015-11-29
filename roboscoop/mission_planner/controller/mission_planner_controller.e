@@ -67,14 +67,18 @@ feature {MISSION_PLANNER_BEHAVIOUR} -- Execute algorithm
 				if mission_sig.is_waypoint_reached then
 					mission_sig.request_object_recognition (True)
 					mission_sig.set_waypoint_reached (False)
+					if not mission_sig.way_points_idx.islast then
+						mission_sig.way_points_idx.forth
+					end
 				end
 			else
 				mission_sig.set_waypoint_reached (True)
 			end
 
 			if mission_sig.discovered_obstacle then
-				target_pub.publish_point (mission_sig.get_goal - mission_sig.get_origin)
-				mission_sig.path.go_i_th (mission_sig.path.count)
+				mission_sig.path.go_i_th (mission_sig.way_points_idx.item)
+				target_pub.publish_point (mission_sig.get_current_path_point - mission_sig.get_origin)
+
 				mission_sig.set_discovered_obstacle (False)
 			else
 				if current_point.euclidean_distance(mission_sig.get_current_path_point - mission_sig.get_origin) < mission_sig.goal_threshold then

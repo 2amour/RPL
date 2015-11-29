@@ -138,6 +138,7 @@ feature {ANY} -- Access
 			-- Set way point index in vector
 		do
 			way_points_idx.force (path.count)
+			way_points_idx.start
 		end
 
 	set_discovered_obstacle (a_val: BOOLEAN)

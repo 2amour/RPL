@@ -3,3 +3,5 @@
 roboscoop/robot_controller/EIFGENs/robot_controller/F_code/robot_controller roboscoop/robot_controller/execution_parameters_files/files_parameters.txt &
 
 roboscoop/path_planner/EIFGENs/path_planner/F_code/path_planner roboscoop/path_planner/execution_parameters_files/path_planner_params.txt roboscoop/path_planner/execution_parameters_files/map_params.txt roboscoop/path_planner/execution_parameters_files/path_planner_topics.txt &
+
+roboscoop/mission_planner/EIFGENs/mission_planner/F_code/mission_planner roboscoop/mission_planner/execution_parameters_files/mission_planner_parameters.txt roboscoop/mission_planner/execution_parameters_files/mission_planner_topics.txt &
