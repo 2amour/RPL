@@ -321,7 +321,7 @@ feature -- Access
 			v_wall := line.get_vector.get_unitary
 			v_robot := v_wall.get_perpendicular
 
-			v_theta := (v_wall*desired_distance) + (v_robot*((current_distance - desired_distance))) -- TODO - Change to minus (-) for follow obstacle in the right.
+			v_theta := (v_wall*desired_distance) + (v_robot*((current_distance - desired_distance)))
 			Result := v_theta.get_angle
 		end
 
@@ -337,7 +337,7 @@ feature -- Access
 			v_wall := line.get_vector.get_unitary
 			v_robot := v_wall.get_perpendicular
 
-			v_theta := (v_wall*desired_distance) - (v_robot*((current_distance - desired_distance))) -- TODO - Change to minus (-) for follow obstacle in the right.
+			v_theta := (v_wall*desired_distance) - (v_robot*((current_distance - desired_distance)))
 			Result := v_theta.get_angle
 		end
 

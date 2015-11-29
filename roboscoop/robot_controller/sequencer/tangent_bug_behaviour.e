@@ -33,7 +33,8 @@ feature -- Access
 	start
 			-- Start the behaviour.
 		local
-			a, b, c, d: separate TANGENT_BUG_CONTROLLER
+			a: separate TANGENT_BUG_CONTROLLER
+			b, c, d: separate COMMUNICATION_CONTROLLER
 		do
 			create a.make_with_attributes (stop_signaler)
 			create b.make_with_attributes (stop_signaler)
@@ -64,7 +65,7 @@ feature {NONE} -- Implementation
 	goal_signaler: separate POINT_SIGNALER
 			-- Signaler to register the goal.
 
-	sep_start (a, b, c, d: separate TANGENT_BUG_CONTROLLER)
+	sep_start (a: separate TANGENT_BUG_CONTROLLER; b, c, d: separate COMMUNICATION_CONTROLLER)
 			-- Start behaviour controllers.
 		do
 			if attached odometry_sig as a_odometry_sig and
