@@ -57,24 +57,24 @@ feature {MISSION_PLANNER_BEHAVIOUR} -- Execute algorithm
 			not mission_sig.path.islast
 			mission_sig.path.count > 0
 			marker_sig.is_new_val
+			--not mission_sig.is_obj_recognition_requested
 			not s_sig.is_stop_requested
 		local
 			current_point: POINT
 		do
 			create current_point.make_from_msg (odometry_sig.data.pose.pose.position)
-			if 	mission_sig.at_a_way_point (current_point+mission_sig.get_origin) then
-				mission_sig.request_object_recognition (True)
-			end
-
-			if current_point.euclidean_distance(mission_sig.get_next_way_point - mission_sig.get_origin) < mission_sig.goal_threshold then
-				mission_sig.way_points_idx.forth
+			if mission_sig.at_a_way_point (current_point + mission_sig.get_origin) then
+				if mission_sig.is_waypoint_reached then
+					mission_sig.request_object_recognition (True)
+					mission_sig.set_waypoint_reached (False)
+				end
+			else
+				mission_sig.set_waypoint_reached (True)
 			end
 
 			if mission_sig.discovered_obstacle then
-				--target_pub.publish_point (mission_sig.get_goal - mission_sig.get_origin)
-				--mission_sig.path.go_i_th (mission_sig.path.count)
-				target_pub.publish_point (mission_sig.get_next_way_point - mission_sig.get_origin)
-				mission_sig.path.go_i_th (mission_sig.way_points_idx.item)
+				target_pub.publish_point (mission_sig.get_goal - mission_sig.get_origin)
+				mission_sig.path.go_i_th (mission_sig.path.count)
 				mission_sig.set_discovered_obstacle (False)
 			else
 				if current_point.euclidean_distance(mission_sig.get_current_path_point - mission_sig.get_origin) < mission_sig.goal_threshold then
@@ -103,8 +103,7 @@ feature {MISSION_PLANNER_BEHAVIOUR} -- Execute algorithm
 			path_sig.set_new_val (False)
 			create path.make (0)
 
-			io.put_string ("Recieved path size: ")
-			io.put_string (path_sig.data.poses.count.out + "%N")
+			io.put_string ("Recieved path size: " + path_sig.data.poses.count.out + "%N")
 
 			current_point := create {POINT}.make_from_msg (path_sig.data.poses[1].pose.position)
 			path.put (current_point)
@@ -132,7 +131,6 @@ feature {MISSION_PLANNER_BEHAVIOUR} -- Execute algorithm
 				mission_sig.update_path (path.item)
 				path.remove
 			end
-			mission_sig.update_path(mission_sig.get_goal)
 			mission_sig.set_way_point_idx
 			io.put_string ("Processed path size: " + mission_sig.path.count.out + "%N")
 
@@ -153,7 +151,7 @@ feature {MISSION_PLANNER_BEHAVIOUR} -- Execute algorithm
 		local
 			current_idx: INTEGER_32
 		do
-			io.put_string ("Request a path!")
+			io.put_string ("Request path%N")
 			current_idx := mission_sig.way_points.index
 			-- This are inverted! also reinvert in reconstruction
 			goal_pub.publish_point (mission_sig.way_points.at (current_idx))
@@ -168,9 +166,9 @@ feature {MISSION_PLANNER_BEHAVIOUR} -- Execute algorithm
 			not s_sig.is_stop_requested
 			mission_sig.is_obj_recognition_requested
 		do
-			object_rec_pub.publish
 			mission_sig.request_object_recognition (False)
+			io.put_string ("Recognition requested%N")
+			object_rec_pub.publish
 			marker_sig.set_new_val (False)
 		end
-
 end

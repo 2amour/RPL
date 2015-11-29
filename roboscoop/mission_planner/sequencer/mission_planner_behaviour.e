@@ -29,6 +29,7 @@ feature {NONE} -- Initialization
 			set_map_frame (map_publisher, parameters_bag.mission_planner_topics.planner_map_frame)
 			create object_recognition_publisher.make_with_topic (parameters_bag.mission_planner_topics.object_recognition_request)
 
+			io.put_string ("Publish empty message topic: " + parameters_bag.mission_planner_topics.object_recognition_request + "%N")
 
 			create stop_signaler.make
 		end

@@ -2,11 +2,11 @@ node_name:			mission_planner_node
 map:				/map
 target:				/robot_controller/target
 odometry:			/robot_controller/odometry
-sensed_obstacles:		/robot_controller/sensed_obstacles
+sensed_obstacles:	/robot_controller/sensed_obstacles
 path:				/path_planner/path
-planner_map:			/path_planner/map
+planner_map:		/path_planner/map
 start:				/path_planner/start
 goal:				/path_planner/goal
-planner_map_frame: 		/map
-marker_signaler:		/visualization_marker
-recognize_object:		/object_recognition/request
+planner_map_frame: 	/map
+marker_signaler:	/visualization_marker
+recognize_object:	/object_recognition/request_recognition

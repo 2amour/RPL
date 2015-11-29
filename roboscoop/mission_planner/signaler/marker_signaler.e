@@ -20,6 +20,7 @@ feature {NONE} -- Initialization
 			create data.make_empty
 			create subscriber.make
 			subscribe_marker (subscriber, Current, topic_name)
+			is_new_val := True
 		end
 
 feature -- Access

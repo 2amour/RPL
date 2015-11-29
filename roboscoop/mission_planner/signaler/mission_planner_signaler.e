@@ -60,6 +60,15 @@ feature {ANY} -- Access
 	goal_threshold: REAL_64
 			-- Threshold to switch way_points in path.
 
+	is_waypoint_reached: BOOLEAN
+			-- Whether a waypoint has benn reached.
+
+	set_waypoint_reached (value: BOOLEAN)
+			-- Setter for `is_waypoint_reached'.
+		do
+			is_waypoint_reached := value
+		end
+
 	reset_path
 			-- Reset path of points.
 		do
@@ -137,22 +146,24 @@ feature {ANY} -- Access
 			discovered_obstacle := a_val
 		end
 
-	at_ith_way_point(test_point: separate POINT; way_point_idx: INTEGER): BOOLEAN
+	at_ith_way_point (test_point: separate POINT; way_point_idx: INTEGER): BOOLEAN
 			-- Check if the point is at one of the way points
 		do
 			Result := way_points.at (way_point_idx).euclidean_distance (test_point) < goal_threshold
 		end
 
-	at_a_way_point(test_point: separate POINT): BOOLEAN
+	at_a_way_point (test_point: separate POINT): BOOLEAN
 			-- Check if the point is at one of the way points
 		local
 			i: INTEGER
 		do
 			Result := False
-			from i := 1
+			from i := 2
 			until i > way_points.count
 			loop
-				Result := at_ith_way_point(test_point, i)
+				if not Result then
+					Result := at_ith_way_point(test_point, i)
+				end
 				i := i + 1
 			end
 		end
