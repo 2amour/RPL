@@ -189,6 +189,12 @@ feature -- Access
 			Result := (sensors[3].is_valid_range or sensors[2].is_valid_range or sensors[1].is_valid_range)
 		end
 
+	is_sensor_at_front (sensor_index: INTEGER_32): BOOLEAN
+			-- <Precursor>
+		do
+			Result := (sensor_index > 1 and sensor_index < 5)
+		end
+
 	get_left_wall: LINE_2D
 			-- <Precursor>
 		local
@@ -364,10 +370,24 @@ feature -- Access
 			end
 		end
 
-	is_sensor_at_front (sensor_index: INTEGER_32): BOOLEAN
-			-- <Precursor>
+	get_closest_obstacle_point: POINT_2D
+			-- Get closest sensed obstacle point.
+		local
+			i: INTEGER
+			closest_point: POINT_2D
+			minimum_range: REAL_64
 		do
-			Result := (sensor_index > 1 and sensor_index < 5)
+			create closest_point.make
+			minimum_range := {REAL_64}.max_value
+			from i := sensors.lower until i > sensors.upper
+			loop
+				if sensors[i].is_valid_range and sensors[i].range < minimum_range then
+					minimum_range := sensors[i].range
+					closest_point := transforms[i].project_to_parent (get_sensor_point (i))
+				end
+				i := i + 1
+			end
+			Result := closest_point
 		end
 
 feature {NONE} -- Implementation

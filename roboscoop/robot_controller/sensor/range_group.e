@@ -80,6 +80,11 @@ feature -- Access
 		deferred
 		end
 
+	is_sensor_at_front (sensor_index: INTEGER_32): BOOLEAN
+			-- Whether the sensor is at front of the robot.
+		deferred
+		end
+
 	get_left_wall: LINE_2D
 			-- Get left wall.
 		deferred
@@ -152,8 +157,8 @@ feature -- Access
 		deferred
 		end
 
-	is_sensor_at_front (sensor_index: INTEGER_32): BOOLEAN
-			-- Whether the sensor is at front of the robot.
+	get_closest_obstacle_point: POINT_2D
+			-- Get closest sensed obstacle point.
 		deferred
 		end
 end

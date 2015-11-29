@@ -19,7 +19,6 @@ feature -- Initialization
 		do
 			is_clockwise := False
 			safe_leaving_wall_vertical_distance := wall_following_parameters.safe_leaving_wall_vertical_distance
-			turning_angular_velocity := wall_following_parameters.outer_corner_angular_velocity
 			target_threshold := wall_following_parameters.safe_outer_corner_turn_offset_threshold
 			distance_from_wall := wall_following_parameters.desired_wall_distance
 			corner_offset := create {POINT_2D}.make_from_separate (wall_following_parameters.safe_outer_corner_turn_offset)
@@ -115,7 +114,6 @@ feature -- Access
 			-- Set clockwise wall-following.
 		do
 			corner_offset.make_with_coordinates (corner_offset.get_x, {DOUBLE_MATH}.dabs (corner_offset.get_y))
-			turning_angular_velocity := -{DOUBLE_MATH}.dabs (turning_angular_velocity)
 			is_clockwise := True
 		end
 
@@ -123,7 +121,6 @@ feature -- Access
 			-- Set counter-clockwise wall-following.
 		do
 			corner_offset.make_with_coordinates (corner_offset.get_x, -{DOUBLE_MATH}.dabs (corner_offset.get_y))
-			turning_angular_velocity := {DOUBLE_MATH}.dabs (turning_angular_velocity)
 			is_clockwise := False
 		end
 
@@ -131,9 +128,6 @@ feature {NONE} -- Implementation
 
 	safe_leaving_wall_vertical_distance: REAL_64
 			-- Minimum local vertical distance between the robot and the followed wall to leave it safely.
-
-	turning_angular_velocity: REAL_64
-			-- Angular velocity when its only turning.
 
 	distance_from_wall: REAL_64
 			-- Distance to follow wall.
@@ -178,6 +172,7 @@ feature {NONE} -- Implementation
 		do
 			world_tf.make_with_offsets (t_sig.current_pose.get_position.get_x, t_sig.current_pose.get_position.get_y, t_sig.current_pose.get_orientation)
 			target_point := world_tf.project_to_parent (corner_offset)
+			last_point := world_tf.project_to_parent (create {POINT_2D}.make_from_separate (range_signaler.get_closest_obstacle_point))
 
 			if is_clockwise then
 				error := range_signaler.follow_right_wall (distance_from_wall)
@@ -231,9 +226,10 @@ feature {NONE} -- Implementation
 				orientation_controller.set_error (error)
 				angular_velocity := orientation_controller.get_output
 			else
-				angular_velocity := turning_angular_velocity
-				speed_controller.set_angular_velocity (angular_velocity)
-				linear_speed := speed_controller.get_output
+				target_point := last_point
+			end
+			debug
+				io.put_string ("Outer Corner %N")
 			end
 
 		end

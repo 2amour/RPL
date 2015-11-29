@@ -31,9 +31,6 @@ feature -- Access
 				if key.is_equal ("Desired_wall_distance") then
 					file.read_double
 					wall_following_parameters.set_desired_wall_distance (file.last_double)
-				elseif key.is_equal ("Outer_corner_angular_velocity") then
-					file.read_double
-					wall_following_parameters.set_outer_corner_angular_velocity (file.last_double)
 				elseif key.is_equal ("Safe_outer_corner_turn_offset") then
 					file.read_double
 					x := file.last_double
