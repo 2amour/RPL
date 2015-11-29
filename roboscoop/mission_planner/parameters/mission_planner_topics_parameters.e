@@ -31,7 +31,7 @@ feature {NONE} -- Initialize
 			planner_map := "/path_planner/map"
 			planner_map_frame := "/map"
 			marker_signaler := "/visualization_marker"
-			object_recognition_request := "/request"
+			object_recognition_request := "/object_recognition/request"
 		end
 
 feature {ANY} -- Constants
