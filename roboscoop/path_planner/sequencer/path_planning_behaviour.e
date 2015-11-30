@@ -15,7 +15,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make_with_attributes (param_bag: PATH_PLANNER_PARAMETERS_BAG)
+	make_with_attributes (param_bag: separate PATH_PLANNER_PARAMETERS_BAG)
 			-- Create Current with signaler.
 		do
 			create start_signaler.make_with_topic (param_bag.path_planner_topics.start)

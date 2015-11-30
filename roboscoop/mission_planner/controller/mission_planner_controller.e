@@ -1,14 +1,12 @@
 note
-	description: "Summary description for {MISSION_PLANNER_CONTROLLER}."
-	author: ""
-	date: "$Date$"
-	revision: "$Revision$"
+	description: "Controller for the mission planner."
+	author: "Sebastian Curri"
+	date: "29.11.2015"
 
 class
 	MISSION_PLANNER_CONTROLLER
 
 inherit
-
 	CANCELLABLE_CONTROL_LOOP
 
 create
@@ -51,13 +49,13 @@ feature {MISSION_PLANNER_BEHAVIOUR} -- Execute algorithm
 		end
 
 	update_target (odometry_sig: separate ODOMETRY_SIGNALER; marker_sig: separate MARKER_SIGNALER; mission_sig: separate MISSION_PLANNER_SIGNALER; target_pub: separate POINT_PUBLISHER; s_sig: separate STOP_SIGNALER)
-			-- update target of robot driver.
+			-- Update target of robot driver.
 		require
 			not mission_sig.is_path_requested
 			not mission_sig.path.islast
 			mission_sig.path.count > 0
 			marker_sig.is_new_val
-			--not mission_sig.is_obj_recognition_requested
+			-- Not mission_sig.is_obj_recognition_requested.
 			not s_sig.is_stop_requested
 		local
 			current_point: POINT
@@ -93,7 +91,7 @@ feature {MISSION_PLANNER_BEHAVIOUR} -- Execute algorithm
 		end
 
 	update_path (mission_sig: separate MISSION_PLANNER_SIGNALER; path_sig: separate PATH_SIGNALER_WITH_FLAG; s_sig: separate STOP_SIGNALER)
-			-- update recieved path.
+			-- Update recieved path.
 		require
 			path_sig.is_new_val
 			path_sig.data.poses.count > 1
@@ -121,7 +119,7 @@ feature {MISSION_PLANNER_BEHAVIOUR} -- Execute algorithm
 				if {DOUBLE_MATH}.dabs (current_point.get_angle (next_point) - current_point.get_angle (following_point)) < {TRIGONOMETRY_MATH}.pi_16 and
 				   current_point.euclidean_distance (next_point) > mission_sig.goal_threshold
 				then
-					--mission_sig.update_path (next_point)
+					-- Mission_sig.update_path (next_point).
 					path.put (current_point)
 					current_point := create {POINT}.make_from_separate (next_point)
 				end
@@ -146,7 +144,7 @@ feature {MISSION_PLANNER_BEHAVIOUR} -- Execute algorithm
 		end
 
 	request_path (mission_sig: separate MISSION_PLANNER_SIGNALER; obstacle_sig: separate POINT_SIGNALER; start_pub, goal_pub: separate POINT_PUBLISHER; s_sig: separate STOP_SIGNALER)
-			-- request a new path to the path_planner.
+			-- Request a new path to the path_planner.
 		require
 			not mission_sig.path.islast
 			mission_sig.is_path_requested
@@ -157,7 +155,7 @@ feature {MISSION_PLANNER_BEHAVIOUR} -- Execute algorithm
 		do
 			io.put_string ("Request path%N")
 			current_idx := mission_sig.way_points.index
-			-- This are inverted! also reinvert in reconstruction
+			-- This are inverted! also reinvert in reconstruction.
 			goal_pub.publish_point (mission_sig.way_points.at (current_idx))
 			start_pub.publish_point (mission_sig.way_points.at (current_idx+1))
 			mission_sig.way_points.forth
@@ -165,7 +163,7 @@ feature {MISSION_PLANNER_BEHAVIOUR} -- Execute algorithm
 		end
 
 	request_recognition (object_rec_pub: separate EMPTY_PUBLISHER; marker_sig: separate MARKER_SIGNALER; mission_sig: separate MISSION_PLANNER_SIGNALER; s_sig: separate STOP_SIGNALER)
-			-- Request the obstacle recognition
+			-- Request the obstacle recognition.
 		require
 			not s_sig.is_stop_requested
 			mission_sig.is_obj_recognition_requested

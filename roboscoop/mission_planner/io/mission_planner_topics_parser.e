@@ -1,7 +1,7 @@
 note
 	description: "Parser of topics for mission planner"
 	author: "Sebastian Curri"
-	date: "30/11/15"
+	date: "30.11.15"
 
 class
 	MISSION_PLANNER_TOPICS_PARSER
@@ -92,5 +92,4 @@ feature {ANY} -- Access.
 		end
 
 		last_parameters: MISSION_PLANNER_TOPICS_PARAMETERS
-
 end
