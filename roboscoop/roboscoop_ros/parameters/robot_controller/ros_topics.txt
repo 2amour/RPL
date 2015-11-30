@@ -1,0 +1,6 @@
+name:					robot_controller
+path:					/robot_controller/path
+pose:					/robot_controller/pose
+mission_odometry:		/robot_controller/odometry
+sensed_obstacles:		/robot_controller/sensed_obstacles
+goal:					/robot_controller/target

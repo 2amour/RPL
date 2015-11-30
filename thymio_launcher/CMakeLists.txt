@@ -1,16 +1,10 @@
 cmake_minimum_required(VERSION 2.8.3)
-project(thymio_tf_launcher)
+project(thymio_launcher)
 
 ## Find catkin macros and libraries
 ## if COMPONENTS list like find_package(catkin REQUIRED COMPONENTS xyz)
 ## is used, also find other catkin packages
-find_package(catkin REQUIRED COMPONENTS
-  sensor_msgs
-  roscpp
-  rospy
-  std_msgs
-  tf
-)
+find_package(catkin REQUIRED)
 
 ## System dependencies are found with CMake's conventions
 # find_package(Boost REQUIRED COMPONENTS system)
@@ -83,7 +77,7 @@ find_package(catkin REQUIRED COMPONENTS
 ## DEPENDS: system dependencies of this project that dependent projects also need
 catkin_package(
 #  INCLUDE_DIRS include
-#  LIBRARIES thymio_tf_launcher
+#  LIBRARIES thymio_launcher
 #  CATKIN_DEPENDS other_catkin_pkg
 #  DEPENDS system_lib
 )
@@ -91,29 +85,25 @@ catkin_package(
 ###########
 ## Build ##
 ###########
-include_directories(
-  ${catkin_INCLUDE_DIRS}
-)
+
 ## Specify additional locations of header files
 ## Your package locations should be listed before other locations
 # include_directories(include)
 
 ## Declare a cpp library
-# add_library(thymio_tf_launcher
-#   src/${PROJECT_NAME}/thymio_tf_launcher.cpp
+# add_library(thymio_launcher
+#   src/${PROJECT_NAME}/thymio_launcher.cpp
 # )
-add_library(tf_parameter_parser src/parsers/tf_parameter_parser.cpp)
-add_library(tf_broadcaster src/publisher/tf_broadcaster.cpp)
 
 ## Declare a cpp executable
-add_executable(thymio_tf_launcher src/thymio_tf_launcher.cpp)
-target_link_libraries(thymio_tf_launcher ${catkin_LIBRARIES} tf_parameter_parser tf_broadcaster)
+# add_executable(thymio_launcher_node src/thymio_launcher_node.cpp)
+
 ## Add cmake target dependencies of the executable/library
 ## as an example, message headers may need to be generated before nodes
-# add_dependencies(thymio_tf_launcher_node thymio_tf_launcher_generate_messages_cpp)
+# add_dependencies(thymio_launcher_node thymio_launcher_generate_messages_cpp)
 
 ## Specify libraries to link a library or executable target against
-# target_link_libraries(thymio_tf_launcher_node
+# target_link_libraries(thymio_launcher_node
 #   ${catkin_LIBRARIES}
 # )
 
@@ -132,7 +122,7 @@ target_link_libraries(thymio_tf_launcher ${catkin_LIBRARIES} tf_parameter_parser
 # )
 
 ## Mark executables and/or libraries for installation
-# install(TARGETS thymio_tf_launcher thymio_tf_launcher_node
+# install(TARGETS thymio_launcher thymio_launcher_node
 #   ARCHIVE DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
 #   LIBRARY DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
 #   RUNTIME DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
@@ -157,7 +147,7 @@ target_link_libraries(thymio_tf_launcher ${catkin_LIBRARIES} tf_parameter_parser
 #############
 
 ## Add gtest based cpp test target and link libraries
-# catkin_add_gtest(${PROJECT_NAME}-test test/test_thymio_tf_launcher.cpp)
+# catkin_add_gtest(${PROJECT_NAME}-test test/test_thymio_launcher.cpp)
 # if(TARGET ${PROJECT_NAME}-test)
 #   target_link_libraries(${PROJECT_NAME}-test ${PROJECT_NAME})
 # endif()

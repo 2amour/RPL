@@ -1,0 +1,10 @@
+Goal_parameters_file_path										goal_parameters.txt
+Go_to_goal_PID_parameters_file_path								go_to_goal_pid_parameters.txt
+Follow_wall_PID_parameters_file_path							follow_wall_pid_parameters.txt
+Leave_wall_PID_parameters_file_path								leave_wall_pid_parameters.txt
+Go_to_goal_non_linear_speed_controller_parameters_file_path		go_to_goal_non_linear_speed_controller_parameters.txt
+Follow_wall_non_linear_speed_controller_parameters_file_path	follow_wall_non_linear_speed_controller_parameters.txt
+Leave_wall_non_linear_speed_controller_parameters_file_path		leave_wall_non_linear_speed_controller_parameters.txt
+Wall_following_parameters_file_path								wall_following_parameters.txt
+Range_sensors_parameters_file_path								range_sensors_parameters.txt
+ROS_topics_file_path											ros_topics.txt

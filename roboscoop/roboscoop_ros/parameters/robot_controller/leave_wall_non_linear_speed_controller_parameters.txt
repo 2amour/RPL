@@ -1,0 +1,2 @@
+Maximum_speed	    0.05
+Angular_decay_rate	2
