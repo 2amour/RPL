@@ -135,6 +135,11 @@ public:
   void set_transparency(double a);
 
   /**
+   * Set timestamp
+   * @param timestamp
+   */
+  void set_timestamp(double timestamp);
+  /**
    * Get the marker msg.
    * @return marker msg
    */

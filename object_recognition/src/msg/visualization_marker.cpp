@@ -29,6 +29,11 @@ void MarkerMessage::update_timestamp(void)
 {
   _marker.header.stamp = ros::Time();
 }
+void MarkerMessage::set_timestamp(double timestamp)
+{
+  ros::Time stamp(timestamp);
+  _marker.header.stamp = stamp;
+}
 void MarkerMessage::set_frame_id(const std::string & frame)
 {
   _marker.header.frame_id = frame.c_str();
@@ -120,6 +125,6 @@ void MarkerMessage::show(bool s)
 }
 
 visualization_msgs::Marker MarkerMessage::get_marker(void){
-  update_timestamp();
+  //update_timestamp();
   return _marker;
 }

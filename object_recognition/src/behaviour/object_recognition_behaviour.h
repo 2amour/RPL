@@ -32,7 +32,7 @@ private:
   ObjectRecognitionPipeline _recognition_pipeline; ///< Object recognition pipeline.
 
   std::vector<MarkerMessage> _markers; ///< Vector of Marker messages.
-  void publish(Eigen::Vector4f position, Eigen::Vector4f scale, int cluster_number); ///< Publisher wrapper.
+  void publish(Eigen::Vector4f position, Eigen::Vector4f scale, int marker_id, double timestamp); ///< Publisher wrapper.
   void reset_publisher(void); ///< Reset publisher objects
   std::string _frame; ///< Image frame
 

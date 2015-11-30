@@ -18,7 +18,6 @@ void ObjectRecognitionBehaviour::image_callback(const PointCloud::ConstPtr& msg)
   if (is_requested){
     ROS_INFO("I heard a new msg!");
     _listener.msg_callback(msg);
-
     _recognition_pipeline.pre_process_image(_listener.get_cloud());
     std::vector<PointCloud> clusters = _recognition_pipeline.get_clusters();
 
@@ -29,24 +28,11 @@ void ObjectRecognitionBehaviour::image_callback(const PointCloud::ConstPtr& msg)
       difference = max - min;
 
       _recognition_pipeline.recognize_image(*it);
-      publish(mean, difference, _requested_number++);
+      publish(mean, difference, _requested_number++, msg->header.stamp);
     }
     ROS_INFO("Finished processing point cloud");
     is_requested = false;
   }
-
-  /*
-  if ((_segmentator->get_cluster_indices()).size() != _markers.size())
-  {
-    reset_publisher();
-    ROS_WARN("Errasing markers");
-  }
-  _markers.clear();
-  for (size_t i = 0; i < (_segmentator->get_cluster_indices()).size(); ++i)
-  {
-    recognize_image(_segmentator->get_cluster_cloud(i), i);
-  }
-    */
 }
 
 void ObjectRecognitionBehaviour::set_marker_publisher(ros::Publisher marker_publisher)
@@ -60,7 +46,7 @@ void ObjectRecognitionBehaviour::set_pipeline(ObjectRecognitionPipeline recognit
   ROS_INFO("Pipeline set!");
 }
 
-void ObjectRecognitionBehaviour::publish(Eigen::Vector4f position, Eigen::Vector4f scale, int cluster_number)
+void ObjectRecognitionBehaviour::publish(Eigen::Vector4f position, Eigen::Vector4f scale, int marker_id, double timestamp)
 {
   std::vector<Category> categories = _recognition_pipeline.get_categories();
   for (std::vector<Category>::iterator it = categories.begin(); it != categories.end(); ++it)
@@ -71,9 +57,10 @@ void ObjectRecognitionBehaviour::publish(Eigen::Vector4f position, Eigen::Vector
       marker.set_position(static_cast<double>(position[0]), static_cast<double>(position[1]),
                           static_cast<double>(position[2]));
       marker.set_scale(static_cast<double>(scale[0]), static_cast<double>(scale[1]), static_cast<double>(scale[2]));
-      marker.set_id(cluster_number);
+      marker.set_id(marker_id);
       marker.set_color(it->get_color());
       marker.set_frame_id(_frame);
+      marker.set_timestamp(timestamp);
       _markers.push_back(marker);
       _marker_publisher.publish(marker.get_marker());
     }
