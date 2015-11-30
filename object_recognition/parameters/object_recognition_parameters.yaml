@@ -1,16 +1,16 @@
 pass_through_filter:
     min: 0.2
-    max: 0.8
+    max: 0.6
     field: z
 voxel_grid_filter:
     size: 0.003
 euclidean_segmentation:
-    cluster_min: 500
+    cluster_min: 100
     cluster_max: 10000
     tolerance: 0.02
 correlation:
     min_correlation: 0.95
-    match_threshold: 0.80
+    match_threshold: 0.75
     K: 1
     lambda: 1.0
 spin_image:

@@ -87,7 +87,7 @@ void RosParameterParser::parse_segmentator_parameters(ros::NodeHandle nh)
   if (nh.hasParam(EUCLIDEAN_SEGMENTATION_PARAM_KEY))
   {
     euclidean_segmentation_parameters e_segmentation_params = euclidean_segmentation_parameters();
-    nh.getParam("/" + EUCLIDEAN_SEGMENTATION_PARAM_KEY + "/" + CLUSTER_MIN_KEY, e_segmentation_params.cluster_max);
+    nh.getParam("/" + EUCLIDEAN_SEGMENTATION_PARAM_KEY + "/" + CLUSTER_MIN_KEY, e_segmentation_params.cluster_min);
     nh.getParam("/" + EUCLIDEAN_SEGMENTATION_PARAM_KEY + "/" + CLUSTER_MAX_KEY, e_segmentation_params.cluster_max);
     nh.getParam("/" + EUCLIDEAN_SEGMENTATION_PARAM_KEY + "/" + TOLERANCE_KEY, e_segmentation_params.tolerance);
     _segmentator.reset(new EuclideanSegmentation(e_segmentation_params));
