@@ -9,8 +9,8 @@ euclidean_segmentation:
     cluster_max: 10000
     tolerance: 0.02
 correlation:
-    min_correlation: 0.94
-    match_threshold: 0.65
+    min_correlation: 0.95
+    match_threshold: 0.80
     K: 1
     lambda: 1.0
 spin_image:
