@@ -8,6 +8,7 @@ class
 
 inherit
 	ROS_ENVIRONMENT
+	ARGUMENTS
 
 create
 	make
@@ -21,35 +22,107 @@ feature {NONE} -- Initialization
 			ros_spinner: separate ROS_SPINNER
 			tangent_bug_behaviour: separate TANGENT_BUG_BEHAVIOUR
 			thymio: separate THYMIO_ROBOT
-
-			-- Execution parameters
-			topics: ROBOT_CONTROLLER_TOPIC_PARAMETERS
-			topics_parser: ROBOT_CONTROLLER_TOPICS_PARSER
-			files_params: FILES_PARAMETERS
-			files_params_file_parser: FILES_PARAMETERS_FILE_PARSER
-			gtg_pid_params: PID_PARAMETERS
-			fw_pid_params: PID_PARAMETERS
-			lw_pid_params: PID_PARAMETERS
-			pid_params_file_parser: PID_PARAMETERS_FILE_PARSER
-			gtg_nlsc_params: NON_LINEAR_SPEED_CONTROLLER_PARAMETERS
-			fw_nlsc_params: NON_LINEAR_SPEED_CONTROLLER_PARAMETERS
-			lw_nlsc_params: NON_LINEAR_SPEED_CONTROLLER_PARAMETERS
-			nlsc_params_file_parser: NON_LINEAR_SPEED_CONTROLLER_PARAMETERS_FILE_PARSER
-			goal_params: GOAL_PARAMETERS
-			goal_params_file_parser: GOAL_PARAMETERS_FILE_PARSER
-			wall_following_params: WALL_FOLLOWING_PARAMETERS
-			wall_following_params_file_parser: WALL_FOLLOWING_PARAMETERS_FILE_PARSER
-			range_sensors_params: RANGE_SENSORS_PARAMETERS
-			range_sensors_params_file_parser: RANGE_SENSORS_PARAMETERS_FILE_PARSER
-			tangent_bug_params: TANGENT_BUG_PARAMETERS_BAG
 		do
 			-- Check if correct number of command line arguments.
-			if Current.arguments.argument_count < 1 then
+			if argument_count < 1 then
 				io.put_string ("Usage: ./thymio_app file_path%N")
 				(create {EXCEPTIONS}).die (-1)
 			end
 
 			-- Parse execution parameters
+			parse_parameters
+
+			-- Initialize this application as a ROS node.
+			robo_node := (create {ROS_NAMED_NODE_STARTER}).roboscoop_node (topics.name)
+			synchronize (robo_node)
+
+			-- Listen to ROS.
+			create ros_spinner.make
+			start_spinning (ros_spinner)
+
+			-- Initialize behaviour.
+			create tangent_bug_behaviour.make_with_attributes (topics, tangent_bug_params)
+
+			-- Create a robot object.
+			create thymio.make_with_attributes (range_sensors_params)
+
+			-- Set robot behaviour
+			set_robot_behaviour (thymio, tangent_bug_behaviour)
+
+			-- Launch Thymio.
+			separate thymio as t do
+				t.dispatch
+			end
+		end
+
+feature {NONE} -- Implementation
+
+	set_robot_behaviour (robot: separate THYMIO_ROBOT; behaviour: separate ROBOT_BEHAVIOUR)
+			-- Set a thymio robot's behaviour.
+		do
+			robot.set_behaviour(behaviour)
+		end
+
+	topics: ROBOT_CONTROLLER_TOPIC_PARAMETERS
+			-- Parameters for topics for the robot controller.
+
+	topics_parser: ROBOT_CONTROLLER_TOPICS_PARSER
+			-- Parser for the parameters for topics for the robot controller.
+
+	files_params: FILES_PARAMETERS
+			-- Parameters for the paths of the files with parameters.
+
+	files_params_file_parser: FILES_PARAMETERS_FILE_PARSER
+			-- Parser for the parameters for the paths of the files with parameters.
+
+	gtg_pid_params: PID_PARAMETERS
+			-- PID parameters for the go to goal state.
+
+	fw_pid_params: PID_PARAMETERS
+			-- PID parameters for the follow wall state.
+
+	lw_pid_params: PID_PARAMETERS
+			-- PID parameters for the leave wall state.
+
+	pid_params_file_parser: PID_PARAMETERS_FILE_PARSER
+			-- Parser for the PID parameters.
+
+	gtg_nlsc_params: NON_LINEAR_SPEED_CONTROLLER_PARAMETERS
+			-- Non linear speed parameters for the go to goal state.
+
+	fw_nlsc_params: NON_LINEAR_SPEED_CONTROLLER_PARAMETERS
+			-- Non linear speed parameters for the follow goal state.
+
+	lw_nlsc_params: NON_LINEAR_SPEED_CONTROLLER_PARAMETERS
+			-- Non linear speed parameters for the leave wall state.
+
+	nlsc_params_file_parser: NON_LINEAR_SPEED_CONTROLLER_PARAMETERS_FILE_PARSER
+			-- Parser for non linear speed parameters.
+
+	goal_params: GOAL_PARAMETERS
+			-- Goal parameters.
+
+	goal_params_file_parser: GOAL_PARAMETERS_FILE_PARSER
+			-- Parser for the goal parameters.
+
+	wall_following_params: WALL_FOLLOWING_PARAMETERS
+			-- Parameters for the wall_following state.
+
+	wall_following_params_file_parser: WALL_FOLLOWING_PARAMETERS_FILE_PARSER
+			-- Parser for the wall_following state.
+
+	range_sensors_params: RANGE_SENSORS_PARAMETERS
+			-- Range sensor parameters.
+
+	range_sensors_params_file_parser: RANGE_SENSORS_PARAMETERS_FILE_PARSER
+			-- Parser for range sensor parameters.
+
+	tangent_bug_params: TANGENT_BUG_PARAMETERS_BAG
+			-- Parameters bag for tangent bug algorithm.
+
+	parse_parameters
+			-- Parse set of parameters.
+		do
 			create files_params_file_parser.make
 			files_params_file_parser.parse_file (arguments.argument (1).to_string_8)
 			if files_params_file_parser.is_error_found then
@@ -135,35 +208,5 @@ feature {NONE} -- Initialization
 			end
 
 			create tangent_bug_params.make_with_attributes (goal_params, wall_following_params, gtg_pid_params, gtg_nlsc_params, fw_pid_params, fw_nlsc_params, lw_pid_params, lw_nlsc_params)
-
-			-- Initialize this application as a ROS node.
-			robo_node := (create {ROS_NAMED_NODE_STARTER}).roboscoop_node (topics.name)
-			synchronize (robo_node)
-
-			-- Listen to ROS.
-			create ros_spinner.make
-			start_spinning (ros_spinner)
-
-			-- Initialize behaviour.
-			create tangent_bug_behaviour.make_with_attributes (topics, tangent_bug_params)
-
-			-- Create a robot object.
-			create thymio.make_with_attributes (range_sensors_params)
-
-			-- Set robot behaviour
-			set_robot_behaviour (thymio, tangent_bug_behaviour)
-
-			-- Launch Thymio.
-			separate thymio as t do
-				t.dispatch
-			end
-		end
-
-feature {NONE} -- Implementation
-
-	set_robot_behaviour (robot: separate THYMIO_ROBOT; behaviour: separate ROBOT_BEHAVIOUR)
-			-- Set a thymio robot's behaviour.
-		do
-			robot.set_behaviour(behaviour)
 		end
 end
