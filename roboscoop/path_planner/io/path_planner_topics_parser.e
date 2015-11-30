@@ -1,6 +1,6 @@
 note
 	description: "Parser for path_planner topics."
-	author: "Sebastian Curri"
+	author: "Sebastian Curi"
 	date: "06.11.2015"
 
 

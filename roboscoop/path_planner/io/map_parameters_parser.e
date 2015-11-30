@@ -1,6 +1,6 @@
 note
 	description: "This class parses parameters for map processing."
-	author: "Sebastian Curri"
+	author: "Sebastian Curi"
 	date: "06.11.2015"
 
 class
