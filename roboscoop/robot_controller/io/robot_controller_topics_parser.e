@@ -7,15 +7,30 @@ class
 	ROBOT_CONTROLLER_TOPICS_PARSER
 
 inherit
-	TOPIC_PARAMETERS_FILE_PARSER
+	PARAMETERS_FILE_PARSER
+
+create
+	make
+
+feature {NONE} -- Implementation.
+
+	make
+			-- Create current.
+		do
+			is_error_found := False
+			create last_parameters.make_default
+		end
 
 feature {ANY} -- Access.
-	parse_file (file_path: STRING): ROBOT_CONTROLLER_TOPIC_PARAMETERS
+
+	parse_file (file_path: separate STRING)
 			-- Parse file with path `file_path'.
 		local
 			name, path, pose, mission_odometry, sensed_obstacles, goal: STRING_8
 			file: PLAIN_TEXT_FILE
 			key: STRING
+			f_path: STRING
+			file_checker: FILE_CHECKER
 		do
 			name := ""
 			path := ""
@@ -24,41 +39,50 @@ feature {ANY} -- Access.
 			sensed_obstacles := ""
 			goal := ""
 
-			create file.make_open_read (file_path)
-			from
-				file.start
-			until
-				file.off
-			loop
-				file.read_word_thread_aware
-				key := file.last_string
+			create f_path.make_from_separate (file_path)
+			create file.make (f_path)
+			create file_checker
 
-				if key.is_equal ("path:") then
+			if file_checker.check_file (file) then
+				from
+					file.start
+				until
+					file.off
+				loop
 					file.read_word_thread_aware
-					create path.make_from_string (file.last_string)
-				elseif key.is_equal("name:") then
-					file.read_word_thread_aware
-					create name.make_from_string (file.last_string)
-				elseif key.is_equal("pose:") then
-					file.read_word_thread_aware
-					create pose.make_from_string (file.last_string)
-				elseif key.is_equal("mission_odometry:") then
-					file.read_word_thread_aware
-					create mission_odometry.make_from_string (file.last_string)
-				elseif key.is_equal("sensed_obstacles:") then
-					file.read_word_thread_aware
-					create sensed_obstacles.make_from_string (file.last_string)
-				elseif key.is_equal("goal:") then
-					file.read_word_thread_aware
-					create goal.make_from_string (file.last_string)
-				elseif not key.is_empty then
-					io.putstring ("Parser error while parsing file '" + file_path + "': Key '" + key + "' not recognized%N")
+					key := file.last_string
+
+					if key.is_equal ("path:") then
+						file.read_word_thread_aware
+						create path.make_from_string (file.last_string)
+					elseif key.is_equal("name:") then
+						file.read_word_thread_aware
+						create name.make_from_string (file.last_string)
+					elseif key.is_equal("pose:") then
+						file.read_word_thread_aware
+						create pose.make_from_string (file.last_string)
+					elseif key.is_equal("mission_odometry:") then
+						file.read_word_thread_aware
+						create mission_odometry.make_from_string (file.last_string)
+					elseif key.is_equal("sensed_obstacles:") then
+						file.read_word_thread_aware
+						create sensed_obstacles.make_from_string (file.last_string)
+					elseif key.is_equal("goal:") then
+						file.read_word_thread_aware
+						create goal.make_from_string (file.last_string)
+					elseif not key.is_empty then
+						io.putstring ("Parser error while parsing file '" + f_path + "': Key '" + key + "' not recognized%N")
+						is_error_found := True
+					end
 				end
+				file.close
+			else
+				is_error_found := True
 			end
-			file.close
-
-			Result := create {ROBOT_CONTROLLER_TOPIC_PARAMETERS}.make_with_attributes (name, path, pose, mission_odometry, sensed_obstacles, goal)
+			create last_parameters.make_with_attributes (name, path, pose, mission_odometry, sensed_obstacles, goal)
 		end
+
+	last_parameters: ROBOT_CONTROLLER_TOPIC_PARAMETERS
 
 end
 

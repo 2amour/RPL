@@ -1,6 +1,6 @@
 note
 	description: "Range sensors parameters file parser."
-	author: "Ferran Pallarès"
+	author: "Ferran PallarÃ¨s"
 	date: "21.10.15"
 
 class
@@ -9,54 +9,74 @@ class
 inherit
 	PARAMETERS_FILE_PARSER
 
+create
+	make
+
+feature {NONE} -- Initialization
+
+	make
+			-- Create current.
+		do
+			is_error_found := False
+			create last_parameters.make
+		end
+
 feature -- Access
 
-	parse_file (file_path: STRING): RANGE_SENSORS_PARAMETERS
+	parse_file (file_path: separate STRING)
 		local
 			sensor_count: INTEGER_32
 			x, y, phi: REAL_64
 			sensors_poses: ARRAY[POSE_2D]
-			range_sensors_parameters: RANGE_SENSORS_PARAMETERS
 			file: PLAIN_TEXT_FILE
 			key: STRING
+			f_path: STRING
+			file_checker: FILE_CHECKER
 		do
 			create sensors_poses.make_empty
-			create range_sensors_parameters.make
-			create file.make_open_read (file_path)
+			create last_parameters.make
+			create f_path.make_from_separate (file_path)
+			create file.make (f_path)
+			create file_checker
 
-			from file.start
-			until file.off
-			loop
-				file.read_word
-				key := file.last_string
+			if file_checker.check_file (file) then
+				from file.start
+				until file.off
+				loop
+					file.read_word
+					key := file.last_string
 
-				if key.is_equal ("Sensor_count") then
-					file.read_integer
-					sensor_count := file.last_integer
-					create sensors_poses.make_filled (create {POSE_2D}.make, 1, sensor_count)
-				elseif key.is_equal ("Close_obstacle_threshold") then
-					file.read_double
-					range_sensors_parameters.set_close_obstacle_threshold (file.last_double)
-				elseif key.is_equal ("Sensors_poses") then
-					from until sensor_count <= 0
-					loop
-						file.read_double
-						x := file.last_double
-						file.read_double
-						y := file.last_double
-						file.read_double
-						phi := file.last_double
+					if key.is_equal ("Sensor_count") then
+						file.read_integer
+						sensor_count := file.last_integer
+						create sensors_poses.make_filled (create {POSE_2D}.make, 1, sensor_count)
+					elseif key.is_equal ("Close_obstacle_threshold") then
+										file.read_double
+										last_parameters.set_close_obstacle_threshold (file.last_double)
+					elseif key.is_equal ("Sensors_poses") then
+						from until sensor_count <= 0
+						loop
+							file.read_double
+							x := file.last_double
+							file.read_double
+							y := file.last_double
+							file.read_double
+							phi := file.last_double
 
-						sensor_count := sensor_count - 1
-						sensors_poses.put (create {POSE_2D}.make_with_coordinates (x, y, phi), sensors_poses.upper - sensor_count)
+							sensor_count := sensor_count - 1
+							sensors_poses.put (create {POSE_2D}.make_with_coordinates (x, y, phi), sensors_poses.upper - sensor_count)
+						end
+						last_parameters.set_sensors_poses (sensors_poses)
+					elseif not key.is_empty then
+						io.putstring ("Parser error while parsing file '" + f_path + "': Key '" + key + "' not recognized%N")
+						is_error_found := True
 					end
-					range_sensors_parameters.set_sensors_poses (sensors_poses)
-				elseif not key.is_empty then
-					io.putstring ("Parser error while parsing file '" + file_path + "': Key '" + key + "' not recognized%N")
 				end
+				file.close
+			else
+				is_error_found := True
 			end
-
-			file.close
-			Result := range_sensors_parameters
 		end
+
+		last_parameters: RANGE_SENSORS_PARAMETERS
 end
