@@ -42,7 +42,9 @@ feature -- Access
 	set_readings (t_sig: separate TANGENT_BUG_SIGNALER; range_signaler: separate RANGE_GROUP)
 			-- <Precursor>
 		do
-
+			if {DOUBLE_MATH}.dabs (t_sig.current_pose.get_orientation - t_sig.initial_orientation) > {TRIGONOMETRY_MATH}.pi_2 then
+				t_sig.set_has_turned_back (True)
+			end
 			time_handler.set_time (t_sig.timestamp)
 			orientation_controller.set_sampling (time_handler.get_sampling_rate)
 
@@ -102,6 +104,10 @@ feature -- Access
 
 			if min_distance < t_sig.min_distance then
 				t_sig.set_leave_wall_with_target (best_point)
+			end
+
+			if t_sig.intial_point_wall.get_euclidean_distance (t_sig.current_pose.get_position) < t_sig.reached_point_threshold and t_sig.has_turned_back then
+				t_sig.set_unreachable_goal
 			end
 
 			if t_sig.goal.get_euclidean_distance (t_sig.current_pose.get_position) < t_sig.reached_point_threshold then

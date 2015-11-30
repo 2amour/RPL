@@ -58,6 +58,9 @@ feature
 			-- <Precursor>
 		do
 			if r_sig.is_obstacle_in_front then
+				t_sig.set_intial_point_wall (t_sig.current_pose.get_position)
+				t_sig.set_initial_orientation (t_sig.current_pose.get_orientation)
+
 				if r_sig.is_obstacle_mostly_at_left then
 					t_sig.set_follow_wall_counter_clockwise
 				else
