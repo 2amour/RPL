@@ -1,4 +1,0 @@
-<launch>
-	<rosparam command="load" file="$(find thymio_tf_launcher)/parameters/tf_parameters.yaml" />
-	<node name="thymio_tf_launcher" pkg="thymio_tf_launcher" type="thymio_tf_launcher" output="screen"/>
-</launch>

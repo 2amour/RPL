@@ -1,0 +1,5 @@
+node_name:			path_planning_node
+map:				/path_planner/map
+path:				/path_planner/path
+start:				/path_planner/start
+goal:				/path_planner/goal

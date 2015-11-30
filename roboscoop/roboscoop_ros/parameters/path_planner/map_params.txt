@@ -1,0 +1,4 @@
+block_height:				4
+block_width:				4
+inflation:					0.10
+connectivity:				8

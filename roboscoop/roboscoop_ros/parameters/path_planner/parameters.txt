@@ -1,0 +1,4 @@
+frame_id:			/map
+edge_cost:			euclidean
+heuristic:			euclidean
+search_strategy:	dijkstra
