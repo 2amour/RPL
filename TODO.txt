@@ -1,0 +1,8 @@
+Ferran: 
+	- README Mission planner logic.
+	- Run description.
+Sebastian:
+	- README obstacle recognition.
+	- Change name of ROS Launcher and add TFs node. 
+Toni:
+	- Beatify code. 
