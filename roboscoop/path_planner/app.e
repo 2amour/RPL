@@ -1,20 +1,18 @@
 note
-	description: "path_planning application root class"
+	description: " Path_planning application root class."
 	date: "28.10.2015"
 
 class
 	APP
 
 inherit
-
 	ROS_ENVIRONMENT
-
 	ARGUMENTS
 
 create
 	make
 
-feature {NONE} -- Initialization
+feature {NONE} -- Initialization.
 
 	make
 			-- Run application.
@@ -36,23 +34,37 @@ feature {NONE} -- Initialization
 			path_planning_behaviour: PATH_PLANNING_BEHAVIOUR
 
 		do
-				-- Parse command line arguments
+				-- Parse command line arguments.
 			if argument_count < 3 then
 				io.put_string ("Usage: ./path_planner algorithm_parameters_file map_parameters_file topics_file%N")
 				(create {EXCEPTIONS}).die (-1)
 			end
 
-			create algorithm_parameter_parser
-			algorithm_parameters := algorithm_parameter_parser.parse_file (argument_array[1])
+			create algorithm_parameter_parser.make
+			algorithm_parameter_parser.parse_file (argument_array[1])
+			if algorithm_parameter_parser.is_error_found then
+				(create {EXCEPTIONS}).die (-1)
+			else
+				algorithm_parameters := algorithm_parameter_parser.last_parameters
+			end
 
-			create map_parameter_parser
-			map_parameters := map_parameter_parser.parse_file (argument_array[2])
+			create map_parameter_parser.make
+			map_parameter_parser.parse_file (argument_array[2])
+			if map_parameter_parser.is_error_found then
+				(create {EXCEPTIONS}).die (-1)
+			else
+				map_parameters := map_parameter_parser.last_parameters
+			end
 
-			create topic_parameters_parser
-			topic_parameters := topic_parameters_parser.parse_file (argument_array[3])
+			create topic_parameters_parser.make
+			topic_parameters_parser.parse_file (argument_array[3])
+			if topic_parameters_parser.is_error_found then
+				(create {EXCEPTIONS}).die (-1)
+			else
+				topic_parameters := topic_parameters_parser.last_parameters
+			end
 
 			create parameters_bag.make_with_attributes (map_parameters, algorithm_parameters, topic_parameters)
-
 
 				-- Initialize this application as a ROS node.
 			path_planner_node := (create {ROS_NAMED_NODE_STARTER}).roboscoop_node (parameters_bag.path_planner_topics.node_name)

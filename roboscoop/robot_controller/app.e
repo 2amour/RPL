@@ -50,30 +50,89 @@ feature {NONE} -- Initialization
 			end
 
 			-- Parse execution parameters
-			create files_params_file_parser
-			files_params := files_params_file_parser.parse_file (arguments.argument (1).to_string_8)
+			create files_params_file_parser.make
+			files_params_file_parser.parse_file (arguments.argument (1).to_string_8)
+			if files_params_file_parser.is_error_found then
+				(create {EXCEPTIONS}).die (-1)
+			else
+				files_params := files_params_file_parser.last_parameters
+			end
 
-			create topics_parser
-			topics := topics_parser.parse_file (files_params.ros_topics_file_path)
+			create topics_parser.make
+			topics_parser.parse_file (files_params.ros_topics_file_path)
+			if topics_parser.is_error_found then
+				(create {EXCEPTIONS}).die (-1)
+			else
+				topics := topics_parser.last_parameters
+			end
 
-			create goal_params_file_parser
-			goal_params := goal_params_file_parser.parse_file (files_params.goal_parameters_file_path)
+			create goal_params_file_parser.make
+			goal_params_file_parser.parse_file (files_params.goal_parameters_file_path)
+			if goal_params_file_parser.is_error_found then
+				(create {EXCEPTIONS}).die (-1)
+			else
+				goal_params := goal_params_file_parser.last_parameters
+			end
 
-			create pid_params_file_parser
-			gtg_pid_params := pid_params_file_parser.parse_file (files_params.go_to_goal_pid_parameters_file_path)
-			fw_pid_params := pid_params_file_parser.parse_file (files_params.follow_wall_pid_parameters_file_path)
-			lw_pid_params := pid_params_file_parser.parse_file (files_params.leave_wall_pid_parameters_file_path)
+			create pid_params_file_parser.make
+			pid_params_file_parser.parse_file (files_params.go_to_goal_pid_parameters_file_path)
+			if pid_params_file_parser.is_error_found then
+				(create {EXCEPTIONS}).die (-1)
+			else
+				gtg_pid_params := pid_params_file_parser.last_parameters
+			end
 
-			create nlsc_params_file_parser
-			gtg_nlsc_params := nlsc_params_file_parser.parse_file (files_params.go_to_goal_nlsc_parameters_file_path)
-			fw_nlsc_params := nlsc_params_file_parser.parse_file (files_params.follow_wall_nlsc_parameters_file_path)
-			lw_nlsc_params := nlsc_params_file_parser.parse_file (files_params.leave_wall_nlsc_parameters_file_path)
+			pid_params_file_parser.parse_file (files_params.follow_wall_pid_parameters_file_path)
+			if pid_params_file_parser.is_error_found then
+				(create {EXCEPTIONS}).die (-1)
+			else
+				fw_pid_params := pid_params_file_parser.last_parameters
+			end
 
-			create wall_following_params_file_parser
-			wall_following_params := wall_following_params_file_parser.parse_file (files_params.wall_following_parameters_file_path)
+			pid_params_file_parser.parse_file (files_params.leave_wall_pid_parameters_file_path)
+			if pid_params_file_parser.is_error_found then
+				(create {EXCEPTIONS}).die (-1)
+			else
+				lw_pid_params := pid_params_file_parser.last_parameters
+			end
 
-			create range_sensors_params_file_parser
-			range_sensors_params := range_sensors_params_file_parser.parse_file (files_params.range_sensors_parameters_file_path)
+			create nlsc_params_file_parser.make
+			nlsc_params_file_parser.parse_file (files_params.go_to_goal_nlsc_parameters_file_path)
+			if nlsc_params_file_parser.is_error_found then
+				(create {EXCEPTIONS}).die (-1)
+			else
+				gtg_nlsc_params := nlsc_params_file_parser.last_parameters
+			end
+
+			nlsc_params_file_parser.parse_file (files_params.follow_wall_nlsc_parameters_file_path)
+			if nlsc_params_file_parser.is_error_found then
+				(create {EXCEPTIONS}).die (-1)
+			else
+				fw_nlsc_params := nlsc_params_file_parser.last_parameters
+			end
+
+			nlsc_params_file_parser.parse_file (files_params.leave_wall_nlsc_parameters_file_path)
+			if nlsc_params_file_parser.is_error_found then
+				(create {EXCEPTIONS}).die (-1)
+			else
+				lw_nlsc_params := nlsc_params_file_parser.last_parameters
+			end
+
+			create wall_following_params_file_parser.make
+			wall_following_params_file_parser.parse_file (files_params.wall_following_parameters_file_path)
+			if wall_following_params_file_parser.is_error_found then
+				(create {EXCEPTIONS}).die (-1)
+			else
+				wall_following_params := wall_following_params_file_parser.last_parameters
+			end
+
+			create range_sensors_params_file_parser.make
+			range_sensors_params_file_parser.parse_file (files_params.range_sensors_parameters_file_path)
+			if range_sensors_params_file_parser.is_error_found then
+				(create {EXCEPTIONS}).die (-1)
+			else
+				range_sensors_params :=  range_sensors_params_file_parser.last_parameters
+			end
 
 			create tangent_bug_params.make_with_attributes (goal_params, wall_following_params, gtg_pid_params, gtg_nlsc_params, fw_pid_params, fw_nlsc_params, lw_pid_params, lw_nlsc_params)
 
