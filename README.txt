@@ -5,9 +5,9 @@
 Description
 ===========
 
-This application detects objects as ThymioII goes through a set of way points. There is a main mission planner that sequences in parallel a path-planner, a robot controller and an object recognition module. In order to try to increase modularity and reusability and also so independent tasks can be executed in different computers, it has been decided to separate responsabilities in different Eiffel applications. The communication between the applications is done by means of ROS topics and has been designed in terms of modularity.
+This application lets the user make the ThymioII robot move towards a goal and recognise detected objects in a set of specified way-points. This behaviour is performed while avoiding known and unknown obstacles as shown in past assignments.
 
-A scheme of how the communication is performed can be seen in the file 'rosgraph.png'.
+There is a main mission planner that sequences in parallel a path-planner, a robot controller and an object recognition module. In order to try to increase modularity and reusability and also so independent tasks can be executed in different computers, it has been decided to separate responsabilities in different Eiffel applications. The communication between the applications is done by means of ROS topics and has been designed in terms of modularity.
 
 Following, a description for the parts can be read:
 
@@ -17,7 +17,9 @@ Mission-Planner
 This application is a higher-level planner for the system. 
 It sends a map and goal and start point to the path-planning application through ROS msgs and waits for a path to come back. When a set of points must be visited this mission planner sends sequentially every consequtive pair of goal and start points to the path-planner and then appends the path to the resulting path. 
 
-When the path arrives it gets key-points and sends them sequentially to the robot-controller as way points. Each time the robot is near the way point it updates it to a new one until it reaches goal. 
+When the path arrives it gets key-points (extracts the points where the orientation changes) and sends them sequentially to the robot-controller. Each time the robot is near the sent point the mission controller updates it to a new one until it reaches goal. 
+
+Every time the robot reaches one of the specified way-points, the mission planner triggers a recognition of the object recognition node and proceeds to guide the robot towards the following way-point.
 
 The goal and start points are inverted when sent to the planner and the obtained path is reconstructed backwards. 
 If the robot senses a obstacle that it was not in the map this application sends a new map to the path planner and a new starting point (the actual point) for the algorihtm. 
@@ -37,6 +39,7 @@ The input points are received using a ROS topic and the output path between the 
 
 Robot-Controller
 ----------------
+
 This application makes the robot move towards a given point avoiding the obstacles that it may encouter in its way.
 
 In order to reach the goal a tangent bug algorithm is used. The location of the goal is received from the mission-planner while position and heading are retrieved to the latter. This communication enables the robot to follow a path. 
@@ -45,30 +48,39 @@ Other parameters are set via file parsing.
 
 A PID closed loop control tunes the robot's drive input values based on the error sensed by the robot's encoders with respect to the current goal.
 
+Object-Recognition
+------------------
+
+This application can be used to recognise some objects in a scene by matching them to some other known objects. To do so, the application recevies a point cloud representation of the scene (which is basically a depth-mapped image) and, for each object in the scene, tries to extract some caracteristic features that describe the object somehow.
+Then, it extracts caracteristic features from some provided point clouds (which represent already known objects) and computes how 'similar' those features and the object features are, concluding in suggesting in which category (of known objects) the detected object could belong.
+
+The chosen algorithm for 'extracting' those features (or describing the object) was Spin Image. This algorithm consists in computing a 2D image for every chosen keypoint of the object and compare those images to see how 'related' two objects are. As an intuition of how the algorithm compute those images, we can imagine *spinning* a plane arround the point on a given direction (for instance it's normal) and recording how many of the surrounding points 'fall into' or 'hit' every specific area division of the plane. Therefore, this algorithm describe every point in terms of how their neighbours are found in space.
+
 
 Usage
 =====
 
-Wired project. 
+A) Wired setup:
 
-1. Connect the ThymioII robot and the RGBD camera to the computer.
+    1. Connect the ThymioII robot and the RGBD camera to the computer.
 
-2. Launch the whole project. 
-	$ roslaunch thymio_launcher wired_project_launcher.launch
+    2. Launch the whole project using the provided launch file.
+        $ roslaunch thymio_launcher wired_project_launcher.launch
 
-Wireless project.
-1. Connect the ThymioII robot to an USB port of the `Blok' wireless pack (Beaglebone running Ubuntu + router + sensor + power bank).
+B) Wireless setup:
 
-2. Connect to the wireless network of the `Blok' wireless pack and set yourself a static IP which concordes with the computer 'ROS_IP' environmental variable. (SSID: 'rpl_blok', password: 'beaglebone').
+    1. Connect the ThymioII robot to an USB port of the `Blok' wireless pack (Beaglebone running Ubuntu + router + sensor + power bank).
 
-3. Launch ROSCORE in the network master computer.
-	$ roscore 
+    2. Connect to the wireless network of the `Blok' wireless pack and set yourself a static IP which concordes with the computer 'ROS_IP' environmental variable. (SSID: 'rpl_blok', password: 'beaglebone').
 
-4. Connect to the Beaglebone via SSH and launch 'wireless_thymio.launch' from 'thymio_navigation_driver'.
-	$ roslaunch thymio_navigation_driver wireless_thymio.launch
+    3. Launch ROSCORE in the network master computer.
+        $ roscore 
 
-5. In the network master run. 
-	$ roslaunch thymio_launcher wireless_project_launcher.launch
+    4. Connect to the Beaglebone via SSH and launch 'wireless_thymio.launch' from 'thymio_navigation_driver'.
+        $ roslaunch thymio_navigation_driver wireless_thymio.launch
+
+    5. In the network master use the provided launch file.
+        $ roslaunch thymio_launcher wireless_project_launcher.launch
 
 
 IO Files
@@ -98,6 +110,7 @@ map_params.txt
 
 Robot-Controller
 ----------------
+
 files_parameters.txt
 	File with the paths of the other files with parameters.
 
@@ -113,6 +126,17 @@ pid_parameters.txt
 wall_following_parameters.txt
 	Parameters for following an obstacle.
 
+Object-Recognition
+------------------
+
+image_models/
+    Contains the input models used by the recognition algorithm to match detected objects.
+
+image_classes/
+    Contains the pre-computed spin images that will be used for recognition. They can be obtained by launching the spin_tran.lauch launch file.
+
+object_recognition_parameters.yaml
+    Object recognition parameters. The ROS parameters server is used for this purpose.
 
 
 File structure
@@ -367,12 +391,13 @@ How does it work?
 
 Mission-Planner
 ---------------
-The mission planner executes in parallel the following behaviours:
+The mission planner executes the following behaviours concurrently:
 
 1. When a obstacle is sensed propioceptively by the robot it checks if it is a known obstacle and if it is not it updates the map. 
-2. It updates the goal of the robot-controller. It changes the way-points when the position of the robot is near it or when the way point is inside an unkown obstacle. 
-3. It sends to the path-planner a map, a start and a goal point. The start and goal point are consequitve way points of the desired path. 
-4. It recieves the resulting path and extracts key-points of this path to send as goal positions to the robot driver. 
+2. It updates the goal of the robot-controller. It changes the key-points when the position of the robot is near it or when the key-point is inside an unkown obstacle. 
+3. It triggers a recognition from the object recognition node once the robot has reached a way-point, to do so it publishes a message to the specific topic from the object recognize node for requesting recognition.
+4. It sends to the path-planner a map, a start and a goal point. The start and goal point are consequitve way points of the desired path. 
+5. It recieves the resulting path and extracts key-points of this path to send as goal positions to the robot driver. 
 
 Path-Planning
 -------------
@@ -408,6 +433,12 @@ Robot-Controller
 
 Object Recognition
 ------------------
-The object recognition module stays idle until a request is set by the mission planner. The request is set with an Empty message on the /object_recognition/request topic. When this request is set it waits for a new point cloud to arrive. When it arrives it filters it with a pass through filter and downsamples it with a Voxel grid filter. It then does a euclidean clustering and for each of the clusters it performs an object recognition algorithm. 
+1. The object recognition module stays idle until a request is set by the mission planner. The request is set with an Empty message on the /object_recognition/request topic.
 
-For the recognition it first gets the spin image and compares it to the stack of spin images of different models. When the correlation between spin images is high, a match is set. This is repeated for a lot of points and, when a given percentage of points match between the scene and the model the cluster is set to a category. 
+2. When this request is set, it waits for a new point cloud to arrive (usually from the camera).
+
+3. When the input cloud arrives it filters it with a set of filters (precisely, a pass through filter for clipping and a Voxel grid filter for downsampling are used in this particular application).
+
+4. It then does a euclidean clustering and perfoms, for each of the clusters, an object recognition algorithm (Spin Image, in this particular application). 
+
+5. In order to recognise a known model, it first gets the spin image and compares it to the list of precomputed spin images of different models. When the correlation between spin images is high, a match is set. This procedure is repeated for all key-points and, when a given percentage of points match between the scene and the model, the cluster is set to the model particular category.
