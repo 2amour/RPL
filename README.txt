@@ -1,11 +1,11 @@
 ==================================
-= Second group assignment README =
+= Third group assignment README =
 ==================================
 
 Description
 ===========
 
-This group of applications can be used for allowing a ThymioII robot move towards a point in its plane space avoiding both known (by source of a map) and unknown obstacles. In order to try to increase modularity and reusability and also so independent tasks can be executed in different computers, it has been decided to separate responsabilities in different Eiffel applications. The communication between the applications is done by means of ROS topics and has been designed in terms of modularity.
+This application detects objects as ThymioII goes through a set of way points. There is a main mission planner that sequences in parallel a path-planner, a robot controller and an object recognition module. In order to try to increase modularity and reusability and also so independent tasks can be executed in different computers, it has been decided to separate responsabilities in different Eiffel applications. The communication between the applications is done by means of ROS topics and has been designed in terms of modularity.
 
 A scheme of how the communication is performed can be seen in the file 'rosgraph.png'.
 
@@ -49,6 +49,14 @@ A PID closed loop control tunes the robot's drive input values based on the erro
 Usage
 =====
 
+Wired project. 
+
+1. Connect the ThymioII robot and the RGBD camera to the computer.
+
+2. Launch the whole project. 
+	$ roslaunch thymio_launcher wired_project_launcher.launch
+
+Wireless project.
 1. Connect the ThymioII robot to an USB port of the `Blok' wireless pack (Beaglebone running Ubuntu + router + sensor + power bank).
 
 2. Connect to the wireless network of the `Blok' wireless pack and set yourself a static IP which concordes with the computer 'ROS_IP' environmental variable. (SSID: 'rpl_blok', password: 'beaglebone').
@@ -60,26 +68,12 @@ Usage
 	$ roslaunch thymio_navigation_driver wireless_thymio.launch
 
 5. In the network master run. 
-	$ roslaunch roboscoop_ros thymio_driver.launch
-
-6. Yet in another terminal run
-	$ rosrun map_server map_server $PATH_TO_YAML_MAP
-
-7. Run the Mission Planner node
-	$ ./mission_planner mission_planner_parameters_file topics_file
-
-8. Run the Path Planner node
-	$ ./path_planner algorithm_parameters_file map_parameters_file topics_file
-
-9 Run the Robot Controller node
-	$ ./robot_controller file_path
-
-NOTE: most of this could be launched as a roslaunch file. 
-
+	$ roslaunch thymio_launcher wireless_project_launcher.launch
 
 
 IO Files
 ========
+All parameters are in $(find roboscoop_ros)/parameters
 
 Mission-Planner
 ---------------
@@ -313,6 +307,59 @@ robot_controller
  |
  |_robot_controller
 
+Object-Recognition
+----------------
+robot_controller
+ \_behaviour
+ |   \_object_recognition_behaviour.h 		(Recieves and publish ROS msg. Executes the object recognition pipeline)
+ |
+ |_correspondence_strategies
+ |   \_correlation_correspondence.h         (Correspondence by cross-correlation)
+ |	  |_correspondence.h    				(Abstract correspondence strategy class)
+ |
+ |_descriptors
+ |   \_spin_image.h  		(Spin image descriptor)
+ |
+ |_filtering_strategies
+ |   \_filter.h 				(Abstract filter strategy class)
+ |   |_extract_filter.h    		(Filtering by extracting a set of indices)
+ |	 |_pass_through_filter.h 	(Filtering by extracting values outside an interval)
+ |	 |_statistical_filter.h 	(Filtering by getting statistical outliers)
+ |	 |_voxel_grid_filter.h 		(Filtering by downsampling)
+ |
+ |_listeners
+ |   \_point_cloud_listener.h 	(Class that listens and saves a point cloud msg)
+ |
+ |_msg
+ |   \_visualization_marker.h 	(Class to handle visualization markers msgs)
+ |
+ |_parser
+ |   \_ros_parameters_parser.h 	(Class to parse from ROS parameter server)
+ |	 |_model_parser.h 			(Class to parse the different categories descriptors)
+ |	 |_training_files_parser.h 	(Class to parse the files to train the descriptors)
+ | 
+ |_pipeline
+ |   \_object_recognition_pipeline.h 	(Class that implements the different methods of a recognition pipeline)
+ |  
+ |_ros
+ |   \_topics.h  			(Class that defines the different topics used in the project)
+ |
+ |_segmentation_strategies
+ |   \_segmentation.h  		(Abstract segmentation strategy class)
+ |   |_euclidean_segmentation.h   (Class that clusters based on L2 distance)
+ |   |_plane_segmentation.h			(Class that clusters points that lie in a plane)
+ |   |_region_growing_segmentation .h		(Class that clusters objects by growing regions)
+ |
+ |_types
+ |   \_points.h 				(Definitions of points used in the project)
+ |
+ |_util
+ |   \_category.h 				(Class that holds the information of the trained objects)
+ |	 |_histogram_math.h 		(Utility functions for processing histograms)
+ |
+ |_spin_recognition.cpp 		(Spin recognition algorithm main file)	
+ |
+ |_spin_training.cpp 			(Spin training algorithm main file)
 
 
 How does it work?
@@ -358,3 +405,9 @@ Robot-Controller
 2. The THYMIO_ROBOT object starts the TANGENT_BUG_BEHAVIOUR with all required robot parts. The latter listens to the goal sent by the mission planner and executes a controller that drives the robot to the goal. At the same time it publishes any obstacle it senses so that mission planner takes them into account for following calculations. It also publishes odometry information for mission planner that keeps a two way communication, receiving goals and sending position and heading. 
 
 3. This behaviour runs a controller which updates the velocity of the robot according to its environment. If an obstacle is sensed in the way to the given goal point it will follow it until there is a safe point where it can leave the obstacle and get closer to the goal point. If no safe point is found after making a loop around the object, the robot will stop and precise that the goal is unreachable. When the robot gets close to the goal it will also stoThe communication between the STATES among themselves and between the controllers is done using the signaler TANGENT_BUG_SIGNALER. This signaler contains information related to the current state, the goal, the minimum distance towards measured up to the point, etc.
+
+Object Recognition
+------------------
+The object recognition module stays idle until a request is set by the mission planner. The request is set with an Empty message on the /object_recognition/request topic. When this request is set it waits for a new point cloud to arrive. When it arrives it filters it with a pass through filter and downsamples it with a Voxel grid filter. It then does a euclidean clustering and for each of the clusters it performs an object recognition algorithm. 
+
+For the recognition it first gets the spin image and compares it to the stack of spin images of different models. When the correlation between spin images is high, a match is set. This is repeated for a lot of points and, when a given percentage of points match between the scene and the model the cluster is set to a category. 
