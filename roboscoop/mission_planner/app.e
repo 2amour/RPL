@@ -1,7 +1,7 @@
 note
 	description: "Path_planning application root class."
 	date: "28.10.2015"
-	author: "Sebastian Curri"
+	author: "Sebastian Curi"
 
 class
 	APP

@@ -1,6 +1,6 @@
 note
 	description: "This class parses parameters for the path-planning algorithm."
-	author: "Sebastian Curri"
+	author: "Sebastian Curi"
 	date: "06.11.2015"
 
 class
@@ -12,7 +12,7 @@ inherit
 create
 	make
 
-feature -- Initialization.
+feature {NONE} -- Initialization
 
 	make
 			-- Create current.
@@ -21,7 +21,7 @@ feature -- Initialization.
 			create last_parameters.make_default
 		end
 
-feature {ANY} -- Access.
+feature {ANY} -- Access
 
 	parse_file (file_path: separate STRING)
 			-- Parse file with path `file_path'.

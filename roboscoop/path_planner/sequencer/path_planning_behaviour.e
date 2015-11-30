@@ -7,7 +7,6 @@ class
 	PATH_PLANNING_BEHAVIOUR
 
 inherit
-
 	BEHAVIOUR
 
 create

@@ -1,6 +1,6 @@
 note
 	description: "Parser of topics for mission planner"
-	author: "Sebastian Curri"
+	author: "Sebastian Curi"
 	date: "30.11.15"
 
 class

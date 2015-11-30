@@ -1,6 +1,6 @@
 note
 	description: "Main parser for this application."
-	author: "Sebastian Curri"
+	author: "Sebastian Curi"
 	date: "06.11.2015"
 
 class

@@ -7,7 +7,6 @@ class
 	PATH_PLANNER_PARAMETERS_BAG
 
 inherit
-
 	PARAMETERS_BAG
 
 create

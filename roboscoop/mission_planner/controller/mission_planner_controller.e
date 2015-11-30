@@ -1,6 +1,6 @@
 note
 	description: "Controller for the mission planner."
-	author: "Sebastian Curri"
+	author: "Sebastian Curi"
 	date: "29.11.2015"
 
 class

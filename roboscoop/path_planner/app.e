@@ -13,7 +13,7 @@ inherit
 create
 	make
 
-feature {NONE} -- Initialization.
+feature {NONE} -- Initialization
 
 	make
 			-- Run application.
@@ -40,7 +40,7 @@ feature {NONE} -- Initialization.
 			create ros_spinner.make
 			start_spinning (ros_spinner)
 
-				-- Start Behaviour
+				-- Start Behaviour.
 			create path_planning_behaviour.make_with_attributes (parameters_bag)
 			path_planning_behaviour.start
 		end
@@ -51,7 +51,7 @@ feature {NONE} -- Implementation
 			-- Parameters for path planning.
 
 	algorithm_parameter_parser: PATH_PLANNER_PARAMETERS_PARSER
-			-- Parser for path planning parameters
+			-- Parser for path planning parameters.
 
 	map_parameters: MAP_PARAMETERS
 			-- Parameters of the map.
@@ -69,7 +69,7 @@ feature {NONE} -- Implementation
 			-- Bag of parameters for path planning.
 
 	parse_parameters
-			-- Parse set of parameters
+			-- Parse set of parameters.
 		do
 			create algorithm_parameter_parser.make
 			algorithm_parameter_parser.parse_file (argument_array[1])
