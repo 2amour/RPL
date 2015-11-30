@@ -29,10 +29,9 @@ void MarkerMessage::update_timestamp(void)
 {
   _marker.header.stamp = ros::Time();
 }
-void MarkerMessage::set_timestamp(double timestamp)
+void MarkerMessage::set_timestamp(ros::Time timestamp)
 {
-  ros::Time stamp(timestamp);
-  _marker.header.stamp = stamp;
+  _marker.header.stamp = timestamp;
 }
 void MarkerMessage::set_frame_id(const std::string & frame)
 {

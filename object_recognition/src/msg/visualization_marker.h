@@ -138,7 +138,7 @@ public:
    * Set timestamp
    * @param timestamp
    */
-  void set_timestamp(double timestamp);
+  void set_timestamp(ros::Time timestamp);
   /**
    * Get the marker msg.
    * @return marker msg

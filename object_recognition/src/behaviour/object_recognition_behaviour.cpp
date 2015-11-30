@@ -16,6 +16,7 @@ ObjectRecognitionBehaviour::ObjectRecognitionBehaviour(ObjectRecognitionPipeline
 void ObjectRecognitionBehaviour::image_callback(const PointCloud::ConstPtr& msg)
 {
   if (is_requested){
+    ros::Time timestamp = ros::Time::now();
     ROS_INFO("I heard a new msg!");
     _listener.msg_callback(msg);
     _recognition_pipeline.pre_process_image(_listener.get_cloud());
@@ -28,7 +29,7 @@ void ObjectRecognitionBehaviour::image_callback(const PointCloud::ConstPtr& msg)
       difference = max - min;
 
       _recognition_pipeline.recognize_image(*it);
-      publish(mean, difference, _requested_number++, msg->header.stamp);
+      publish(mean, difference, _requested_number++, timestamp);
     }
     ROS_INFO("Finished processing point cloud");
     is_requested = false;
@@ -46,7 +47,7 @@ void ObjectRecognitionBehaviour::set_pipeline(ObjectRecognitionPipeline recognit
   ROS_INFO("Pipeline set!");
 }
 
-void ObjectRecognitionBehaviour::publish(Eigen::Vector4f position, Eigen::Vector4f scale, int marker_id, double timestamp)
+void ObjectRecognitionBehaviour::publish(Eigen::Vector4f position, Eigen::Vector4f scale, int marker_id, ros::Time timestamp)
 {
   std::vector<Category> categories = _recognition_pipeline.get_categories();
   for (std::vector<Category>::iterator it = categories.begin(); it != categories.end(); ++it)
