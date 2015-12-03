@@ -75,4 +75,5 @@ feature {ANY} -- Access.
 		end
 
 		last_parameters: MAP_PARAMETERS
+				-- Parameters being parsed.
 end

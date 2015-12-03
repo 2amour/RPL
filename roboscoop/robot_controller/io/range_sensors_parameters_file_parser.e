@@ -24,6 +24,7 @@ feature {NONE} -- Initialization
 feature -- Access
 
 	parse_file (file_path: separate STRING)
+			-- Parse file.
 		local
 			sensor_count: INTEGER_32
 			x, y, phi: REAL_64
@@ -79,4 +80,5 @@ feature -- Access
 		end
 
 		last_parameters: RANGE_SENSORS_PARAMETERS
+				-- Parameters parsed.
 end

@@ -72,5 +72,6 @@ feature {ANY} -- Access.
 		end
 
 		last_parameters: PATH_PLANNER_TOPICS_PARAMETERS
+				-- Parameters being parsed.
 end
 

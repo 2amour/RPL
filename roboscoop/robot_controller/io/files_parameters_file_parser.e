@@ -24,6 +24,7 @@ feature {NONE} -- Implementation
 feature -- Access
 
 	parse_file (file_path: separate STRING)
+			-- Parse file.
 		local
 			file: PLAIN_TEXT_FILE
 			key: STRING
@@ -83,5 +84,6 @@ feature -- Access
 		end
 
 	last_parameters: FILES_PARAMETERS
+			-- Parameters parsed.
 
 end

@@ -83,6 +83,7 @@ feature {ANY} -- Access.
 		end
 
 	last_parameters: ROBOT_CONTROLLER_TOPIC_PARAMETERS
+			-- Parameters parsed.
 
 end
 

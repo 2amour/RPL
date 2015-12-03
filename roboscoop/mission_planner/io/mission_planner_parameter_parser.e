@@ -71,4 +71,5 @@ feature {ANY} -- Access.
 		end
 
 		last_parameters: MISSION_PLANNER_PARAMETERS
+				-- Parameters being parsed.
 end

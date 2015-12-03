@@ -15,7 +15,7 @@ create
 feature {NONE} -- Initialization
 
 	make
-			-- Create Current
+			-- Create Current.
 		do
 			create last_parameters.make
 			is_error_found := False
@@ -24,6 +24,7 @@ feature {NONE} -- Initialization
 feature -- Access
 
 	parse_file (file_path: separate STRING)
+			-- Parse file.
 		local
 			x: REAL_64
 			y: REAL_64
@@ -70,5 +71,6 @@ feature -- Access
 		end
 
 		last_parameters: WALL_FOLLOWING_PARAMETERS
+				-- Parameters parsed.
 
 end
