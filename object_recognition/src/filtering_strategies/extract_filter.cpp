@@ -5,12 +5,13 @@
  *      Author: Sebastian Curi
  */
 
-#include "extract_filter.h"
+#include "object_recognition/filtering_strategies/extract_filter.h"
 
+static const std::string NAME = "Extract_Filter";
 ExtractFilter::ExtractFilter() :
     Filter()
 {
-  _name = "Extract_Filter";
+  _name = NAME;
 }
 
 ExtractFilter::ExtractFilter(pcl::PointIndices inliers, bool inverse)

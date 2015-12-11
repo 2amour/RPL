@@ -5,7 +5,7 @@
  *      Author: Sebastian Curi
  */
 
-#include "eigenimage_correspondence.h"
+#include "object_recognition/correspondence_strategies/eigenimage_correspondence.h"
 
 EigenCorrespondence::EigenCorrespondence()
 {

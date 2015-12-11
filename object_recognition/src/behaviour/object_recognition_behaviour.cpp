@@ -1,4 +1,6 @@
-#include "object_recognition_behaviour.h"
+#include "object_recognition/behaviour/object_recognition_behaviour.h"
+
+static const int DELETE_ALL = 3; ///< @brief Key to delete all markers. It should be implemented in visualization_msgs::Marker::DELETEALL.
 
 ObjectRecognitionBehaviour::ObjectRecognitionBehaviour() {
   is_requested = false;

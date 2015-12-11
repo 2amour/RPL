@@ -5,7 +5,7 @@
  *      Author: Sebastian Curi
  */
 
-#include "../pipeline/object_recognition_pipeline.h"
+#include "object_recognition/pipeline/object_recognition_pipeline.h"
 
 ObjectRecognitionPipeline::ObjectRecognitionPipeline(std::vector<FilterPtr> filters, SegmentationPtr segmentator,
                                                          DescriptorPtr spin_image, CorrespondencePtr correspondence) :

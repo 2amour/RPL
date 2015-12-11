@@ -4,7 +4,8 @@
  *  Created on: Nov 18, 2015
  *      Author: Sebastian Curi
  */
-#include "plane_segmentation.h"
+#include "object_recognition/segmentation_strategies/plane_segmentation.h"
+static const std::string NAME = "Plane_Segmentation";
 
 PlaneSegmentation::PlaneSegmentation()
 {
@@ -14,7 +15,7 @@ PlaneSegmentation::PlaneSegmentation()
   _segmentator.setMethodType(params.method);
   _segmentator.setDistanceThreshold(params.distance_threshold);
   _segmentator.setMaxIterations(params.max_iter);
-  _name = "Plane_Segmentation";
+  _name = NAME;
 }
 PlaneSegmentation::PlaneSegmentation(struct plane_segmentation_parameters params)
 {
@@ -23,7 +24,7 @@ PlaneSegmentation::PlaneSegmentation(struct plane_segmentation_parameters params
   _segmentator.setMethodType(params.method);
   _segmentator.setDistanceThreshold(params.distance_threshold);
   _segmentator.setMaxIterations(params.max_iter);
-  _name = "Plane_Segmentation";
+  _name = NAME;
 }
 
 PlaneSegmentation::PlaneSegmentation(double distance_threshold)
@@ -33,7 +34,7 @@ PlaneSegmentation::PlaneSegmentation(double distance_threshold)
   _segmentator.setMethodType(pcl::SAC_RANSAC);
   _segmentator.setDistanceThreshold(distance_threshold);
   _segmentator.setMaxIterations(100);
-  _name = "Plane_Segmentation";
+  _name = NAME;
 }
 PlaneSegmentation::PlaneSegmentation(double distance_threshold, int model, int method, int max_iter)
 {
@@ -42,7 +43,7 @@ PlaneSegmentation::PlaneSegmentation(double distance_threshold, int model, int m
   _segmentator.setMethodType(method);
   _segmentator.setDistanceThreshold(distance_threshold);
   _segmentator.setMaxIterations(max_iter);
-  _name = "Plane_Segmentation";
+  _name = NAME;
 }
 
 void PlaneSegmentation::set_distance_threshold(double distance_threshold)

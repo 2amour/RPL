@@ -5,7 +5,8 @@
  *      Author: Sebastian Curi
  */
 
-#include "euclidean_segmentation.h"
+#include "object_recognition/segmentation_strategies/euclidean_segmentation.h"
+static const std::string NAME = "Euclidean_Segmentation";
 
 EuclideanSegmentation::EuclideanSegmentation()
 {
@@ -13,7 +14,7 @@ EuclideanSegmentation::EuclideanSegmentation()
   _segmentator.setClusterTolerance(params.tolerance);
   _segmentator.setMinClusterSize(params.cluster_min);
   _segmentator.setMaxClusterSize(params.cluster_max);
-  _name = "Euclidean_Segmentation";
+  _name = NAME;
 }
 
 EuclideanSegmentation::EuclideanSegmentation(struct euclidean_segmentation_parameters params)
@@ -21,7 +22,7 @@ EuclideanSegmentation::EuclideanSegmentation(struct euclidean_segmentation_param
   _segmentator.setClusterTolerance(params.tolerance);
   _segmentator.setMinClusterSize(params.cluster_min);
   _segmentator.setMaxClusterSize(params.cluster_max);
-  _name = "Euclidean_Segmentation";
+  _name = NAME;
 }
 
 EuclideanSegmentation::EuclideanSegmentation(double tolerance, int cluster_min, int cluster_max)
@@ -29,7 +30,7 @@ EuclideanSegmentation::EuclideanSegmentation(double tolerance, int cluster_min, 
   _segmentator.setClusterTolerance(tolerance);
   _segmentator.setMinClusterSize(cluster_min);
   _segmentator.setMaxClusterSize(cluster_max);
-  _name = "Euclidean_Segmentation";
+  _name = NAME;
 }
 
 void EuclideanSegmentation::set_tolerance(double tolerance)

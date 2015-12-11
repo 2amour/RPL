@@ -5,28 +5,29 @@
  *      Author: Sebastian Curi
  */
 
-#include "statistical_filter.h"
+#include "object_recognition/filtering_strategies/statistical_filter.h"
+static const std::string NAME = "Statistical_Filter";
 
 StatisticalFilter::StatisticalFilter()
 {
   statistical_filter_parameters parameters = statistical_filter_parameters();
   _filter.setMeanK(parameters.points);
   _filter.setStddevMulThresh(parameters.std_dev_mul);
-  _name = "Statistical_Filter";
+  _name = NAME;
 }
 
 StatisticalFilter::StatisticalFilter(struct statistical_filter_parameters parameters)
 {
   _filter.setMeanK(parameters.points);
   _filter.setStddevMulThresh(parameters.std_dev_mul);
-  _name = "Statistical_Filter";
+  _name = NAME;
 }
 
 StatisticalFilter::StatisticalFilter(unsigned int points, double std_dev_mul)
 {
   _filter.setMeanK(points);
   _filter.setStddevMulThresh(std_dev_mul);
-  _name = "Statistical_Filter";
+  _name = NAME;
 }
 
 void StatisticalFilter::set_filter_number_of_points(unsigned int points)

@@ -14,12 +14,10 @@
 #include <pcl/common/common.h>
 #include <pcl/common/transforms.h>
 
-#include "../types/points.h"
-#include "../listeners/point_cloud_listener.h"
-#include "../msg/visualization_marker.h"
-#include "../pipeline/object_recognition_pipeline.h"
-
-static const int DELETE_ALL = 3; ///< @brief Key to delete all markers. It should be implemented in visualization_msgs::Marker::DELETEALL.
+#include "object_recognition/types/points.h"
+#include "object_recognition/listeners/point_cloud_listener.h"
+#include "object_recognition/msg/visualization_marker.h"
+#include "object_recognition/pipeline/object_recognition_pipeline.h"
 
 /**
  * @brief Class that implements the object recognition algorithm.

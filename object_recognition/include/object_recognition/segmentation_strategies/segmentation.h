@@ -13,11 +13,11 @@
 #include <vector>
 #include <ros/ros.h>
 
-#include "../types/points.h"
+#include "object_recognition/types/points.h"
 #include <pcl/sample_consensus/method_types.h>
 #include <pcl/sample_consensus/model_types.h>
 #include <pcl/filters/extract_indices.h>
-#include "../filtering_strategies/extract_filter.h"
+#include "object_recognition/filtering_strategies/extract_filter.h"
 
 #ifndef _SEGMENTATION_H_
 #define _SEGMENTATION_H_

@@ -9,14 +9,14 @@
 #include <ros/ros.h>
 #include <string>
 #include <vector>
-#include "../filtering_strategies/pass_through_filter.h"
-#include "../filtering_strategies/statistical_filter.h"
-#include "../filtering_strategies/voxel_grid_filter.h"
-#include "../segmentation_strategies/euclidean_segmentation.h"
-#include "../segmentation_strategies/plane_segmentation.h"
-#include "../segmentation_strategies/region_growing_segmentation.h"
-#include "../correspondence_strategies/correlation_correspondence.h"
-#include "../descriptors/spin_image.h"
+#include "object_recognition/filtering_strategies/pass_through_filter.h"
+#include "object_recognition/filtering_strategies/statistical_filter.h"
+#include "object_recognition/filtering_strategies/voxel_grid_filter.h"
+#include "object_recognition/segmentation_strategies/euclidean_segmentation.h"
+#include "object_recognition/segmentation_strategies/plane_segmentation.h"
+#include "object_recognition/segmentation_strategies/region_growing_segmentation.h"
+#include "object_recognition/correspondence_strategies/correlation_correspondence.h"
+#include "object_recognition/descriptors/spin_image.h"
 
 
 #ifndef _ROS_PARAMETERS_PARSER_H_

@@ -5,7 +5,7 @@
  *      Author: Sebastian Curi
  */
 
-#include "segmentation.h"
+#include "object_recognition/segmentation_strategies/segmentation.h"
 
 std::vector<pcl::PointIndices> Segmentation::get_cluster_indices(void)
 {

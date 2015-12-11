@@ -1,4 +1,4 @@
-#include "point_cloud_listener.h"
+#include "object_recognition/listeners/point_cloud_listener.h"
 
 PointCloudListener::PointCloudListener()
 {

@@ -5,7 +5,8 @@
  *      Author: Sebastian Curi
  */
 
-#include "region_growing_segmentation.h"
+#include "object_recognition/segmentation_strategies/region_growing_segmentation.h"
+static const std::string NAME = "Region_Growing_Segmentaiton";
 
 RegionGrowingSegmentation::RegionGrowingSegmentation()
 {
@@ -15,7 +16,7 @@ RegionGrowingSegmentation::RegionGrowingSegmentation()
   _segmentator.setNumberOfNeighbours(params.neighbours);
   _segmentator.setSmoothnessThreshold(params.smoothness_threshold);
   _segmentator.setCurvatureThreshold(params.curvature_threshold);
-  _name = "Region_Growing_Segmentaiton";
+  _name = NAME;
 }
 
 RegionGrowingSegmentation::RegionGrowingSegmentation(struct region_growing_parameters params)
@@ -25,7 +26,7 @@ RegionGrowingSegmentation::RegionGrowingSegmentation(struct region_growing_param
   _segmentator.setNumberOfNeighbours(params.neighbours);
   _segmentator.setSmoothnessThreshold(params.smoothness_threshold);
   _segmentator.setCurvatureThreshold(params.curvature_threshold);
-  _name = "Region_Growing_Segmentaiton";
+  _name = NAME;
 }
 
 RegionGrowingSegmentation::RegionGrowingSegmentation(int cluster_min, int cluster_max, int neighbours,
@@ -36,7 +37,7 @@ RegionGrowingSegmentation::RegionGrowingSegmentation(int cluster_min, int cluste
   _segmentator.setNumberOfNeighbours(neighbours);
   _segmentator.setSmoothnessThreshold(smoothness_threshold);
   _segmentator.setCurvatureThreshold(curvature_threshold);
-  _name = "Region_Growing_Segmentaiton";
+  _name = NAME;
 }
 
 void RegionGrowingSegmentation::set_cluster_limits(int cluster_min, int cluster_max)

@@ -4,7 +4,7 @@
  *  Created on: Nov 17, 2015
  *      Author: Sebastian Curi
  */
-#include "filter.h"
+#include "object_recognition/filtering_strategies/filter.h"
 
 const std::string & Filter::get_name()
 {

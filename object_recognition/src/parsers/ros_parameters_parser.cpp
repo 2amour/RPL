@@ -5,7 +5,7 @@
  *      Author: Sebastian Curi
  */
 
-#include "ros_parameters_parser.h"
+#include "object_recognition/parsers/ros_parameters_parser.h"
 
 RosParameterParser::RosParameterParser(ros::NodeHandle nh)
 {

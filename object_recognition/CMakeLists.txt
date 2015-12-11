@@ -105,7 +105,7 @@ catkin_package(
 
 ## Specify additional locations of header files
 ## Your package locations should be listed before other locations
-# include_directories(include)
+include_directories(include)
 include_directories(
   ${catkin_INCLUDE_DIRS}
 )
@@ -171,9 +171,9 @@ target_link_libraries(object_recognition_behaviour
                         point_cloud_listener visualization_marker 
                         object_recognition_pipeline)
   
+add_library(ros_topics_parser src/parsers/ros_topics_parser.cpp)
 add_library(training_files_parser src/parsers/training_files_parser.cpp)
-add_library(model_parser src/parsers/model_parser.cpp)
-target_link_libraries(model_parser training_files_parser)
+add_library(ros_categories_parser src/parsers/ros_categories_parser.cpp)
 add_library(ros_parameters_parser src/parsers/ros_parameters_parser.cpp)
 
 target_link_libraries(ros_parameters_parser ${catkin_LIBRARIES} ${PCL_LIBRARIES}
@@ -186,10 +186,10 @@ target_link_libraries(ros_parameters_parser ${catkin_LIBRARIES} ${PCL_LIBRARIES}
 add_executable(spin_recognition src/spin_recognition.cpp)
 target_link_libraries(spin_recognition ${catkin_LIBRARIES} ${PCL_LIBRARIES} 
                       object_recognition_behaviour 
-                      ros_parameters_parser model_parser training_files_parser)
+                      ros_parameters_parser ros_categories_parser ros_topics_parser)
 
 add_executable(spin_training src/spin_training.cpp)
-target_link_libraries(spin_training ${PCL_LIBRARIES} ros_parameters_parser model_parser training_files_parser)
+target_link_libraries(spin_training ${PCL_LIBRARIES} ros_parameters_parser training_files_parser)
 
 # add_dependencies(talker beginner_tutorials_generate_messages_cpp)
 

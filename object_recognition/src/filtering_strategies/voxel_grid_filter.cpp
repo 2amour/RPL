@@ -4,14 +4,15 @@
  *  Created on: Nov 18, 2015
  *      Author: Sebastian Curi
  */
-#include "voxel_grid_filter.h"
+#include "object_recognition/filtering_strategies/voxel_grid_filter.h"
+static const std::string NAME = "Voxel_Grid_Filter";
 
 VoxelGridFilter::VoxelGridFilter() :
     Filter()
 {
   voxel_filter_parameters params = voxel_filter_parameters();
   _filter.setLeafSize(params.x, params.y, params.z);
-  _name = "Voxel_Grid_Filter";
+  _name = NAME;
   _size = (params.x + params.y + params.z)/3.0;
 }
 
@@ -19,7 +20,7 @@ VoxelGridFilter::VoxelGridFilter(struct voxel_filter_parameters params) :
     Filter()
 {
   _filter.setLeafSize(params.x, params.y, params.z);
-  _name = "Voxel_Grid_Filter";
+  _name = NAME;
   _size = (params.x + params.y + params.z)/3.0;
 }
 
@@ -27,7 +28,7 @@ VoxelGridFilter::VoxelGridFilter(double size) :
     Filter()
 {
   _filter.setLeafSize(size, size, size);
-  _name = "Voxel_Grid_Filter";
+  _name = NAME;
   _size = size;
 }
 
@@ -35,7 +36,7 @@ VoxelGridFilter::VoxelGridFilter(double x, double y, double z) :
     Filter()
 {
   _filter.setLeafSize(x, y, z);
-  _name = "Voxel_Grid_Filter";
+  _name = NAME;
   _size = (x + y + z)/3.0;
 }
 

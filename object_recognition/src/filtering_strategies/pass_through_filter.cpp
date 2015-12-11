@@ -5,28 +5,29 @@
  *      Author: Sebastian Curi
  */
 
-#include "pass_through_filter.h"
+#include "object_recognition/filtering_strategies/pass_through_filter.h"
+static const std::string NAME = "Pass_Through_Filter";
 
 PassThroughFilter::PassThroughFilter()
 {
   pass_through_filter_parameters params = pass_through_filter_parameters();
   _filter.setFilterFieldName(params.field);
   _filter.setFilterLimits(params.min, params.max);
-  _name = "Pass_Through_Filter";
+  _name = NAME;
 }
 
 PassThroughFilter::PassThroughFilter(struct pass_through_filter_parameters params)
 {
   _filter.setFilterFieldName(params.field);
   _filter.setFilterLimits(params.min, params.max);
-  _name = "Pass_Through_Filter";
+  _name = NAME;
 }
 
 PassThroughFilter::PassThroughFilter(double z_min, double z_max, std::string field)
 {
   _filter.setFilterFieldName(field);
   _filter.setFilterLimits(z_min, z_max);
-  _name = "Pass_Through_Filter";
+  _name = NAME;
 }
 
 void PassThroughFilter::set_filter_limits(double z_min, double z_max)

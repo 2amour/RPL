@@ -8,12 +8,12 @@
 #include <pcl/io/pcd_io.h>
 #include <pcl/point_types.h>
 
-#include "descriptors/spin_image.h"
-#include "parsers/ros_parameters_parser.h"
-#include "parsers/training_files_parser.h"
+#include "object_recognition/descriptors/spin_image.h"
+#include "object_recognition/parsers/ros_parameters_parser.h"
+#include "object_recognition/parsers/training_files_parser.h"
 
-#include "types/points.h"
-#include "util/histogram_math.h"
+#include "object_recognition/types/points.h"
+#include "object_recognition/util/histogram_math.h"
 
 const std::string NODE ="SPIN IMAGE TRAINING";
 

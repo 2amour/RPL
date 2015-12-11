@@ -5,7 +5,7 @@
  *      Author: Sebastian Curi
  */
 
-#include "training_files_parser.h"
+#include "object_recognition/parsers/training_files_parser.h"
 
 std::vector<std::string> get_training_file_names(const std::string & path)
 {
