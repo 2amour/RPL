@@ -16,10 +16,11 @@ feature {ANY} -- Acces.
 	parse_file (file_path: separate STRING): MISSION_PLANNER_PARAMETERS
 			-- Parse file with path `file_path'.
 		local
-			point_array: ARRAYED_LIST[POINT]
+			point_array: ARRAYED_LIST[POSE]
 			parameters: MISSION_PLANNER_PARAMETERS
-			x, y: REAL_64
+			x, y, theta: REAL_64
 			file: PLAIN_TEXT_FILE
+			frame: STRING
 			key: STRING
 		do
 			create parameters.make_default
@@ -32,14 +33,23 @@ feature {ANY} -- Acces.
 				file.off
 			loop
 				file.read_word
+				frame := ""
 				key := file.last_string
 
-				if key.is_equal ("point:") then
+				if key.is_equal ("frame: ") then
+					file.read_word_thread_aware
+					frame := file.last_string
+					parameters.set_frame (frame)
+				elseif key.is_equal ("pose:") then
 					file.read_double
 					x := file.last_double
 					file.read_double
 					y := file.last_double
-					point_array.force (create {POINT}.make_with_values (x, y, 0))
+					file.read_double
+					theta := file.last_double
+					point_array.force (create {POSE}.make_with_values (create {POINT}.make_with_values (x, y, 0),
+																	   create {QUATERNION}.make_with_values (0, 0, {DOUBLE_MATH}.sine (theta/2),  {DOUBLE_MATH}.cosine (theta/2)),
+																	   frame))
 				elseif key.is_equal ("way_point_threshold:") then
 					file.read_double
 					parameters.set_threshold (file.last_double)

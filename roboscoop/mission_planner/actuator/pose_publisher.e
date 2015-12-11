@@ -1,10 +1,11 @@
 note
-	description: "Class that publishes point msgs to ROS."
+	description: "Class that publishes stamped pose msgs to ROS."
 	author: "Sebastian Curi"
-	date: "05.11.2015"
+	date: "11/12/2015"
+
 
 class
-	POINT_PUBLISHER
+	POSE_PUBLISHER
 
 create
 	make_with_topic
@@ -24,16 +25,16 @@ feature {ANY} -- Access
 	has_published: BOOLEAN
 			-- Was the publisher used
 
-	publish_point (a_point: separate POINT)
-			-- Publishing a point.
+	publish_pose (a_pose: separate POSE)
+			-- Publishing a pose.
 		do
-			publisher.publish (a_point.get_msg)
+			publisher.publish (a_pose.get_pose_stamped_msg)
 			has_published := True
 		end
 
 feature {NONE} -- Implementation
 
-	publisher: ROS_PUBLISHER [POINT_MSG]
+	publisher: ROS_PUBLISHER [POSE_STAMPED_MSG]
 			-- Publisher object.
 
 end

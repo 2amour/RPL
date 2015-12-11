@@ -11,17 +11,17 @@ create
 
 feature {NONE} -- Initialization
 
-	make_with_attributes (wp: separate ARRAYED_LIST[separate POINT]; thresh: REAL_64)
+	make_with_attributes (a_frame: separate STRING; wp: separate ARRAYED_LIST[separate POSE]; thresh: REAL_64)
 			-- Make `Current' and assign its attributes.
 		local
-			print_point: POINT
 			i: INTEGER_32
 		do
+			create frame.make_from_separate (a_frame)
 			create way_points.make (wp.count)
 			from i := 1
 			until i > wp.count
 			loop
-				way_points.force (create {POINT}.make_from_separate (wp.at (i)))
+				way_points.force (create {POSE}.make_from_separate (wp.at (i)))
 				i := i + 1
 			end
 			way_points.start
@@ -39,10 +39,13 @@ feature {NONE} -- Initialization
 
 feature {ANY} -- Access
 
+	frame: STRING
+			-- Global mission frame.
+
 	discovered_obstacle: BOOLEAN
 			-- Has a new obstacle been discovered?
 
-	way_points: ARRAYED_LIST[POINT]
+	way_points: ARRAYED_LIST[POSE]
 			-- Way points to visit.
 
 	way_points_idx: ARRAYED_LIST[INTEGER]
@@ -54,7 +57,7 @@ feature {ANY} -- Access
 	is_obj_recognition_requested: BOOLEAN
 			-- Is a new object recognition requested?
 
-	path: ARRAYED_LIST [separate POINT]
+	path: ARRAYED_LIST [separate POSE]
 			-- Path of points to visit.
 
 	goal_threshold: REAL_64
@@ -69,18 +72,10 @@ feature {ANY} -- Access
 			is_waypoint_reached := value
 		end
 
-	reset_path
-			-- Reset path of points.
+	update_path (pose: separate POSE)
+			-- Add `pose' to path.
 		do
-			create path.make (0)
-			create way_points_idx.make(0)
-			path.start
-		end
-
-	update_path (point: separate POINT)
-			-- Add `point' to path.
-		do
-			path.force (create{POINT}.make_from_separate (point))
+			path.force (create{POSE}.make_from_separate (pose))
 		end
 
 	request_path (a_val: BOOLEAN)
@@ -99,39 +94,10 @@ feature {ANY} -- Access
 			is_obj_recognition_requested = a_val
 		end
 
-
-	get_current_path_point: POINT
-			-- Get current path_point.
+	get_current_path_pose: POSE
+			-- Get current path_pose.
 		do
-			Result := create {POINT}.make_from_separate (path.item)
-		end
-
-	get_next_path_point: POINT
-			-- Get next path_point.
-		require
-			not path.islast
-		do
-			path.forth
-			Result := get_current_path_point
-			path.back
-		end
-
-	get_next_way_point: POINT
-			-- Get next path_point.
-		do
-			Result := create {POINT}.make_from_separate (path.at(way_points_idx.item))
-		end
-
-	get_origin: POINT
-			-- Get robot's origin.
-		do
-			Result := way_points.first
-		end
-
-	get_goal: POINT
-			-- Get robot's goal.
-		do
-			Result := way_points.item
+			Result := create {POSE}.make_from_separate (path.item)
 		end
 
 	set_way_point_idx
@@ -150,7 +116,7 @@ feature {ANY} -- Access
 	at_ith_way_point (test_point: separate POINT; way_point_idx: INTEGER): BOOLEAN
 			-- Check if the point is at one of the way points
 		do
-			Result := way_points.at (way_point_idx).euclidean_distance (test_point) < goal_threshold
+			Result := way_points.at (way_point_idx).position.euclidean_distance (test_point) < goal_threshold
 		end
 
 	at_a_way_point (test_point: separate POINT): BOOLEAN

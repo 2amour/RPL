@@ -18,21 +18,24 @@ feature {NONE} -- Initialization
 			-- Create `Current' with default values
 		do
 			create way_points.make (0)
+			frame := ""
 		end
-
---	make_with_attributes (wp: ARRAYED_LIST[POINT]; threshold: REAL_64)
---			-- Create `Current' and assign given attributes.
---		do
---			way_points := wp
---			way_point_threshold := threshold
---		end
 
 feature {ANY} -- Acces
 
-	way_points: ARRAYED_LIST[POINT]
+	frame: STRING
+			-- Global frame
+
+	set_frame (a_frame: STRING)
+			-- Set the frame
+		do
+			frame := a_frame
+		end
+
+	way_points: ARRAYED_LIST[POSE]
 			-- Way points to visit.
 
-	set_way_points (wp: ARRAYED_LIST[POINT])
+	set_way_points (wp: ARRAYED_LIST[POSE])
 			-- Set the way points.
 		do
 			way_points := wp

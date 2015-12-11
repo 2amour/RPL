@@ -14,7 +14,7 @@ feature {NONE} -- Initialization
 	make_with_attributes (parameters_bag: MISSION_PLANNER_PARAMETERS_BAG)
 			-- Create `Current' with attributes.
 		do
-			create mission_signaler.make_with_attributes (parameters_bag.mission_planner_parameters.way_points, parameters_bag.mission_planner_parameters.way_point_threshold)
+			create mission_signaler.make_with_attributes (parameters_bag.mission_planner_parameters.frame, parameters_bag.mission_planner_parameters.way_points, parameters_bag.mission_planner_parameters.way_point_threshold)
 
 			create obstacle_signaler.make_with_topic (parameters_bag.mission_planner_topics.sensed_obstacle)
 			create map_signaler.make_with_topic (parameters_bag.mission_planner_topics.map)
@@ -85,7 +85,7 @@ feature {NONE} -- Implementation
 	goal_publisher: separate POINT_PUBLISHER
 			-- Publisher of goal point.
 
-	target_publisher: separate POINT_PUBLISHER
+	target_publisher: separate POSE_PUBLISHER
 			-- Publisher of current target point.
 
 	object_recognition_publisher: separate EMPTY_PUBLISHER
