@@ -26,9 +26,13 @@ feature {NONE} -- Initialize
 			sensed_obstacles := "/robot_controller/sensed_obstacles"
 
 			goal := "/robot_controller/target"
+
+			circular_leds_topic := "/aseba/events/circle_leds_cmd"
+			visualization_marker := "/visualization_marker"
+
 		end
 
-	make_with_attributes (a_name, a_path, a_pose, a_odometry, a_obstacle, a_goal: STRING)
+	make_with_attributes (a_name, a_path, a_pose, a_odometry, a_obstacle, a_goal, a_circular_led, a_viz_mark: STRING)
 			-- Make with attributes
 		do
 			name := a_name
@@ -38,6 +42,10 @@ feature {NONE} -- Initialize
 			mission_odometry := a_odometry
 			sensed_obstacles := a_obstacle
 			goal := a_goal
+
+
+			circular_leds_topic := a_circular_led
+			visualization_marker := a_viz_mark
 		end
 
 	make_from_separate (other: separate like Current)
@@ -48,7 +56,9 @@ feature {NONE} -- Initialize
 								  create {STRING}.make_from_separate (other.pose),
 								  create {STRING}.make_from_separate (other.mission_odometry),
 								  create {STRING}.make_from_separate (other.sensed_obstacles),
-								  create {STRING}.make_from_separate (other.goal))
+								  create {STRING}.make_from_separate (other.goal),
+								  create {STRING}.make_from_separate (other.circular_leds_topic),
+								  create {STRING}.make_from_separate (other.visualization_marker))
 		end
 
 feature {ANY} -- Access
@@ -61,5 +71,8 @@ feature {ANY} -- Access
 		sensed_obstacles: STRING_8
 
 		goal: STRING_8
+
+		circular_leds_topic: STRING_8
+		visualization_marker: STRING_8
 
 end

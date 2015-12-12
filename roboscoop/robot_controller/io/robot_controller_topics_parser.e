@@ -14,6 +14,7 @@ feature {ANY} -- Access.
 			-- Parse file with path `file_path'.
 		local
 			name, path, pose, mission_odometry, sensed_obstacles, goal: STRING_8
+			circl_led, viz_marker: STRING_8
 			file: PLAIN_TEXT_FILE
 			key: STRING
 		do
@@ -23,6 +24,9 @@ feature {ANY} -- Access.
 			mission_odometry := ""
 			sensed_obstacles := ""
 			goal := ""
+
+			circl_led := ""
+			viz_marker := ""
 
 			create file.make_open_read (file_path)
 			from
@@ -51,13 +55,21 @@ feature {ANY} -- Access.
 				elseif key.is_equal("goal:") then
 					file.read_word_thread_aware
 					create goal.make_from_string (file.last_string)
+
+				elseif key.is_equal("circ_led:") then
+					file.read_word_thread_aware
+					create circl_led.make_from_string (file.last_string)
+				elseif key.is_equal("viz_mark:") then
+					file.read_word_thread_aware
+					create viz_marker.make_from_string (file.last_string)
+
 				elseif not key.is_empty then
 					io.putstring ("Parser error while parsing file '" + file_path + "': Key '" + key + "' not recognized%N")
 				end
 			end
 			file.close
 
-			Result := create {ROBOT_CONTROLLER_TOPIC_PARAMETERS}.make_with_attributes (name, path, pose, mission_odometry, sensed_obstacles, goal)
+			Result := create {ROBOT_CONTROLLER_TOPIC_PARAMETERS}.make_with_attributes (name, path, pose, mission_odometry, sensed_obstacles, goal, circl_led, viz_marker)
 		end
 
 end

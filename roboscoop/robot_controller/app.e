@@ -20,6 +20,7 @@ feature {NONE} -- Initialization
 			robo_node: separate NAMED_ROBOSCOOP_NODE
 			ros_spinner: separate ROS_SPINNER
 			tangent_bug_behaviour: separate TANGENT_BUG_BEHAVIOUR
+			led_behaviour: separate OBJECT_DISPLAY_BEHAVIOUR
 			thymio: separate THYMIO_ROBOT
 
 			-- Execution parameters
@@ -102,6 +103,7 @@ feature {NONE} -- Initialization
 
 			-- Initialize behaviour.
 			create tangent_bug_behaviour.make_with_attributes (topics, tangent_bug_params)
+			create led_behaviour.make_with_attributes (topics)
 
 			-- Create a robot object.
 			create thymio.make_with_attributes (range_sensors_params)
@@ -109,6 +111,9 @@ feature {NONE} -- Initialization
 			-- Set robot behaviour
 			set_robot_behaviour (thymio, tangent_bug_behaviour)
 
+			separate led_behaviour as ld do
+				ld.start
+			end
 			-- Launch Thymio.
 			separate thymio as t do
 				t.dispatch
