@@ -20,6 +20,7 @@ void ObjectRecognitionBehaviour::image_callback(const PointCloud::ConstPtr& msg)
   if (is_requested){
     ros::Time timestamp = ros::Time::now();
     ROS_INFO("I heard a new msg!");
+    _image_recieved_publisher.publish(std_msgs::Empty());
     _listener.msg_callback(msg);
     _recognition_pipeline.pre_process_image(_listener.get_cloud());
     std::vector<PointCloud> clusters = _recognition_pipeline.get_clusters();
@@ -41,6 +42,11 @@ void ObjectRecognitionBehaviour::image_callback(const PointCloud::ConstPtr& msg)
 void ObjectRecognitionBehaviour::set_marker_publisher(ros::Publisher marker_publisher)
 {
   _marker_publisher = marker_publisher;
+}
+
+void ObjectRecognitionBehaviour::set_image_recieved_publisher(ros::Publisher image_recieved_publisher)
+{
+  _image_recieved_publisher = image_recieved_publisher;
 }
 
 void ObjectRecognitionBehaviour::set_pipeline(ObjectRecognitionPipeline recognition_pipeline)

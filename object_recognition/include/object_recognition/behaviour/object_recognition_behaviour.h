@@ -25,6 +25,7 @@
 class ObjectRecognitionBehaviour {
 private:
   ros::Publisher _marker_publisher; ///< Publisher of ROS Messages
+  ros::Publisher _image_recieved_publisher; ///< Publisher of ROS Messages
   PointCloudListener _listener; ///< Listener of ROS Messages.
 
   ObjectRecognitionPipeline _recognition_pipeline; ///< Object recognition pipeline.
@@ -49,9 +50,15 @@ public:
 
   /**
    * Set an advertised marker publisher.
-   * @param marker_publisher advertised publisher to ros node_handler.
+   * @param marker_publisher advertised publisher in ros node_handler.
    */
   void set_marker_publisher(ros::Publisher marker_publisher);
+
+  /**
+   * Set an advertised image recieved publisher
+   * @param image_recieved_publisher advertised publisher in ros node_handler.
+   */
+  void set_image_recieved_publisher(ros::Publisher image_recieved_publisher);
 
   /**
    * Set the used recognition pipeline
