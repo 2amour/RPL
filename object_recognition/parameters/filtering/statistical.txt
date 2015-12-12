@@ -1,2 +1,0 @@
-points 50
-std_dev 0.5

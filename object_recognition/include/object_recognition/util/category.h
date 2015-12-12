@@ -10,8 +10,8 @@
 #include <pcl/io/pcd_io.h>
 #include <pcl/point_types.h>
 
-#include "../descriptors/spin_image.h"
-#include "../msg/visualization_marker.h"
+#include "object_recognition/descriptors/spin_image.h"
+#include "object_recognition/msg/visualization_marker.h"
 
 #ifndef _CATEGORY_H_
 #define _CATEGORY_H_
@@ -32,7 +32,7 @@ public:
     * Class constructor
     * @param name name of category
     */
-  Category(const std::string & name);
+  Category(std::string name);
 
   /**
    * Add a new instance of the model.
@@ -77,7 +77,7 @@ public:
    * Set category name.
    * @param name category name
    */
-  void set_name(const std::string & name);
+  void set_name(std::string name);
 
   /**
    * Check if object is detected

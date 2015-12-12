@@ -5,7 +5,7 @@
  *      Author: Sebastian Curi
  */
 
-#include "correlation_correspondence.h"
+#include "object_recognition/correspondence_strategies/correlation_correspondence.h"
 
 CorrelationCorrespondence::CorrelationCorrespondence()
 {

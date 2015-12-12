@@ -1,5 +1,0 @@
-image_width 8
-support_angle_cos 0.5
-min_pts_neighb 16
-radius 0.10
-max_points 150

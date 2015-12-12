@@ -17,8 +17,8 @@
 #include <pcl/features/normal_3d.h>
 #include <pcl/features/spin_image.h>
 
-#include "../filtering_strategies/voxel_grid_filter.h"
-#include "../types/points.h"
+#include "object_recognition/filtering_strategies/voxel_grid_filter.h"
+#include "object_recognition/types/points.h"
 
 #ifndef _SPIN_IMAGE_H_
 #define _SPIN_IMAGE_H_

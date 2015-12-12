@@ -1,5 +1,0 @@
-cluster_min 50
-cluster_max 1000000
-neighbours 30
-smoothness_threshold 0.05
-curvature_threshold 1.0 

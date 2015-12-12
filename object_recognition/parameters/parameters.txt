@@ -1,5 +1,0 @@
-pass_through_filter /home/parallels/catkin_ws/src/scuri/object_recognition/parameters/filtering/pass_through.txt
-voxel_grid_filter /home/parallels/catkin_ws/src/scuri/object_recognition/parameters/filtering/voxel_grid.txt
-euclidean_segmentation /home/parallels/catkin_ws/src/scuri/object_recognition/parameters/segmentation/euclidean.txt
-correlation /home/parallels/catkin_ws/src/scuri/object_recognition/parameters/correspondence/correlation_correspondence.txt
-spin_image /home/parallels/catkin_ws/src/scuri/object_recognition/parameters/spin_image_parameters.txt

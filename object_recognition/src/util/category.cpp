@@ -5,16 +5,17 @@
  *      Author: Sebastian Curi
  */
 
-#include "category.h"
+#include "object_recognition/util/category.h"
 
+static const std::string NAME = "UNKNOWN";
 Category::Category()
 {
-  std::string name = "category";
+  std::string name = NAME;
   _name = name;
   _is_detected = false;
 }
 
-Category::Category(const std::string & name){
+Category::Category(std::string name){
   _name = name;
   _is_detected = false;
 }
@@ -51,7 +52,7 @@ struct Color Category::get_color(void){
 }
 
 
-void Category::set_name(const std::string & name){
+void Category::set_name(std::string name){
   _name = name;
 }
 

@@ -10,7 +10,7 @@
  */
 
 #include <sensor_msgs/PointCloud2.h>
-#include "../types/points.h"
+#include "object_recognition/types/points.h"
 
 #ifndef _POINT_CLOUD_LISTENER
 #define _POINT_CLOUD_LISTENER

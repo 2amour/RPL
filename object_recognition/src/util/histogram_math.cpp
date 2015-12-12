@@ -5,7 +5,7 @@
  *      Author: Sebastian Curi
  */
 
-#include "histogram_math.h"
+#include "object_recognition/util/histogram_math.h"
 
 float get_correlation(DescriptorType p, DescriptorType q)
 {

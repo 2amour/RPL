@@ -1,0 +1,9 @@
+image_topic:
+    topic_name: "/camera/depth/points"
+    queue_size: 1
+marker_topic:
+    topic_name: "/visualization_marker"
+    queue_size: 1
+request_topic:
+    topic_name: "/object_recognition/request_recognition"
+    queue_size: 1

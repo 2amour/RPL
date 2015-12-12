@@ -5,7 +5,7 @@
  *      Author: Sebastian Curi
  */
 
-#include "../descriptors/spin_image.h"
+#include "object_recognition/descriptors/spin_image.h"
 SpinImage::SpinImage()
 {
   spin_image_params params = spin_image_params();

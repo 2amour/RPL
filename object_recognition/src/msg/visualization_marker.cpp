@@ -1,4 +1,4 @@
-#include "visualization_marker.h"
+#include "object_recognition/msg/visualization_marker.h"
 
 MarkerMessage::MarkerMessage()
 {

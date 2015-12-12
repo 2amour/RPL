@@ -5,12 +5,12 @@
  *      Author: Sebastian Curi
  */
 
-#include "../filtering_strategies/filter.h"
-#include "../segmentation_strategies/segmentation.h"
-#include "../correspondence_strategies/correspondence.h"
-#include "../descriptors/spin_image.h"
-#include "../types/points.h"
-#include "../util/category.h"
+#include "object_recognition/filtering_strategies/filter.h"
+#include "object_recognition/segmentation_strategies/segmentation.h"
+#include "object_recognition/correspondence_strategies/correspondence.h"
+#include "object_recognition/descriptors/spin_image.h"
+#include "object_recognition/types/points.h"
+#include "object_recognition/util/category.h"
 
 #ifndef OBJECT_RECOGNITION_CONTROLLER_H_
 #define OBJECT_RECOGNITION_CONTROLLER_H_

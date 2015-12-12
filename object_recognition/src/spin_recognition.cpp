@@ -5,34 +5,37 @@
 
 #include <map>
 
-#include "behaviour/object_recognition_behaviour.h"
+#include "object_recognition/behaviour/object_recognition_behaviour.h"
 #include <visualization_msgs/Marker.h>
-#include "ros/topics.h"
 
 
-#include "filtering_strategies/filter.h"
-#include "segmentation_strategies/segmentation.h"
-#include "correspondence_strategies/correspondence.h"
-#include "descriptors/spin_image.h"
-#include "parsers/model_parser.h"
-#include "parsers/ros_parameters_parser.h"
+#include "object_recognition/filtering_strategies/filter.h"
+#include "object_recognition/segmentation_strategies/segmentation.h"
+#include "object_recognition/correspondence_strategies/correspondence.h"
+#include "object_recognition/descriptors/spin_image.h"
+#include "object_recognition/parsers/ros_categories_parser.h"
+#include "object_recognition/parsers/ros_parameters_parser.h"
+#include "object_recognition/parsers/ros_topics_parser.h"
 
-#include "util/category.h"
+
+#include "object_recognition/util/category.h"
+
+static const std::string IMAGE_LISTENER = "image_topic";
+static const std::string REQUEST_LISTENER = "request_topic";
+static const std::string MARKER_PUBLISHER = "marker_topic";
+static const std::string NODE_NAME = "object_recognition"; ///< @brief global node name
 
 
 int main(int argc, char** argv)
 {
-  if (argc < 2)
-  {
-    std::cerr << "Usage ./spin_training file_with_classes" << std::endl;
-    return -1;
-  }
   ros::init(argc, argv, NODE_NAME);
   ros::NodeHandle nh;
 
-  /****************************** PARSING *******************************************/
-  std::string classes_file = argv[1];
-  std::vector<Category> models = get_models(classes_file);
+  /****************************** Parse categories *******************************************/
+  RosCategoriesParser categories_parser(nh);
+  std::vector<Category> models = categories_parser.get_categories();
+
+  /**************************** Parse parameters *****************************************/
 
   RosParameterParser rosparam_parser(nh);
   std::vector<FilterPtr> filters = rosparam_parser.get_filters();
@@ -40,6 +43,11 @@ int main(int argc, char** argv)
   DescriptorPtr spin_image = rosparam_parser.get_descriptor();
   CorrespondencePtr correspondence = rosparam_parser.get_correspondence();
   std::string frame = rosparam_parser.get_image_frame();
+
+  /**************************** Parse topics *****************************************/
+  RosTopicParser image_topic(nh, IMAGE_LISTENER);
+  RosTopicParser request_topic(nh, REQUEST_LISTENER);
+  RosTopicParser marker_topic(nh, MARKER_PUBLISHER);
 
   /**********************************************************************************/
 
@@ -57,12 +65,12 @@ int main(int argc, char** argv)
   //behaviour.set_pipeline(pipeline);
   behaviour.set_image_frame(frame);
 
-  ros::Publisher marker_pub = nh.advertise<visualization_msgs::Marker>( MARKER_TOPIC, MARKER_QUEUE_SIZE);
+  ros::Publisher marker_pub = nh.advertise<visualization_msgs::Marker>(marker_topic.get_topic_name(), marker_topic.get_queue_size());
   behaviour.set_marker_publisher(marker_pub);
 
-  ros::Subscriber im_sub = nh.subscribe(IMAGE_TOPIC, IMAGE_QUEUE_SIZE, &ObjectRecognitionBehaviour::image_callback,
+  ros::Subscriber im_sub = nh.subscribe(image_topic.get_topic_name(), image_topic.get_queue_size(), &ObjectRecognitionBehaviour::image_callback,
                                      &behaviour);
-  ros::Subscriber re_sub = nh.subscribe(REQUEST_TOPIC, REQUEST_QUEUE_SIZE, &ObjectRecognitionBehaviour::request_callback,
+  ros::Subscriber re_sub = nh.subscribe(request_topic.get_topic_name(), request_topic.get_queue_size(), &ObjectRecognitionBehaviour::request_callback,
                                        &behaviour);
 
   ros::spin();

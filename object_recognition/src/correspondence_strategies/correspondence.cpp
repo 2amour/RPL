@@ -5,7 +5,7 @@
  *      Author: Sebastian Curi
  */
 
-#include "correspondence.h"
+#include "object_recognition/correspondence_strategies/correspondence.h"
 
 double Correspondence::get_match_percentage(void)
 {

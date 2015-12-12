@@ -9,7 +9,6 @@
 #include <visualization_msgs/Marker.h>
 #include <string.h>
 #include <ros/ros.h>
-#include "../ros/topics.h"
 #ifndef _MARKER_MSG
 #define _MARKER_MSG
 

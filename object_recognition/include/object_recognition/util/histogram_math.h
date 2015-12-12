@@ -11,7 +11,7 @@
 
 
 #include <cmath>
-#include "../descriptors/spin_image.h"
+#include "object_recognition/descriptors/spin_image.h"
 
 #ifndef _HISTOGRAM_MATH_H_
 #define _HISTOGRAM_MATH_H_

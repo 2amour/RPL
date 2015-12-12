@@ -11,7 +11,7 @@
  */
 
 #include <string.h>
-#include "../types/points.h"
+#include "object_recognition/types/points.h"
 #include <pcl/filters/filter.h>
 
 #ifndef _FILTER_H_

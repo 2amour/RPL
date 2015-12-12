@@ -12,11 +12,11 @@
 #include <ros/ros.h>
 
 #include <pcl/point_cloud.h>
-#include "../util/histogram_math.h"
+#include "object_recognition/util/histogram_math.h"
 
 #include <vector>
-#include "../descriptors/spin_image.h"
-#include "../types/points.h"
+#include "object_recognition/descriptors/spin_image.h"
+#include "object_recognition/types/points.h"
 
 
 #ifndef _CORRESPONDENCE_H_
