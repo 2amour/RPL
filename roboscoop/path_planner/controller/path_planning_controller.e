@@ -31,22 +31,24 @@ feature {PATH_PLANNING_BEHAVIOUR} -- Execute algorithm
 			-- Update start point.
 		require
 			start_sig.new_point
-			not s_sig.is_stop_requested
 		do
-			io.put_string ("Recieved start point %N")
-			path_planning_sig.set_start (start_sig.point)
-			start_sig.set_new_point(False)
+			if not s_sig.is_stop_requested then
+				io.put_string ("Recieved start point %N")
+				path_planning_sig.set_start (start_sig.point)
+				start_sig.set_new_point(False)
+			end
 		end
 
 	update_goal_point (goal_sig: separate POINT_SIGNALER; path_planning_sig: separate PATH_PLANNING_SIGNALER; s_sig: separate STOP_SIGNALER)
 			-- Update goal point.
 		require
 			goal_sig.new_point
-			not s_sig.is_stop_requested
 		do
-			io.put_string ("Recieved goal point %N")
-			path_planning_sig.set_goal (goal_sig.point)
-			goal_sig.set_new_point(False)
+			if not s_sig.is_stop_requested then
+				io.put_string ("Recieved goal point %N")
+				path_planning_sig.set_goal (goal_sig.point)
+				goal_sig.set_new_point(False)
+			end
 		end
 
 	update_map (map: separate OCCUPANCY_GRID_SIGNALER; map_params_sig: separate MAP_PARAMETERS_SIGNALER; s_sig: separate STOP_SIGNALER)
@@ -54,13 +56,14 @@ feature {PATH_PLANNING_BEHAVIOUR} -- Execute algorithm
 		require
 			map.state.info.resolution > 0
 			map.state.header.timestamp > map_params_sig.timestamp
-			not s_sig.is_stop_requested
 		do
-			io.put_string ("Recieved map %N")
-			map.inflate (map_params_sig.inflation)
-			map_params_sig.set_timestamp(map.state.header.timestamp)
-			map_params_sig.set_changed (True)
-			map_params_sig.set_created (True)
+			if not s_sig.is_stop_requested then
+				io.put_string ("Recieved map %N")
+				map.inflate (map_params_sig.inflation)
+				map_params_sig.set_timestamp(map.state.header.timestamp)
+				map_params_sig.set_changed (True)
+				map_params_sig.set_created (True)
+			end
 		end
 
 	search (map: separate OCCUPANCY_GRID_SIGNALER; map_params_sig: separate MAP_PARAMETERS_SIGNALER; path_planning_sig: separate PATH_PLANNING_SIGNALER; path_publisher: separate PATH_PUBLISHER; s_sig: separate STOP_SIGNALER)
@@ -70,7 +73,6 @@ feature {PATH_PLANNING_BEHAVIOUR} -- Execute algorithm
 			attached path_planning_sig.start_point
 			attached path_planning_sig.goal_point
 			map_params_sig.is_changed or (path_planning_sig.changed_start and path_planning_sig.changed_goal)
-			not s_sig.is_stop_requested
 		local
 			start_point: POINT
 			goal_point: POINT
@@ -81,30 +83,32 @@ feature {PATH_PLANNING_BEHAVIOUR} -- Execute algorithm
 			path: ARRAYED_STACK [SPATIAL_GRAPH_NODE]
 
 		do
-			if (attached path_planning_sig.start_point as sp) and
-			   (attached path_planning_sig.goal_point as gp) then
+			if not s_sig.is_stop_requested then
+				if (attached path_planning_sig.start_point as sp) and
+				   (attached path_planning_sig.goal_point as gp) then
 
-				if map_params_sig.is_changed then
-					io.put_string ("start building %N")
-					grid := grid_wrapper.get_grid (map, map_params_sig)
-					map_params_sig.set_changed (False)
-					io.put_string ("end building %N")
+					if map_params_sig.is_changed then
+						io.put_string ("start building %N")
+						grid := grid_wrapper.get_grid (map, map_params_sig)
+						map_params_sig.set_changed (False)
+						io.put_string ("end building %N")
+					end
+
+					create start_point.make_from_separate (sp)
+					create goal_point.make_from_separate (gp)
+
+					search_strategy.make_with_size (grid.nodes.count)
+
+					start_node := grid.node_at (((start_point.x - map.state.info.origin.position.x) / (map.state.info.resolution*map_params_sig.block_width)).rounded, ((start_point.y - map.state.info.origin.position.y) / (map.state.info.resolution*map_params_sig.block_width)).rounded, 1)
+					goal_node := grid.node_at (((goal_point.x - map.state.info.origin.position.x) / (map.state.info.resolution*map_params_sig.block_height)).rounded, ((goal_point.y - map.state.info.origin.position.y) / (map.state.info.resolution*map_params_sig.block_height)).rounded, 1)
+
+					path := search_strategy.search (start_node, goal_node, path_planning_sig.edge_cost_strategy, path_planning_sig.heuristic_strategy)
+
+					path_publisher.publish_path_from_nodes (path, path_planning_sig.frame)
+
+					path_planning_sig.processed_start_point
+					path_planning_sig.processed_goal_point
 				end
-
-				create start_point.make_from_separate (sp)
-				create goal_point.make_from_separate (gp)
-
-				search_strategy.make_with_size (grid.nodes.count)
-
-				start_node := grid.node_at (((start_point.x - map.state.info.origin.position.x) / (map.state.info.resolution*map_params_sig.block_width)).rounded, ((start_point.y - map.state.info.origin.position.y) / (map.state.info.resolution*map_params_sig.block_width)).rounded, 1)
-				goal_node := grid.node_at (((goal_point.x - map.state.info.origin.position.x) / (map.state.info.resolution*map_params_sig.block_height)).rounded, ((goal_point.y - map.state.info.origin.position.y) / (map.state.info.resolution*map_params_sig.block_height)).rounded, 1)
-
-				path := search_strategy.search (start_node, goal_node, path_planning_sig.edge_cost_strategy, path_planning_sig.heuristic_strategy)
-
-				path_publisher.publish_path_from_nodes (path, path_planning_sig.frame)
-
-				path_planning_sig.processed_start_point
-				path_planning_sig.processed_goal_point
 			end
 		end
 
