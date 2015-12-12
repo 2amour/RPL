@@ -1,0 +1,7 @@
+<launch>
+
+<rosparam> use_sim_time: true </rosparam>
+<rosparam> clock_period_ms: 10 </rosparam>
+<node name="clock_server" pkg="thymio_launcher" type="clock_server" />
+	
+</launch>
