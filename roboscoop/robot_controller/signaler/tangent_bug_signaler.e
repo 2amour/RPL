@@ -33,9 +33,9 @@ feature {NONE} -- Initialization
 	initialize_states (parameters_bag: separate TANGENT_BUG_PARAMETERS_BAG)
 			-- Initialize states.
 		do
-			create go_to_goal.make_with_attributes (parameters_bag.go_to_goal_pid_parameters, parameters_bag.go_to_goal_nlsc_parameters)
-			create follow_wall.make_with_attributes (parameters_bag.follow_wall_pid_parameters, parameters_bag.follow_wall_nlsc_parameters, parameters_bag.wall_following_parameters)
-			create leave_wall.make_with_attributes (parameters_bag.leave_wall_pid_parameters, parameters_bag.leave_wall_nlsc_parameters)
+			create go_to_goal.make_with_attributes (parameters_bag.go_to_goal_pose_controller_parameters)
+			create follow_wall.make_with_attributes (parameters_bag.follow_wall_pose_controller_parameters, parameters_bag.wall_following_parameters)
+			create leave_wall.make_with_attributes (parameters_bag.leave_wall_pose_controller_parameters)
 			create at_goal
 			create unreachable_goal
 		end
@@ -110,14 +110,20 @@ feature -- Status setting
 			state := follow_wall
 			is_follow_wall := True
 			debug
-				io.put_string ("Follow Wall Counter Clockwise%N")
+				io.put_string ("Follow Wall Counter Clockwise %N")
 			end
 		end
 
 	set_leave_wall_with_target (p: separate POINT_2D)
 			-- Set to leave wall state.
+		local
+			heading: REAL_64
+			math: TRIGONOMETRY_MATH
 		do
-			leave_wall.set_safe_sensed_point (p)
+			create math
+			heading := math.atan2 (p.get_y - current_pose.get_position.get_y, p.get_x - current_pose.get_position.get_x) - current_pose.get_orientation
+			heading := math.atan2 (math.sine (heading), math.cosine (heading))
+			leave_wall.set_safe_sensed_pose (create {POSE_2D}.make_with_pose (p, current_pose.get_orientation + heading))
 			state := leave_wall
 			is_leave_wall := True
 			debug

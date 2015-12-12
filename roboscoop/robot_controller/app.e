@@ -35,6 +35,10 @@ feature {NONE} -- Initialization
 			fw_nlsc_params: NON_LINEAR_SPEED_CONTROLLER_PARAMETERS
 			lw_nlsc_params: NON_LINEAR_SPEED_CONTROLLER_PARAMETERS
 			nlsc_params_file_parser: NON_LINEAR_SPEED_CONTROLLER_PARAMETERS_FILE_PARSER
+			gtg_pose_controller_params: POSE_CONTROLLER_PARAMETERS
+			fw_pose_controller_params: POSE_CONTROLLER_PARAMETERS
+			lw_pose_controller_params: POSE_CONTROLLER_PARAMETERS
+			pose_controller_params_file_parser: POSE_CONTROLLER_PARAMETERS_FILE_PARSER
 			goal_params: GOAL_PARAMETERS
 			goal_params_file_parser: GOAL_PARAMETERS_FILE_PARSER
 			wall_following_params: WALL_FOLLOWING_PARAMETERS
@@ -69,13 +73,24 @@ feature {NONE} -- Initialization
 			fw_nlsc_params := nlsc_params_file_parser.parse_file (files_params.follow_wall_nlsc_parameters_file_path)
 			lw_nlsc_params := nlsc_params_file_parser.parse_file (files_params.leave_wall_nlsc_parameters_file_path)
 
+			create pose_controller_params_file_parser -- TODO - Put it nicely!
+			gtg_pose_controller_params := pose_controller_params_file_parser.parse_file (files_params.go_to_goal_pose_controller_parameters_file_path)
+			gtg_pose_controller_params.set_pid_parameters (gtg_pid_params)
+			gtg_pose_controller_params.set_nlsc_parameters (gtg_nlsc_params)
+			fw_pose_controller_params := pose_controller_params_file_parser.parse_file (files_params.follow_wall_pose_controller_parameters_file_path)
+			fw_pose_controller_params.set_pid_parameters (fw_pid_params)
+			fw_pose_controller_params.set_nlsc_parameters (fw_nlsc_params)
+			lw_pose_controller_params := pose_controller_params_file_parser.parse_file (files_params.leave_wall_pose_controller_parameters_file_path)
+			lw_pose_controller_params.set_pid_parameters (lw_pid_params)
+			lw_pose_controller_params.set_nlsc_parameters (lw_nlsc_params)
+
 			create wall_following_params_file_parser
 			wall_following_params := wall_following_params_file_parser.parse_file (files_params.wall_following_parameters_file_path)
 
 			create range_sensors_params_file_parser
 			range_sensors_params := range_sensors_params_file_parser.parse_file (files_params.range_sensors_parameters_file_path)
 
-			create tangent_bug_params.make_with_attributes (goal_params, wall_following_params, gtg_pid_params, gtg_nlsc_params, fw_pid_params, fw_nlsc_params, lw_pid_params, lw_nlsc_params)
+			create tangent_bug_params.make_with_attributes (goal_params, wall_following_params, gtg_pose_controller_params, fw_pose_controller_params, lw_pose_controller_params)
 
 			-- Initialize this application as a ROS node.
 			robo_node := (create {ROS_NAMED_NODE_STARTER}).roboscoop_node (topics.name)

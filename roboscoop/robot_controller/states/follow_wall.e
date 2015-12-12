@@ -14,21 +14,20 @@ create
 
 feature -- Initialization
 
-	make_with_attributes (pid_parameters: separate PID_PARAMETERS; nlsc_parameters: separate NON_LINEAR_SPEED_CONTROLLER_PARAMETERS; wall_following_parameters: separate WALL_FOLLOWING_PARAMETERS)
+	make_with_attributes (a_pose_controller_parameters: separate POSE_CONTROLLER_PARAMETERS; wall_following_parameters: separate WALL_FOLLOWING_PARAMETERS)
 			-- Create self.
 		do
 			is_clockwise := False
 			safe_leaving_wall_vertical_distance := wall_following_parameters.safe_leaving_wall_vertical_distance
-			target_threshold := wall_following_parameters.safe_outer_corner_turn_offset_threshold
 			distance_from_wall := wall_following_parameters.desired_wall_distance
 			corner_offset := create {POINT_2D}.make_from_separate (wall_following_parameters.safe_outer_corner_turn_offset)
 
 			create world_tf.make
 			create target_point.make
-			create orientation_controller.make_with_gains (pid_parameters.kp, pid_parameters.ki, pid_parameters.kd)
-			create speed_controller.make_with_attributes (nlsc_parameters.maximum_speed, nlsc_parameters.angular_decay_rate)
-			create time_handler.start (0.0)
 			create last_point.make
+			create pose_controller.make_with_attributes (a_pose_controller_parameters.pid_parameters, a_pose_controller_parameters.nlsc_parameters,
+															a_pose_controller_parameters.turning_angular_speed, a_pose_controller_parameters.reached_point_threshold,
+															a_pose_controller_parameters.reached_orientation_threshold)
 		end
 
 feature -- Access
@@ -36,37 +35,32 @@ feature -- Access
 	update_velocity (drive: separate DIFFERENTIAL_DRIVE)
 			-- <Precursor>
 		do
-			drive.set_velocity (linear_speed, angular_velocity)
+			pose_controller.update_drive_velocity (drive)
 		end
 
 	set_readings (t_sig: separate TANGENT_BUG_SIGNALER; range_signaler: separate RANGE_GROUP)
 			-- <Precursor>
 		do
+			pose_controller.set_current_pose (t_sig.current_pose, t_sig.timestamp)
 
-			time_handler.set_time (t_sig.timestamp)
-			orientation_controller.set_sampling (time_handler.get_sampling_rate)
-
-			if time_handler.get_sampling_rate > 0 then
-				if is_clockwise then
-					if range_signaler.is_wall_only_at_right then
-						follow_parallel_wall (t_sig, range_signaler)
-					elseif range_signaler.is_huge_at_left then
-						follow_inner_corner (t_sig, range_signaler)
-					elseif range_signaler.is_all_front_sensors_open then
-						follow_outer_corner (t_sig, range_signaler)
-					end
-				else
-					if range_signaler.is_wall_only_at_left then
-						follow_parallel_wall (t_sig, range_signaler)
-					elseif range_signaler.is_huge_at_right then
-						follow_inner_corner (t_sig, range_signaler)
-					elseif range_signaler.is_all_front_sensors_open then
-						follow_outer_corner (t_sig, range_signaler)
-					end
+			if is_clockwise then
+				if range_signaler.is_wall_only_at_right then
+					follow_parallel_wall (t_sig, range_signaler)
+				elseif range_signaler.is_huge_at_left then
+					follow_inner_corner (t_sig, range_signaler)
+				elseif range_signaler.is_all_front_sensors_open then
+					follow_outer_corner (t_sig, range_signaler)
 				end
-
-				update_minimum_distance_to_goal (t_sig)
+			else
+				if range_signaler.is_wall_only_at_left then
+					follow_parallel_wall (t_sig, range_signaler)
+				elseif range_signaler.is_huge_at_right then
+					follow_inner_corner (t_sig, range_signaler)
+				elseif range_signaler.is_all_front_sensors_open then
+					follow_outer_corner (t_sig, range_signaler)
+				end
 			end
+			update_minimum_distance_to_goal (t_sig)
 		end
 
 	update_state(t_sig: separate TANGENT_BUG_SIGNALER; o_sig: separate ODOMETRY_SIGNALER; r_sig: separate RANGE_GROUP)
@@ -105,7 +99,7 @@ feature -- Access
 			end
 
 			if t_sig.goal.get_euclidean_distance (t_sig.current_pose.get_position) < t_sig.reached_point_threshold then
-				t_sig.set_at_goal
+				t_sig.set_go_to_goal
 			end
 
 		end
@@ -141,26 +135,11 @@ feature {NONE} -- Implementation
 	target_point: POINT_2D
 			-- Target point, offset from last detected point.
 
-	target_threshold: REAL_64
-			-- Target threshold for controller.
-
 	last_point: POINT_2D
 			-- Last point detected in the wall the robot is following.
 
-	orientation_controller: PID_CONTROLLER
-			-- Controller for the robot orientation.
-
-	speed_controller: NON_LINEAR_SPEED_CONTROLLER
-			-- Controller for the robot linear speed.
-
-	time_handler: TIME_HANDLER
-			-- Time stamp manager.
-
-	linear_speed: REAL_64
-			-- Desiread linear speed.
-
-	angular_velocity: REAL_64
-			-- Desired angular speed.
+	pose_controller: POSE_CONTROLLER
+			-- Pose controller.
 
 	is_clockwise: BOOLEAN
 			-- If the wall is being followed in clockwise direction.
@@ -168,23 +147,20 @@ feature {NONE} -- Implementation
 	follow_parallel_wall (t_sig: separate TANGENT_BUG_SIGNALER; range_signaler: separate RANGE_GROUP)
 			-- Proceed to follow parallel wall.
 		local
-			error: REAL_64
+			heading: REAL_64
 		do
 			world_tf.make_with_offsets (t_sig.current_pose.get_position.get_x, t_sig.current_pose.get_position.get_y, t_sig.current_pose.get_orientation)
 			target_point := world_tf.project_to_parent (corner_offset)
 			last_point := world_tf.project_to_parent (create {POINT_2D}.make_from_separate (range_signaler.get_closest_obstacle_point))
 
 			if is_clockwise then
-				error := range_signaler.follow_right_wall (distance_from_wall)
+				heading := range_signaler.follow_right_wall (distance_from_wall)
 			else
-				error := range_signaler.follow_left_wall (distance_from_wall)
+				heading := range_signaler.follow_left_wall (distance_from_wall)
 			end
 
-			orientation_controller.set_error (error)
-			angular_velocity := orientation_controller.get_output
-
-			speed_controller.set_angular_velocity (angular_velocity)
-			linear_speed := speed_controller.get_output
+			pose_controller.set_target_pose (create {POSE_2D}.make_with_pose (get_point_in_direction (t_sig.current_pose, pose_controller.reached_point_threshold*2.0, heading),
+												t_sig.current_pose.get_orientation + heading))
 
 			debug
 				io.put_string ("Follow Wall %N")
@@ -194,18 +170,16 @@ feature {NONE} -- Implementation
 	follow_inner_corner (t_sig: separate TANGENT_BUG_SIGNALER; range_signaler: separate RANGE_GROUP)
 			-- Proceed to follow wall inner corner.
 		local
-			error: REAL_64
+			heading: REAL_64
 		do
 			if is_clockwise then
-				error := range_signaler.follow_closest_wall_cw (distance_from_wall)
+				heading := range_signaler.follow_closest_wall_cw (distance_from_wall)
 			else
-				error := range_signaler.follow_closest_wall_ccw (distance_from_wall)
+				heading := range_signaler.follow_closest_wall_ccw (distance_from_wall)
 			end
 
-			orientation_controller.set_error (error)
-			angular_velocity := orientation_controller.get_output
-			speed_controller.set_angular_velocity (angular_velocity)
-			linear_speed := speed_controller.get_output
+			pose_controller.set_target_pose (create {POSE_2D}.make_with_pose (get_point_in_direction (t_sig.current_pose, pose_controller.reached_point_threshold*2.0, heading),
+												t_sig.current_pose.get_orientation + heading))
 
 			debug
 				io.put_string ("Inner Corner %N")
@@ -215,23 +189,22 @@ feature {NONE} -- Implementation
 	follow_outer_corner (t_sig: separate TANGENT_BUG_SIGNALER; range_signaler: separate RANGE_GROUP)
 			-- Proceed to follow wall outer corner.
 		local
-			error: REAL_64
-			line: LINE_2D
+			heading: REAL_64
 			math: TRIGONOMETRY_MATH
 		do
 			create math
-			if target_point.get_euclidean_distance (t_sig.current_pose.get_position) > target_threshold then
-				error := math.atan2 (target_point.get_y - t_sig.current_pose.get_position.get_y, target_point.get_x - t_sig.current_pose.get_position.get_x)  - t_sig.current_pose.get_orientation
-				error := math.atan2 (math.sine (error), math.cosine (error))
-				orientation_controller.set_error (error)
-				angular_velocity := orientation_controller.get_output
+			heading := math.atan2 (target_point.get_y - t_sig.current_pose.get_position.get_y, target_point.get_x - t_sig.current_pose.get_position.get_x) - t_sig.current_pose.get_orientation
+			heading := math.atan2 (math.sine (heading), math.cosine (heading))
+			pose_controller.set_target_pose (create {POSE_2D}.make_with_pose (target_point, t_sig.current_pose.get_orientation + heading))
+			if not pose_controller.is_target_position_reached then
+				pose_controller.set_current_pose (t_sig.current_pose, t_sig.timestamp)
 			else
 				target_point := last_point
 			end
+
 			debug
 				io.put_string ("Outer Corner %N")
 			end
-
 		end
 
 	update_minimum_distance_to_goal (t_sig: separate TANGENT_BUG_SIGNALER)
@@ -240,5 +213,15 @@ feature {NONE} -- Implementation
 			if t_sig.goal.get_euclidean_distance (t_sig.current_pose.get_position) < t_sig.min_distance then
 				t_sig.set_min_distance (t_sig.goal.get_euclidean_distance (t_sig.current_pose.get_position))
 			end
+		end
+
+	get_point_in_direction (pose: separate POSE_2D; distance, heading: REAL_64): POINT_2D
+			-- Compute a point at the given distance from the given position in the given relative direction.
+		local
+			x_increment, y_increment: REAL_64
+		do
+			x_increment := distance*{DOUBLE_MATH}.cosine (pose.get_orientation + heading)
+			y_increment := distance*{DOUBLE_MATH}.sine (pose.get_orientation + heading)
+			Result := create {POINT_2D}.make_with_coordinates (pose.get_position.get_x + x_increment, pose.get_position.get_y + y_increment)
 		end
 end

@@ -62,6 +62,15 @@ feature -- Access
 			Result := output
 		end
 
+	reset
+			-- Reset controller status.
+		do
+			perror := 0.0
+			ierror := 0.0
+			derror := 0.0
+			delta_t := 0.0
+		end
+
 feature {NONE} -- Implementation
 
 	Kp, Ki, Kd: REAL_64

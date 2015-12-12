@@ -14,13 +14,12 @@ create
 
 feature {NONE} -- Initialization
 
-	make_with_attributes (pid_parameters: separate PID_PARAMETERS; nlsc_parameters: separate NON_LINEAR_SPEED_CONTROLLER_PARAMETERS)
+	make_with_attributes (pose_controller_parameters: separate POSE_CONTROLLER_PARAMETERS)
 			-- Create self with attributes.
 		do
-			create math
-			create time_handler.start (0.0)
-			create speed_controller.make_with_attributes (nlsc_parameters.maximum_speed, nlsc_parameters.angular_decay_rate)
-			create orientation_controller.make_with_gains (pid_parameters.kp, pid_parameters.ki, pid_parameters.kd)
+			create pose_controller.make_with_attributes (pose_controller_parameters.pid_parameters, pose_controller_parameters.nlsc_parameters,
+															pose_controller_parameters.turning_angular_speed, pose_controller_parameters.reached_point_threshold,
+															pose_controller_parameters.reached_orientation_threshold)
 		end
 
 feature
@@ -28,58 +27,32 @@ feature
 	update_velocity(drive: separate DIFFERENTIAL_DRIVE)
 			-- <Precursor>
 		do
-			drive.set_velocity (speed_controller.get_output, orientation_controller.get_output)
+			pose_controller.update_drive_velocity (drive)
 		end
 
 	set_readings(t_sig: separate TANGENT_BUG_SIGNALER; range_signaler:separate RANGE_GROUP)
 			-- <Precursor>
-		local
-			error: REAL_64
 		do
-
-			if t_sig.goal.get_y - t_sig.current_pose.get_position.get_y = 0 and
-			   t_sig.goal.get_x - t_sig.current_pose.get_position.get_x = 0 then
-				error := 0
-			else
-				error := math.atan2(t_sig.goal.get_y - t_sig.current_pose.get_position.get_y, t_sig.goal.get_x - t_sig.current_pose.get_position.get_x) - t_sig.current_pose.get_orientation
-				error := math.atan2 (math.sine (error), math.cosine (error))
-			end
-
-			time_handler.set_time(t_sig.timestamp)
-			if time_handler.get_sampling_rate > 0 then
-				orientation_controller.set_sampling (time_handler.get_sampling_rate)
-				orientation_controller.set_error (error)
-
-				speed_controller.set_angular_velocity (orientation_controller.get_output)
-			end
+			pose_controller.set_target_pose (create {POSE_2D}.make_with_pose (t_sig.goal, 0.0)) -- TODO - Fix.
+			pose_controller.set_current_pose (t_sig.current_pose, t_sig.timestamp)
 		end
 
 	update_state(t_sig: separate TANGENT_BUG_SIGNALER; o_sig: separate ODOMETRY_SIGNALER; r_sig: separate RANGE_GROUP)
 			-- <Precursor>
 		do
-			if r_sig.is_obstacle_in_front then
+			if pose_controller.is_target_pose_reached then
+				t_sig.set_at_goal
+			elseif not pose_controller.is_target_position_reached and r_sig.is_obstacle_in_front then
 				if r_sig.is_obstacle_mostly_at_left then
 					t_sig.set_follow_wall_counter_clockwise
 				else
 					t_sig.set_follow_wall_clockwise
 				end
 			end
-			if t_sig.goal.get_euclidean_distance (t_sig.current_pose.get_position) < t_sig.reached_point_threshold then
-				t_sig.set_at_goal
-			end
 		end
 
 feature {NONE} -- Implementation
 
-	orientation_controller: PID_CONTROLLER
-			-- Orientation controller.
-
-	speed_controller: NON_LINEAR_SPEED_CONTROLLER
-			-- Speed controller.
-
-	time_handler: TIME_HANDLER
-			-- Object for time stamp managing.
-
-	math: TRIGONOMETRY_MATH
-			-- Math object.
+	pose_controller: POSE_CONTROLLER
+			-- Pose controller.
 end

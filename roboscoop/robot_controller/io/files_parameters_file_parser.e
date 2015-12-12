@@ -50,6 +50,15 @@ feature -- Access
 				elseif key.is_equal ("Leave_wall_non_linear_speed_controller_parameters_file_path") then
 					file.read_word
 					files_parameters.set_leave_wall_nlsc_parameters_file_path (file.last_string)
+				elseif key.is_equal ("Go_to_goal_pose_controller_parameters_file_path") then
+					file.read_word
+					files_parameters.set_go_to_goal_pose_controller_parameters_file_path (file.last_string)
+				elseif key.is_equal ("Follow_wall_pose_controller_parameters_file_path") then
+					file.read_word
+					files_parameters.set_follow_wall_pose_controller_parameters_file_path (file.last_string)
+				elseif key.is_equal ("Leave_wall_pose_controller_parameters_file_path") then
+					file.read_word
+					files_parameters.set_leave_wall_pose_controller_parameters_file_path (file.last_string)
 				elseif key.is_equal ("Wall_following_parameters_file_path") then
 					file.read_word
 					files_parameters.set_wall_following_parameters_file_path (file.last_string)
