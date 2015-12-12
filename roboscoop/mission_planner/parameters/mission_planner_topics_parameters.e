@@ -30,7 +30,6 @@ feature {NONE} -- Initialize
 			path_planner_goal := "/path_planner/goal"
 			planner_map := "/path_planner/map"
 			planner_map_frame := "/map"
-			marker_signaler := "/visualization_marker"
 			object_recognition_request := "/object_recognition/request"
 			object_recognition_signaler := "/object_recognition/image_recieved"
 		end
@@ -125,15 +124,6 @@ feature {ANY} -- Constants
 			-- Set frame name for map of the path_planner node.
 		do
 			planner_map_frame := create {STRING}.make_from_separate (a_frame)
-		end
-
-	marker_signaler: STRING
-			-- Topic name of the markers.
-
-	set_marker_signaler(a_marker_signaler: separate STRING)
-			-- Set the marker_signaler topic.
-		do
-			marker_signaler := create {STRING}.make_from_separate (a_marker_signaler)
 		end
 
 	object_recognition_request: STRING

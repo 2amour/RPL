@@ -8,6 +8,5 @@ planner_map:		/path_planner/map
 start:				/path_planner/start
 goal:				/path_planner/goal
 planner_map_frame: 	/map
-marker_signaler:	/visualization_marker
 recognize_object:	/object_recognition/request_recognition
 is_image_recieved:  /object_recognition/image_recieved

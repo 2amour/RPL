@@ -51,14 +51,14 @@ feature {MISSION_PLANNER_BEHAVIOUR} -- Execute algorithm
 			end
 		end
 
-	update_target (odometry_sig: separate ODOMETRY_SIGNALER; marker_sig: separate MARKER_SIGNALER; mission_sig: separate MISSION_PLANNER_SIGNALER; target_pub: separate POSE_PUBLISHER; s_sig: separate STOP_SIGNALER)
+	update_target (odometry_sig: separate ODOMETRY_SIGNALER; mission_sig: separate MISSION_PLANNER_SIGNALER; target_pub: separate POSE_PUBLISHER; object_rec_sig: separate EMPTY_SIGNALER; s_sig: separate STOP_SIGNALER)
 			-- update target of robot driver.
 		require
 			not mission_sig.is_path_requested
 			not mission_sig.path.islast
 			mission_sig.path.count > 0
-			marker_sig.is_new_val
-			--not mission_sig.is_obj_recognition_requested
+			object_rec_sig.is_new_val
+			not mission_sig.is_obj_recognition_requested
 		local
 			current_point: POINT
 		do
@@ -180,16 +180,18 @@ feature {MISSION_PLANNER_BEHAVIOUR} -- Execute algorithm
 
 		end
 
-	request_recognition (object_rec_pub: separate EMPTY_PUBLISHER; marker_sig: separate MARKER_SIGNALER; mission_sig: separate MISSION_PLANNER_SIGNALER; s_sig: separate STOP_SIGNALER)
+	request_recognition (object_rec_pub: separate EMPTY_PUBLISHER; object_rec_sig: separate EMPTY_SIGNALER; mission_sig: separate MISSION_PLANNER_SIGNALER; odometry_sig: separate ODOMETRY_SIGNALER; s_sig: separate STOP_SIGNALER)
 			-- Request the obstacle recognition
 		require
 			mission_sig.is_obj_recognition_requested
+			object_rec_sig.is_new_val
+			not (odometry_sig.is_moving or odometry_sig.is_twisting)
 		do
 			if not s_sig.is_stop_requested then
-				mission_sig.request_object_recognition (False)
 				io.put_string ("Recognition requested%N")
+				mission_sig.request_object_recognition (False)
+				object_rec_sig.set_new_val (False)
 				object_rec_pub.publish
-				marker_sig.set_new_val (False)
 			end
 		end
 end

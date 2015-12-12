@@ -20,7 +20,6 @@ feature {NONE} -- Initialization
 			create map_signaler.make_with_topic (parameters_bag.mission_planner_topics.map)
 			create odometry_signaler.make_with_topic (parameters_bag.mission_planner_topics.odometry)
 			create path_signaler.make_with_topic (parameters_bag.mission_planner_topics.path)
-			create marker_signaler.make_with_topic (parameters_bag.mission_planner_topics.marker_signaler)
 			create object_recognition_signaler.make_with_topic (parameters_bag.mission_planner_topics.object_recognition_signaler)
 
 			create start_publisher.make_with_topic (parameters_bag.mission_planner_topics.path_planner_start)
@@ -77,9 +76,6 @@ feature {NONE} -- Implementation
 	path_signaler: separate PATH_SIGNALER_WITH_FLAG
 			-- Current state of the path.
 
-	marker_signaler: separate MARKER_SIGNALER
-			-- Current state of the markers.
-
 	start_publisher: separate POINT_PUBLISHER
 			-- Publisher of start point.
 
@@ -101,11 +97,11 @@ feature {NONE} -- Implementation
 	sep_start (a, b, c, d, e: separate MISSION_PLANNER_CONTROLLER)
 			-- Start controllers asynchronously.
 		do
-			a.repeat_until_stop_requested (agent a.update_target(odometry_signaler, marker_signaler, mission_signaler, target_publisher, stop_signaler))
+			a.repeat_until_stop_requested (agent a.update_target(odometry_signaler, mission_signaler, target_publisher, object_recognition_signaler, stop_signaler))
 			b.repeat_until_stop_requested (agent b.request_path(mission_signaler, obstacle_signaler, start_publisher, goal_publisher, stop_signaler))
 			c.repeat_until_stop_requested (agent c.update_path(mission_signaler, path_signaler, stop_signaler))
 			d.repeat_until_stop_requested (agent d.update_map (obstacle_signaler, mission_signaler, map_signaler, map_publisher, stop_signaler))
-			e.repeat_until_stop_requested (agent e.request_recognition (object_recognition_publisher, marker_signaler, mission_signaler, stop_signaler))
+			e.repeat_until_stop_requested (agent e.request_recognition (object_recognition_publisher, object_recognition_signaler, mission_signaler, odometry_signaler, stop_signaler))
 		end
 
 	sep_stop (s_sig: separate STOP_SIGNALER; val: BOOLEAN)

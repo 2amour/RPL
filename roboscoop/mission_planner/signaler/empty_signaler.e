@@ -19,7 +19,7 @@ feature {NONE} -- Initialization
 		do
 			create subscriber.make
 			subscribe_empty (subscriber, Current, topic_name)
-			is_new_val := False
+			is_new_val := True
 		end
 
 feature -- Access.

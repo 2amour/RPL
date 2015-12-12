@@ -60,9 +60,6 @@ feature {ANY} -- Access.
 				elseif key.is_equal("planner_map_frame:") then
 					file.read_word_thread_aware
 					topics.set_planner_map_frame (file.last_string)
-				elseif key.is_equal("marker_signaler:") then
-					file.read_word_thread_aware
-					topics.set_marker_signaler (file.last_string)
 				elseif key.is_equal("recognize_object:") then
 					file.read_word_thread_aware
 					topics.set_object_recognition_request (file.last_string)
