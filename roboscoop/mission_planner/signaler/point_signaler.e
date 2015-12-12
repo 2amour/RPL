@@ -20,7 +20,7 @@ feature {NONE} -- Initialization
 		do
 			create data.make_empty
 			create subscriber.make
-			subscribe_path (subscriber, Current, topic_name)
+			subscribe_point (subscriber, Current, topic_name)
 			is_new_val := False
 		end
 
@@ -51,7 +51,7 @@ feature {NONE} -- Implementation
 	subscriber: separate ROS_SUBSCRIBER [POINT_MSG]
 			-- Subscriber object.
 
-	subscribe_path (a_sub: separate ROS_SUBSCRIBER [POINT_MSG];
+	subscribe_point (a_sub: separate ROS_SUBSCRIBER [POINT_MSG];
 							a_listener: separate POINT_LISTENER; a_topic: separate STRING)
 			-- Subscriber for odometry update.
 		do

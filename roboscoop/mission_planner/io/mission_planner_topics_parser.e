@@ -66,6 +66,9 @@ feature {ANY} -- Access.
 				elseif key.is_equal("recognize_object:") then
 					file.read_word_thread_aware
 					topics.set_object_recognition_request (file.last_string)
+				elseif key.is_equal("is_image_recieved:") then
+					file.read_word_thread_aware
+					topics.set_object_recognition_signaler (file.last_string)
 				elseif not key.is_empty then
 					io.putstring ("Parser error while parsing file '" + file.name + "': Key '" + key + "' not recognized%N")
 				end

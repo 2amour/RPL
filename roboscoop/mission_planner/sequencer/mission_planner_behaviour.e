@@ -21,6 +21,7 @@ feature {NONE} -- Initialization
 			create odometry_signaler.make_with_topic (parameters_bag.mission_planner_topics.odometry)
 			create path_signaler.make_with_topic (parameters_bag.mission_planner_topics.path)
 			create marker_signaler.make_with_topic (parameters_bag.mission_planner_topics.marker_signaler)
+			create object_recognition_signaler.make_with_topic (parameters_bag.mission_planner_topics.object_recognition_signaler)
 
 			create start_publisher.make_with_topic (parameters_bag.mission_planner_topics.path_planner_start)
 			create goal_publisher.make_with_topic (parameters_bag.mission_planner_topics.path_planner_goal)
@@ -90,6 +91,9 @@ feature {NONE} -- Implementation
 
 	object_recognition_publisher: separate EMPTY_PUBLISHER
 			-- Publisher to request object recognition procedure.
+
+	object_recognition_signaler: separate EMPTY_SIGNALER
+			-- Signaler to handle the object recognition module timing.
 
 	stop_signaler: separate STOP_SIGNALER
 			-- Signaler for stopping the behaviour.

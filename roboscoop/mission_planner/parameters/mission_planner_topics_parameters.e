@@ -32,6 +32,7 @@ feature {NONE} -- Initialize
 			planner_map_frame := "/map"
 			marker_signaler := "/visualization_marker"
 			object_recognition_request := "/object_recognition/request"
+			object_recognition_signaler := "/object_recognition/image_recieved"
 		end
 
 feature {ANY} -- Constants
@@ -139,9 +140,17 @@ feature {ANY} -- Constants
 			-- Topic for requesting the object_recognition module.
 
 	set_object_recognition_request(a_object_recognition_request: separate STRING)
-			-- Set the path topic.
+			-- Set the object recognition request topic.
 		do
 			object_recognition_request := create {STRING}.make_from_separate (a_object_recognition_request)
+		end
+
+	object_recognition_signaler: STRING
+
+	set_object_recognition_signaler(a_object_recognition_signaler: separate STRING)
+			-- Set the object recognition signaler topic.
+		do
+			object_recognition_signaler := create {STRING}.make_from_separate (a_object_recognition_signaler)
 		end
 
 end
