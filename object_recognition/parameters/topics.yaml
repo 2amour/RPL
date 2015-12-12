@@ -7,3 +7,6 @@ marker_topic:
 request_topic:
     topic_name: "/object_recognition/request_recognition"
     queue_size: 1
+image_recieved_topic:
+    topic_name: "/object_recognition/image_recieved"
+    queue_size: 1
