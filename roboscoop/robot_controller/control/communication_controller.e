@@ -52,12 +52,17 @@ feature {TANGENT_BUG_BEHAVIOUR} -- Access
 			end
 		end
 
-	update_goal (goal_sig: separate POINT_SIGNALER; t_sig: separate TANGENT_BUG_SIGNALER)
+	update_goal (goal_sig: separate POSE_SIGNALER; t_sig: separate TANGENT_BUG_SIGNALER)
 			-- Update goal coordinates.
 		require
-			goal_sig.is_new_val
+			goal_sig.timestamp > last_goal_received_timestamp
 		do
-			t_sig.set_goal (goal_sig.data.x, goal_sig.data.y)
-			goal_sig.set_new_val (False)
+			t_sig.set_goal (create {POSE_2D}.make_with_coordinates (goal_sig.x, goal_sig.y, goal_sig.theta))
+			last_goal_received_timestamp := goal_sig.timestamp
 		end
+
+feature {TANGENT_BUG_BEHAVIOUR} -- Precondition check.
+
+	last_goal_received_timestamp: REAL_64
+			-- Time when last goal point was received.
 end

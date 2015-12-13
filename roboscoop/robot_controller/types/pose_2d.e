@@ -18,7 +18,7 @@ feature	-- Initialization
 			orientation := 0
 		end
 
-	make_with_pose (p: POINT_2D; phi: REAL_64)
+	make_with_pose (p: separate POINT_2D; phi: REAL_64)
 			-- Initialize object with a given position and orientation.
 		do
 			set_position (p)
@@ -44,10 +44,10 @@ feature -- Access
 			Result := point
 		end
 
-	set_position (p: POINT_2D)
+	set_position (p: separate POINT_2D)
 			-- Set new position.
 		do
-			point := p
+			create point.make_from_separate (p)
 		ensure
 			point_set: point = p
 		end

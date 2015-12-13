@@ -10,7 +10,7 @@ inherit
 	PARAMETERS
 
 create
-	make_default --, make_with_attributes
+	make_default
 
 feature {NONE} -- Initialization
 

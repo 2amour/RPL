@@ -34,7 +34,7 @@ feature -- Access
 			-- Is a new point recieved.
 
 	point: POINT
-			-- point read
+			-- Point read.
 
 	update_point (msg: separate POINT_MSG)
 			-- Update current state with the values from `msg'.

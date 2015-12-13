@@ -1,14 +1,13 @@
 note
-	description: "Current state of the point."
+	description: "Current state of a marker."
 	author: "Sebastian Curi"
-	date: "08.11.2015"
-
+	date: "28.11.2015"
 
 class
-	POINT_SIGNALER
+	MARKER_SIGNALER
 
 inherit
-	POINT_LISTENER
+	MARKER_LISTENER
 
 create
 	make_with_topic
@@ -20,8 +19,8 @@ feature {NONE} -- Initialization
 		do
 			create data.make_empty
 			create subscriber.make
-			subscribe_path (subscriber, Current, topic_name)
-			is_new_val := False
+			subscribe_marker (subscriber, Current, topic_name)
+			is_new_val := True
 		end
 
 feature -- Access
@@ -29,10 +28,10 @@ feature -- Access
 	is_new_val: BOOLEAN
 			-- Is a new path recieved.
 
-	data: POINT_MSG
+	data: MARKER_MSG
 		-- Current state.
 
-	update_point (msg: separate POINT_MSG)
+	update_marker (msg: separate MARKER_MSG)
 			-- Update current state with the values from `msg'.
 		do
 			is_new_val := True
@@ -45,16 +44,16 @@ feature -- Access
 			is_new_val := a_val
 		end
 
-
 feature {NONE} -- Implementation
 
-	subscriber: separate ROS_SUBSCRIBER [POINT_MSG]
+	subscriber: separate ROS_SUBSCRIBER [MARKER_MSG]
 			-- Subscriber object.
 
-	subscribe_path (a_sub: separate ROS_SUBSCRIBER [POINT_MSG];
-							a_listener: separate POINT_LISTENER; a_topic: separate STRING)
+	subscribe_marker (a_sub: separate ROS_SUBSCRIBER [MARKER_MSG];
+							a_listener: separate MARKER_LISTENER; a_topic: separate STRING)
 			-- Subscriber for odometry update.
 		do
-			a_sub.subscribe (a_topic, agent a_listener.update_point)
+			a_sub.subscribe (a_topic, agent a_listener.update_marker)
 		end
+
 end

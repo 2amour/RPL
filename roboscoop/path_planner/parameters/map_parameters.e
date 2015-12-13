@@ -15,7 +15,7 @@ create
 feature {NONE} -- Initialization
 
 	make_default
-			-- Create `Current' with default values
+			-- Create `Current' with default values.
 		do
 			block_width := 1
 			block_height := 1
@@ -23,7 +23,7 @@ feature {NONE} -- Initialization
 			connectivity_strategy := create {FULL_CONNECTIVITY_STRATEGY}
 		end
 
-feature {ANY} -- Acces
+feature {ANY} -- Access
 
 	block_width: INTEGER
 			-- width of the block in pixels.

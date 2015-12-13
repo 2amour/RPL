@@ -31,7 +31,7 @@ feature -- Access
 feature {NONE} -- Implementation
 
 	node_name: STRING
-			-- Name of node in ROS
+			-- Name of node in ROS.
 
 	Name: STRING
 			-- Name of the node in ROS.

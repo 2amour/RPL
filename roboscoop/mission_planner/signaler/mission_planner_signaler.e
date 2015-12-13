@@ -102,7 +102,7 @@ feature {ANY} -- Access
 		end
 
 	request_path (a_val: BOOLEAN)
-			-- Set `a_val' to is_path_requested
+			-- Set `a_val' to is_path_requested.
 		do
 			is_path_requested := a_val
 		ensure
@@ -124,26 +124,26 @@ feature {ANY} -- Access
 		end
 
 	set_way_point_idx
-			-- Set way point index in vector
+			-- Set way point index in vector.
 		do
 			way_points_idx.force (path.count)
 			way_points_idx.start
 		end
 
 	set_discovered_obstacle (a_val: BOOLEAN)
-			-- Set `a_val' to is_path_requested
+			-- Set `a_val' to is_path_requested.
 		do
 			discovered_obstacle := a_val
 		end
 
 	at_ith_way_point (test_point: separate POINT; way_point_idx: INTEGER): BOOLEAN
-			-- Check if the point is at one of the way points
+			-- Check if the point is at one of the way points.
 		do
 			Result := way_points.at (way_point_idx).position.euclidean_distance (test_point) < goal_threshold
 		end
 
 	at_a_way_point (test_point: separate POINT): BOOLEAN
-			-- Check if the point is at one of the way points
+			-- Check if the point is at one of the way points.
 		local
 			i: INTEGER
 		do
