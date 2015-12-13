@@ -34,7 +34,7 @@ feature -- Access
 																		   marker_sig.data.color.g,
 																		   marker_sig.data.color.b>>))
 			then
-				leds_on := (leds_on + 1)\\cir_leds.number_of_leds
+				leds_on := leds_on\\cir_leds.number_of_leds + 1
 				cir_leds.set_leds_brightness (get_array(leds_on, cir_leds.number_of_leds))
 			end
 		end
@@ -52,8 +52,8 @@ feature {NONE} --Implementation
 		do
 			create array.make_filled (0, 1, a_size)
 
-			from i:= 0
-			until i < a_number
+			from i:= 1
+			until i > a_number
 			loop
 				array[i] := {LED_ARRAY}.led_on_value
 				i := i + 1

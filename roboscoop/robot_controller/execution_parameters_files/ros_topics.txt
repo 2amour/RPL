@@ -4,3 +4,5 @@ pose:					/robot_controller/pose
 mission_odometry:		/robot_controller/odometry
 sensed_obstacles:		/robot_controller/sensed_obstacles
 goal:					/robot_controller/target
+circ_led:				/aseba/events/circle_leds_cmd
+viz_mark:				/visualization_marker

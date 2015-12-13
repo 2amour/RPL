@@ -10,7 +10,7 @@ feature -- Access
 	number_of_leds: INTEGER
 			-- Number of leds this array.
 
-	led_on_value: INTEGER_16 = 32
+	led_on_value: INTEGER_16 = 255
 			-- Value that sets the led on.
 
 	set_leds_brightness (a_leds: separate ARRAY[INTEGER_16])

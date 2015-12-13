@@ -47,7 +47,7 @@ feature --Access
 			until
 				i > rgb_code.count
 			loop
-				Result := Result and {DOUBLE_MATH}.dabs (rgb_test[i] - rgb_code[i]) < 2*{DOUBLE}.epsilon
+				Result := Result and {DOUBLE_MATH}.dabs (rgb_test[i] - rgb_code[i]) < 2.0*{DOUBLE}.epsilon
 				i := i + 1
 			end
 		end
