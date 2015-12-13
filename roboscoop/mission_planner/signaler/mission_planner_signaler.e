@@ -35,6 +35,9 @@ feature {NONE} -- Initialization
 			path.start
 
 			discovered_obstacle := False
+
+			is_loc_request_handled := False
+			is_localization_requested := True
 		end
 
 feature {ANY} -- Access
@@ -63,8 +66,28 @@ feature {ANY} -- Access
 	goal_threshold: REAL_64
 			-- Threshold to switch way_points in path.
 
+	is_localization_requested: BOOLEAN
+			-- Require localization algorithm.
+
+	request_localization (a_val: BOOLEAN)
+			-- Set `a_val' to is_localization_requested.
+		do
+			is_localization_requested := a_val
+		ensure
+			is_localization_requested = a_val
+		end
+
+	is_loc_request_handled: BOOLEAN
+			-- Check if localization request has been handled.
+
+	set_localized_handled (a_val: BOOLEAN)
+			-- Set `is_loc_request_handled' to a_val.
+		do
+			is_loc_request_handled := a_val
+		end
+
 	is_waypoint_reached: BOOLEAN
-			-- Whether a waypoint has benn reached.
+			-- Whether a waypoint has been reached.
 
 	set_waypoint_reached (value: BOOLEAN)
 			-- Setter for `is_waypoint_reached'.

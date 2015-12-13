@@ -1,11 +1,10 @@
 note
-	description: "Class that publishes emtpy msgs to ROS."
+	description: "Class that publishes bool msgs to ROS."
 	author: "Sebastian Curi"
-	date: "28.11.2015"
-
+	date: "13.12.2015"
 
 class
-	EMPTY_PUBLISHER
+	BOOLEAN_PUBLISHER
 
 create
 	make_with_topic
@@ -20,15 +19,15 @@ feature {NONE} -- Initialization
 		end
 
 feature -- Acces
-	publish
-			-- Publishing path.
+	publish_val(a_val: BOOLEAN)
+			-- Publishing a boolean value.
 		do
-			publisher.publish (create {EMPTY_MSG}.make_empty)
+			publisher.publish (create {BOOLEAN_MSG}.make_from_value (a_val))
 		end
 
 feature {NONE} -- Implementation
 
-	publisher: ROS_PUBLISHER [EMPTY_MSG]
+	publisher: ROS_PUBLISHER [BOOLEAN_MSG]
 			-- Publisher object.
 
 end

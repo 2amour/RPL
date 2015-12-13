@@ -51,7 +51,7 @@ feature {MISSION_PLANNER_BEHAVIOUR} -- Execute algorithm
 			end
 		end
 
-	update_target (odometry_sig: separate ODOMETRY_SIGNALER; mission_sig: separate MISSION_PLANNER_SIGNALER; target_pub: separate POSE_PUBLISHER; object_rec_sig: separate EMPTY_SIGNALER; s_sig: separate STOP_SIGNALER)
+	update_target (odometry_sig: separate ODOMETRY_SIGNALER; localization_sig: separate BOOLEAN_SIGNALER; mission_sig: separate MISSION_PLANNER_SIGNALER; target_pub: separate POSE_PUBLISHER; object_rec_sig: separate EMPTY_SIGNALER; s_sig: separate STOP_SIGNALER)
 			-- update target of robot driver.
 		require
 			not mission_sig.is_path_requested
@@ -64,32 +64,41 @@ feature {MISSION_PLANNER_BEHAVIOUR} -- Execute algorithm
 		do
 			if not s_sig.is_stop_requested then
 				create current_point.make_from_msg (odometry_sig.data.pose.pose.position)
-				if mission_sig.at_a_way_point (current_point) then
-					if mission_sig.is_waypoint_reached then
-						mission_sig.request_object_recognition (True)
-						mission_sig.set_waypoint_reached (False)
-						if not mission_sig.way_points_idx.islast then
-							mission_sig.way_points_idx.forth
+				mission_sig.set_localized_handled (False)
+
+				if localization_sig.data then
+					if mission_sig.at_a_way_point (current_point) then
+						mission_sig.request_localization (False)
+						if mission_sig.is_waypoint_reached then
+							mission_sig.request_object_recognition (True)
+							mission_sig.set_waypoint_reached (False)
+							if not mission_sig.way_points_idx.islast then
+								mission_sig.way_points_idx.forth
+							end
+						end
+					else
+						mission_sig.set_waypoint_reached (True)
+					end
+
+					if mission_sig.discovered_obstacle then
+						mission_sig.path.go_i_th (mission_sig.way_points_idx.item)
+						target_pub.publish_pose (mission_sig.get_current_path_pose)
+
+						mission_sig.set_discovered_obstacle (False)
+					else
+						if current_point.euclidean_distance(mission_sig.get_current_path_pose.position) < mission_sig.goal_threshold then
+							mission_sig.path.forth
+							target_pub.publish_pose (mission_sig.get_current_path_pose)
 						end
 					end
-				else
-					mission_sig.set_waypoint_reached (True)
-				end
 
-				if mission_sig.discovered_obstacle then
-					mission_sig.path.go_i_th (mission_sig.way_points_idx.item)
-					target_pub.publish_pose (mission_sig.get_current_path_pose)
-
-					mission_sig.set_discovered_obstacle (False)
-				else
-					if current_point.euclidean_distance(mission_sig.get_current_path_pose.position) < mission_sig.goal_threshold then
-						mission_sig.path.forth
-						target_pub.publish_pose (mission_sig.get_current_path_pose)
+					if not target_pub.has_published then
+						target_pub.publish_pose (create {POSE}.make_default)
 					end
-				end
-
-				if not target_pub.has_published then
-					target_pub.publish_pose (create {POSE}.make_default)
+				else
+					mission_sig.request_localization (True)
+					target_pub.publish_pose (create {POSE}.make_with_values (current_point,
+						create {QUATERNION}.make_from_heading (odometry_sig.theta + {DOUBLE_MATH}.pi_2), mission_sig.frame))
 				end
 			end
 		end
@@ -194,4 +203,16 @@ feature {MISSION_PLANNER_BEHAVIOUR} -- Execute algorithm
 				object_rec_pub.publish
 			end
 		end
+
+	request_localization (localization_pub: separate BOOLEAN_PUBLISHER; mission_sig: separate MISSION_PLANNER_SIGNALER; s_sig: separate STOP_SIGNALER)
+			-- Start or stop the localization the localization
+		require
+			not mission_sig.is_loc_request_handled
+		do
+			if not s_sig.is_stop_requested then
+				localization_pub.publish_val (mission_sig.is_localization_requested)
+				mission_sig.set_localized_handled (True)
+			end
+		end
+
 end
