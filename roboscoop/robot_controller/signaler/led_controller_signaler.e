@@ -25,6 +25,8 @@ feature {NONE} -- Initialization
 				rgb_code.force (a_rgb_code[i], i)
 				i := i + 1
 			end
+
+			led_counter := 0
 		end
 
 feature {NONE} -- Implementaiton
@@ -33,6 +35,21 @@ feature {NONE} -- Implementaiton
 			-- Code to check
 
 feature --Access
+
+	led_counter: INTEGER
+			-- Number of leds that are on.
+
+	increment_leds (leds_in_array: INTEGER)
+			-- Increment led_counter.
+		do
+			led_counter := led_counter\\leds_in_array + 1
+		end
+
+	reset_led_counter
+			-- Reset to 0 the led_counter.
+		do
+			led_counter := 0
+		end
 
 	is_code (rgb_test: separate ARRAY[DOUBLE]): BOOLEAN
 			-- Check if code is valid

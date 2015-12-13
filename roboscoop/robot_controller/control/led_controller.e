@@ -18,7 +18,6 @@ feature {NONE} -- Initialization
 			-- Make `Current' with given attributes
 		do
 			stop_signaler := stop_sig
-			leds_on := 0
 		end
 
 feature -- Access
@@ -34,17 +33,14 @@ feature -- Access
 																		   marker_sig.data.color.g,
 																		   marker_sig.data.color.b>>))
 			then
-				leds_on := leds_on\\cir_leds.number_of_leds + 1
-				cir_leds.set_leds_brightness (get_array(leds_on, cir_leds.number_of_leds))
+				led_sig.increment_leds (cir_leds.number_of_leds)
+				cir_leds.set_leds_brightness (get_array(led_sig.led_counter, cir_leds.number_of_leds))
 			end
 		end
 
 feature {NONE} --Implementation
 
-	leds_on: INTEGER
-			-- Number of leds that are on.
-
-	get_array (a_number, a_size: INTEGER): ARRAY[INTEGER_16]
+	get_array (a_number, a_size: INTEGER_32): ARRAY[INTEGER_16]
 			-- Get array of leds to turn on
 		local
 			array: ARRAY[INTEGER_16]
