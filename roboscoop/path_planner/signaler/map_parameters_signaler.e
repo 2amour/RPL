@@ -26,10 +26,10 @@ feature {NONE} -- Initialization
 feature {ANY} -- Access
 
 	block_width: INTEGER_32
-			-- width of the block in pixels.
+			-- Width of the block in pixels.
 
 	block_height: INTEGER_32
-			-- height of the block in pixels.
+			-- Height of the block in pixels.
 
 	inflation: REAL_64
 			-- Inflation distance for map boundaries.

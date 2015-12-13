@@ -8,11 +8,10 @@ class
 	PATH_PLANNER_TOPICS_PARAMETERS
 
 inherit
-
 	TOPIC_PARAMETERS
 
 create
-	make_default --, make_with_attributes
+	make_default
 
 feature {NONE} -- Initialize
 

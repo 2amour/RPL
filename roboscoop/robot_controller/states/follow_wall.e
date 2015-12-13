@@ -61,6 +61,9 @@ feature -- Access
 				end
 			end
 			update_minimum_distance_to_goal (t_sig)
+			if {DOUBLE_MATH}.dabs (t_sig.current_pose.get_orientation - t_sig.initial_orientation) > {TRIGONOMETRY_MATH}.pi_2 then
+				t_sig.set_has_turned_back (True)
+			end
 		end
 
 	update_state(t_sig: separate TANGENT_BUG_SIGNALER; o_sig: separate ODOMETRY_SIGNALER; r_sig: separate RANGE_GROUP)
@@ -100,6 +103,8 @@ feature -- Access
 
 			if t_sig.goal.get_position.get_euclidean_distance (t_sig.current_pose.get_position) < t_sig.reached_goal_position_threshold then
 				t_sig.set_go_to_goal
+			elseif t_sig.intial_point_wall.get_euclidean_distance (t_sig.current_pose.get_position) < t_sig.reached_goal_position_threshold and t_sig.has_turned_back then
+				t_sig.set_unreachable_goal
 			end
 
 		end

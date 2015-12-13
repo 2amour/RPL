@@ -1,78 +1,95 @@
 note
-	description: "Summary description for {MISSION_PLANNER_TOPICS_PARSER}."
-	author: ""
-	date: "$Date$"
-	revision: "$Revision$"
+	description: "Parser of topics for mission planner"
+	author: "Sebastian Curi"
+	date: "30.11.15"
 
 class
 	MISSION_PLANNER_TOPICS_PARSER
 
 inherit
-	TOPIC_PARAMETERS_FILE_PARSER
+	PARAMETERS_FILE_PARSER
+
+create
+	make
+
+feature -- Initialization.
+
+	make
+			-- Create current.
+		do
+			is_error_found := False
+			create last_parameters.make_default
+		end
 
 feature {ANY} -- Access.
 
-	parse_file (file_path: separate STRING): MISSION_PLANNER_TOPICS_PARAMETERS
+	parse_file (file_path: separate STRING)
 			-- Parse file with path `file_path'.
 		local
-			--node_name, path, map, target, odometry, obstacles, start, goal, planner_map: STRING
 			file: PLAIN_TEXT_FILE
 			key: STRING
-			topics: MISSION_PLANNER_TOPICS_PARAMETERS
+			f_path: STRING
+			file_checker: FILE_CHECKER
 		do
-			create topics.make_default
-			create file.make_open_read (create {STRING}.make_from_separate (file_path))
-			from
-				file.start
-			until
-				file.off
-			loop
-				file.read_word_thread_aware
-				key := file.last_string
+			create f_path.make_from_separate (file_path)
+			create file.make (f_path)
+			create file_checker
 
-				if key.is_equal ("path:") then
+			if file_checker.check_file (file) then
+				from
+					file.start
+				until
+					file.off
+				loop
 					file.read_word_thread_aware
-					topics.set_path (file.last_string)
-				elseif key.is_equal("node_name:") then
-					file.read_word_thread_aware
-					topics.set_node_name (file.last_string)
-				elseif key.is_equal("map:") then
-					file.read_word_thread_aware
-					topics.set_map (file.last_string)
-				elseif key.is_equal("target:") then
-					file.read_word_thread_aware
-					topics.set_target (file.last_string)
-				elseif key.is_equal("odometry:") then
-					file.read_word_thread_aware
-					topics.set_odometry (file.last_string)
-				elseif key.is_equal("sensed_obstacles:") then
-					file.read_word_thread_aware
-					topics.set_sensed_obstacle (file.last_string)
-				elseif key.is_equal("start:") then
-					file.read_word_thread_aware
-					topics.set_path_planner_start (file.last_string)
-				elseif key.is_equal("goal:") then
-					file.read_word_thread_aware
-					topics.set_path_planner_goal (file.last_string)
-				elseif key.is_equal("planner_map:") then
-					file.read_word_thread_aware
-					topics.set_planner_map (file.last_string)
-				elseif key.is_equal("planner_map_frame:") then
-					file.read_word_thread_aware
-					topics.set_planner_map_frame (file.last_string)
-				elseif key.is_equal("marker_signaler:") then
-					file.read_word_thread_aware
-					topics.set_marker_signaler (file.last_string)
-				elseif key.is_equal("recognize_object:") then
-					file.read_word_thread_aware
-					topics.set_object_recognition_request (file.last_string)
-				elseif not key.is_empty then
-					io.putstring ("Parser error while parsing file '" + file.name + "': Key '" + key + "' not recognized%N")
+					key := file.last_string
+
+					if key.is_equal ("path:") then
+						file.read_word_thread_aware
+						last_parameters.set_path (file.last_string)
+					elseif key.is_equal("node_name:") then
+						file.read_word_thread_aware
+						last_parameters.set_node_name (file.last_string)
+					elseif key.is_equal("map:") then
+						file.read_word_thread_aware
+						last_parameters.set_map (file.last_string)
+					elseif key.is_equal("target:") then
+						file.read_word_thread_aware
+						last_parameters.set_target (file.last_string)
+					elseif key.is_equal("odometry:") then
+						file.read_word_thread_aware
+						last_parameters.set_odometry (file.last_string)
+					elseif key.is_equal("sensed_obstacles:") then
+						file.read_word_thread_aware
+						last_parameters.set_sensed_obstacle (file.last_string)
+					elseif key.is_equal("start:") then
+						file.read_word_thread_aware
+						last_parameters.set_path_planner_start (file.last_string)
+					elseif key.is_equal("goal:") then
+						file.read_word_thread_aware
+						last_parameters.set_path_planner_goal (file.last_string)
+					elseif key.is_equal("planner_map:") then
+						file.read_word_thread_aware
+						last_parameters.set_planner_map (file.last_string)
+					elseif key.is_equal("planner_map_frame:") then
+						file.read_word_thread_aware
+						last_parameters.set_planner_map_frame (file.last_string)
+					elseif key.is_equal("marker_signaler:") then
+						file.read_word_thread_aware
+						last_parameters.set_marker_signaler (file.last_string)
+					elseif key.is_equal("recognize_object:") then
+						file.read_word_thread_aware
+						last_parameters.set_object_recognition_request (file.last_string)
+					elseif not key.is_empty then
+						io.putstring ("Parser error while parsing file '" + file.name + "': Key '" + key + "' not recognized%N")
+						is_error_found := True
+					end
 				end
+				file.close
+			else
+				is_error_found := True
 			end
-			file.close
-
-			Result := topics
 		end
 
+		last_parameters: MISSION_PLANNER_TOPICS_PARAMETERS
 end

@@ -62,7 +62,7 @@ feature {ANY} -- Access
 		end
 
 	euclidean_distance (other: separate POINT): REAL_64
-			-- Return eculidean distance between current point and other
+			-- Return eculidean distance between current point and other.
 		local
 			dx, dy, dz: REAL_64
 		do
@@ -73,7 +73,7 @@ feature {ANY} -- Access
 		end
 
 	manhattan_distance (other: separate POINT): REAL_64
-			-- Return manhattan distance between current point and other
+			-- Return manhattan distance between current point and other.
 		local
 			dx, dy, dz: REAL_64
 		do
@@ -84,7 +84,7 @@ feature {ANY} -- Access
 		end
 
 	get_angle (other: separate POINT): REAL_64
-			-- Return angle of the vector (in 2D only) connecting two points
+			-- Return angle of the vector (in 2D only) connecting two points.
 		require
 			other.z = z
 		local
@@ -98,7 +98,7 @@ feature {ANY} -- Access
 		end
 
 	get_string: STRING_8
-			-- Return string representation of point
+			-- Return string representation of point.
 		do
 			Result := "x: " + x.out + " y: " + y.out + " z: " + z.out
 		end

@@ -6,11 +6,12 @@ note
 deferred class
 	PARAMETERS_FILE_PARSER
 
-feature {ANY} -- Access
+feature -- Access
 
-	parse_file (file_path: separate STRING): PARAMETERS
+	parse_file (file_path: separate STRING)
 			-- Parse file with path `file_path'.
 		deferred
 		end
 
+	is_error_found: BOOLEAN
 end

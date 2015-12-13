@@ -63,6 +63,12 @@ feature -- Access
 	min_distance: REAL_64
 			-- Minimum recorded distance to goal.
 
+	initial_orientation: REAL_64
+			-- Orientation at the beginning of finding a wall.
+
+	has_turned_back: BOOLEAN
+			-- Whether the robot has turned more than ninety degrees from `initial_orientation'.
+
 	intial_point_wall: POINT_2D
 			-- Position at the beginning of finding a wall.
 
@@ -185,12 +191,31 @@ feature -- Element change
 		end
 
 	set_timestamp (t: REAL_64)
-			-- Set time
+			-- Set time.
 		do
 			timestamp := t
 		ensure
 			time_set: timestamp = t
 		end
+
+	set_intial_point_wall (point: separate POINT_2D)
+			-- Set inital point wall.
+		do
+			intial_point_wall.set_coordinates (point.get_x, point.get_y)
+		end
+
+	set_initial_orientation (orientation: REAL_64)
+			-- Set initial orientation.
+		do
+			initial_orientation := orientation
+		end
+
+	set_has_turned_back (bool: BOOLEAN)
+			-- Set turned back.
+		do
+			has_turned_back := bool
+		end
+
 
 feature {NONE} -- Implementation
 

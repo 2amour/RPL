@@ -1,5 +1,5 @@
 note
-	description: "label correcting algorithm."
+	description: " Label correcting algorithm."
 	author: "Sebastian Curi"
 	date: "28.10.2015"
 

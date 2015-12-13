@@ -10,7 +10,7 @@ inherit
 	PARAMETERS
 
 create
-	make_default --, make_with_attributes
+	make_default
 
 feature {NONE} -- Initialization
 
@@ -19,13 +19,6 @@ feature {NONE} -- Initialization
 		do
 			create way_points.make (0)
 		end
-
---	make_with_attributes (wp: ARRAYED_LIST[POINT]; threshold: REAL_64)
---			-- Create `Current' and assign given attributes.
---		do
---			way_points := wp
---			way_point_threshold := threshold
---		end
 
 feature {ANY} -- Acces
 

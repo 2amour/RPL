@@ -9,7 +9,7 @@ class
 create
 	make_with_topic
 
-feature {NONE} -- Initialization
+feature {NONE} -- Initialization.
 
 	make_with_topic (topic_name: separate STRING)
 			-- Create `Current' with topic.
@@ -20,13 +20,13 @@ feature {NONE} -- Initialization
 			frame := ""
 		end
 
-feature {ANY} -- Access
+feature {ANY} -- Access.
 
 	frame: STRING
 			-- Frame of map msg.
 
 	has_published: BOOLEAN
-			-- Is the publisher used
+			-- Is the publisher used.
 
 	publish_map (sep_msg: separate OCCUPANCY_GRID_MSG)
 			-- Publishing path.
@@ -41,12 +41,12 @@ feature {ANY} -- Access
 		end
 
 	set_frame(a_frame: separate STRING)
-			-- Set the frame's name
+			-- Set the frame's name.
 		do
 			frame := create {STRING}.make_from_separate (a_frame)
 		end
 
-feature {NONE} -- Implementation
+feature {NONE} -- Implementation.
 
 	publisher: ROS_PUBLISHER [OCCUPANCY_GRID_MSG]
 			-- Publisher object.
