@@ -19,6 +19,7 @@ feature {NONE} -- Initialization
 			create stop_signaler.make
 			create circular_leds.make_with_topic (ros_topics_params.circular_leds_topic)
 			create marker_signaler.make_with_topic (ros_topics_params.visualization_marker)
+			create led_signaler.make_with_attributes (<<0.0, 1.0, 0.0>>) -- TODO-REMOVE HARD CODING
 		end
 
 feature -- Access
@@ -41,6 +42,9 @@ feature -- Access
 
 feature {NONE} -- Implementation
 
+	led_signaler: separate LED_CONTROLLER_SIGNALER
+			-- Signaler to manage object recognition.
+
 	marker_signaler: separate MARKER_SIGNALER
 			-- Signaler to listen marker msgs.
 
@@ -54,7 +58,7 @@ feature {NONE} -- Implementation
 			-- Start behaviour controllers.
 		do
 			a.repeat_until_stop_requested (
-					agent a.update_leds (circular_leds, marker_signaler, stop_signaler))
+					agent a.update_leds (led_signaler, circular_leds, marker_signaler, stop_signaler))
 		end
 
 	sep_stop (stop_sig: separate STOP_SIGNALER; val: BOOLEAN)

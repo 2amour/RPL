@@ -23,13 +23,17 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	update_leds (cir_leds: separate LED_ARRAY; marker_sig: separate MARKER_SIGNALER; stop_sig: separate STOP_SIGNALER)
+	update_leds (led_sig: separate LED_CONTROLLER_SIGNALER; cir_leds: separate LED_ARRAY; marker_sig: separate MARKER_SIGNALER; stop_sig: separate STOP_SIGNALER)
 			-- Update leds module
 		require
 			marker_sig.is_new_val
 		do
 			marker_sig.set_new_val (False)
-			if not stop_sig.is_stop_requested then
+			if not stop_sig.is_stop_requested and
+				led_sig.is_code (create {ARRAY[DOUBLE]}.make_from_array (<<marker_sig.data.color.r,
+																		   marker_sig.data.color.g,
+																		   marker_sig.data.color.b>>))
+			then
 				leds_on := (leds_on + 1)\\cir_leds.number_of_leds
 				cir_leds.set_leds_brightness (get_array(leds_on, cir_leds.number_of_leds))
 			end
