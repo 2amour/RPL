@@ -19,7 +19,6 @@ feature -- Access
 			     io.putstring ("error: file '" + file.path.out + "' is not readable.%N")
 			     Result:= False
 			   else
-			     file.open_read
 			     Result:= True
 			   end
 			end

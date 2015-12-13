@@ -143,9 +143,9 @@ feature {MISSION_PLANNER_BEHAVIOUR} -- Execute algorithm
 					end
 					idx := idx + 1
 				end
+
 				path.put (create {POINT}.make_from_msg (path_sig.data.poses[idx].pose.position))
 				angles.put (path_sig.data.poses[idx].pose.orientation.theta)
-
 
 				from
 				until (path.is_empty or angles.empty)

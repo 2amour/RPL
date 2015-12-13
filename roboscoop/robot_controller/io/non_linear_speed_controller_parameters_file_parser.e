@@ -37,6 +37,7 @@ feature -- Access
 			create file_checker
 
 			if file_checker.check_file (file) then
+				file.open_read
 				from file.start
 				until file.off
 				loop

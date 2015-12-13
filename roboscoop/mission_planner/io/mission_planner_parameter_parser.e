@@ -41,32 +41,32 @@ feature {ANY} -- Access.
 			create point_array.make (0)
 
 			if file_checker.check_file (file) then
+				file.open_read
 				from
 					file.start
 				until
 					file.off
 				loop
-                    file.read_word
-                    frame := ""
-                    key := file.last_string
+					file.read_word
+					key := file.last_string
 
-                    if key.is_equal ("frame: ") then
-                        file.read_word_thread_aware
-                        frame := file.last_string
-                        last_parameters.set_frame (frame)
-                    elseif key.is_equal ("pose:") then
-                        file.read_double
-                        x := file.last_double
-                        file.read_double
-                        y := file.last_double
-                        file.read_double
-                        theta := file.last_double
-                        point_array.force (create {POSE}.make_with_values (create {POINT}.make_with_values (x, y, 0),
-                                                                           create {QUATERNION}.make_from_heading (theta),
-                                                                           frame))
-                    elseif key.is_equal ("way_point_threshold:") then
-                        file.read_double
-                        last_parameters.set_threshold (file.last_double)
+					if key.is_equal ("frame:") then
+						file.read_word
+						frame := create {STRING}.make_from_string (file.last_string)
+						last_parameters.set_frame (frame)
+					elseif key.is_equal ("pose:") then
+						file.read_double
+						x := file.last_double
+						file.read_double
+						y := file.last_double
+						file.read_double
+						theta := file.last_double
+						point_array.force (create {POSE}.make_with_values (create {POINT}.make_with_values (x, y, 0),
+																		   create {QUATERNION}.make_from_heading (theta),
+																		   last_parameters.frame))
+					elseif key.is_equal ("way_point_threshold:") then
+						file.read_double
+						last_parameters.set_threshold (file.last_double)
 					elseif not key.is_empty then
 						io.putstring ("Parser error while parsing file '" + file.name + "': Key '" + key + "' not recognized%N")
 						is_error_found := True
