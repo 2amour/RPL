@@ -15,14 +15,17 @@ feature {NONE} -- Initialization
 			-- Initialize signaler with attributes.
 		local
 			goal_parameters: GOAL_PARAMETERS
+			go_to_goal_pose_controller_parameters: POSE_CONTROLLER_PARAMETERS
 		do
-			goal_parameters := create {GOAL_PARAMETERS}.make_from_separate (parameters_bag.goal_parameters)
+			create goal_parameters.make_from_separate (parameters_bag.goal_parameters)
+			create go_to_goal_pose_controller_parameters.make_from_separate (parameters_bag.go_to_goal_pose_controller_parameters)
 
-			create goal.make_with_coordinates (goal_parameters.x, goal_parameters.y)
+			create goal.make_with_coordinates (goal_parameters.x, goal_parameters.y, goal_parameters.orientation)
 			create current_pose.make
 			create intial_point_wall.make
 
-			reached_point_threshold := goal_parameters.threshold
+			reached_goal_position_threshold := go_to_goal_pose_controller_parameters.reached_point_threshold
+			reached_goal_orientation_threshold := go_to_goal_pose_controller_parameters.reached_orientation_threshold
 			timestamp := 0.0
 			min_distance := {REAL_64}.max_value
 
@@ -42,11 +45,14 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	goal: POINT_2D
+	goal: POSE_2D
 			-- Goal coordinates.
 
-	reached_point_threshold: REAL_64
-			-- Threshold for considering when a point is reached.
+	reached_goal_position_threshold: REAL_64
+			-- Threshold for considering when the goal position is reached.
+
+	reached_goal_orientation_threshold: REAL_64
+			-- Threshold for considering when the goal orientation is reached.
 
 	current_pose: POSE_2D
 			-- Present position and orientation.
@@ -153,11 +159,11 @@ feature -- Status setting
 
 feature -- Element change
 
-	set_goal (x, y: REAL_64)
+	set_goal (a_goal: separate POSE_2D)
 			-- Setter for `goal'.
 		do
-			create goal.make_with_coordinates (x, y)
-			min_distance := goal.get_euclidean_distance (current_pose.get_position)
+			create goal.make_from_separate (a_goal)
+			min_distance := goal.get_position.get_euclidean_distance (current_pose.get_position)
 		end
 
 	set_min_distance (d: REAL_64)

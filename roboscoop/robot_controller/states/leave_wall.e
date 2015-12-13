@@ -45,7 +45,7 @@ feature -- Access
 					else
 						t_sig.set_follow_wall_clockwise
 					end
-			elseif t_sig.goal.get_euclidean_distance (t_sig.current_pose.get_position) < t_sig.min_distance and
+			elseif t_sig.goal.get_position.get_euclidean_distance (t_sig.current_pose.get_position) < t_sig.min_distance and
 				pose_controller.is_target_position_reached then
 				t_sig.set_go_to_goal
 			end

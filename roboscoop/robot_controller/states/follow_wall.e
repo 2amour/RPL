@@ -87,8 +87,8 @@ feature -- Access
 						v_leave_point := world_coordinates.project_to_parent (create {POINT_2D}.make_with_coordinates (r_sig.get_sensor_point (i).get_x, r_sig.get_sensor_point (i).get_y))
 				end
 
-				if v_leave_point.get_euclidean_distance (t_sig.goal) < min_distance then
-					min_distance := v_leave_point.get_euclidean_distance (t_sig.goal)
+				if v_leave_point.get_euclidean_distance (t_sig.goal.get_position) < min_distance then
+					min_distance := v_leave_point.get_euclidean_distance (t_sig.goal.get_position)
 					best_point := v_leave_point
 				end
 				i := i + 1
@@ -98,7 +98,7 @@ feature -- Access
 				t_sig.set_leave_wall_with_target (best_point)
 			end
 
-			if t_sig.goal.get_euclidean_distance (t_sig.current_pose.get_position) < t_sig.reached_point_threshold then
+			if t_sig.goal.get_position.get_euclidean_distance (t_sig.current_pose.get_position) < t_sig.reached_goal_position_threshold then
 				t_sig.set_go_to_goal
 			end
 
@@ -210,8 +210,8 @@ feature {NONE} -- Implementation
 	update_minimum_distance_to_goal (t_sig: separate TANGENT_BUG_SIGNALER)
 			-- Check if current distance to goal is smaller than the minimum
 		do
-			if t_sig.goal.get_euclidean_distance (t_sig.current_pose.get_position) < t_sig.min_distance then
-				t_sig.set_min_distance (t_sig.goal.get_euclidean_distance (t_sig.current_pose.get_position))
+			if t_sig.goal.get_position.get_euclidean_distance (t_sig.current_pose.get_position) < t_sig.min_distance then
+				t_sig.set_min_distance (t_sig.goal.get_position.get_euclidean_distance (t_sig.current_pose.get_position))
 			end
 		end
 

@@ -33,7 +33,7 @@ feature
 	set_readings(t_sig: separate TANGENT_BUG_SIGNALER; range_signaler:separate RANGE_GROUP)
 			-- <Precursor>
 		do
-			pose_controller.set_target_pose (create {POSE_2D}.make_with_pose (t_sig.goal, 0.0)) -- TODO - Fix.
+			pose_controller.set_target_pose (t_sig.goal)
 			pose_controller.set_current_pose (t_sig.current_pose, t_sig.timestamp)
 		end
 

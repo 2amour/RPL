@@ -19,11 +19,12 @@ feature {NONE} -- Implementation
 		do
 		end
 
-	make_with_attributes (goal_x: REAL_64; goal_y: REAL_64; goal_threshold: REAL_64)
+	make_with_attributes (goal_x: REAL_64; goal_y: REAL_64; goal_orientation: REAL_64; goal_threshold: REAL_64)
 			-- Create goal parameters object with attributes.
 		do
 			x := goal_x
 			y := goal_y
+			orientation := goal_orientation
 			threshold := goal_threshold
 		end
 
@@ -32,6 +33,7 @@ feature {NONE} -- Implementation
 		do
 			x := other.x
 			y := other.y
+			orientation := other.orientation
 			threshold := other.threshold
 		end
 
@@ -42,6 +44,9 @@ feature -- Access
 
 	y: REAL_64
 			-- Goal y coordinate.
+
+	orientation: REAL_64
+			-- Goal orientation.
 
 	threshold: REAL_64
 			-- Threshold for considering when the goal is reached.
@@ -56,6 +61,12 @@ feature -- Access
 			-- Setter for `y'.
 		do
 			y := goal_y
+		end
+
+	set_orientation (goal_orientation: REAL_64)
+			-- Setter for `orientation'.
+		do
+			orientation := goal_orientation
 		end
 
 	set_threshold (goal_threshold: REAL_64)

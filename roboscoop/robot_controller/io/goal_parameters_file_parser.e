@@ -32,6 +32,9 @@ feature -- Access
 				elseif key.is_equal ("Y") then
 					file.read_double
 					goal_parameters.set_y (file.last_double)
+				elseif key.is_equal ("Orientation") then
+					file.read_double
+					goal_parameters.set_orientation (file.last_double)
 				elseif key.is_equal ("Threshold") then
 					file.read_double
 					goal_parameters.set_threshold (file.last_double)

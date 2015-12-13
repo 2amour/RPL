@@ -62,7 +62,7 @@ feature {NONE} -- Implementation
 	obstacles_publisher: separate POINT_PUBLISHER
 			-- Publisher of sensed obstacles.
 
-	goal_signaler: separate POINT_SIGNALER
+	goal_signaler: separate POSE_SIGNALER
 			-- Signaler to register the goal.
 
 	sep_start (a: separate TANGENT_BUG_CONTROLLER; b, c, d: separate COMMUNICATION_CONTROLLER)

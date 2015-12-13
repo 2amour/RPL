@@ -146,9 +146,10 @@ feature {NONE} -- Implementation
 			if a_target_point.get_y - a_current_point.get_y = 0 and
 			   a_target_point.get_x - a_current_point.get_x = 0 then
 				error := 0
+			else
+				error := math.atan2 (a_target_point.get_y - a_current_point.get_y, a_target_point.get_x - a_current_point.get_x) - a_current_orientation
+				error := math.atan2 (math.sine (error), math.cosine (error))
 			end
-			error := math.atan2 (a_target_point.get_y - a_current_point.get_y, a_target_point.get_x - a_current_point.get_x) - a_current_orientation
-			error := math.atan2 (math.sine (error), math.cosine (error))
 
 			orientation_controller.set_error (error)
 			angular_speed_command := orientation_controller.get_output
