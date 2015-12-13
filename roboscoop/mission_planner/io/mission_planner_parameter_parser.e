@@ -48,7 +48,7 @@ feature {ANY} -- Acces.
 					file.read_double
 					theta := file.last_double
 					point_array.force (create {POSE}.make_with_values (create {POINT}.make_with_values (x, y, 0),
-																	   create {QUATERNION}.make_with_values (0, 0, {DOUBLE_MATH}.sine (theta/2),  {DOUBLE_MATH}.cosine (theta/2)),
+																	   create {QUATERNION}.make_from_heading (theta),
 																	   frame))
 				elseif key.is_equal ("way_point_threshold:") then
 					file.read_double

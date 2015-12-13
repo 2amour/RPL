@@ -191,6 +191,6 @@ feature {NONE} -- Implementation
 		external
 			"C++ inline use %"math.h%""
 		alias
-			"return (double) atan2($a_y, $a_x) * 2.0;"
+			"return (double) atan2($a_y, $a_x);"
 		end
 end
