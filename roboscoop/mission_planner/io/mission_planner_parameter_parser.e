@@ -47,13 +47,12 @@ feature {ANY} -- Access.
 				until
 					file.off
 				loop
-					file.read_word
-					key := file.last_string
+					file.read_word_thread_aware
+					key := file.last_string.twin
 
 					if key.is_equal ("frame:") then
-						file.read_word
-						frame := create {STRING}.make_from_string (file.last_string)
-						last_parameters.set_frame (frame)
+						file.read_word_thread_aware
+						last_parameters.set_frame (file.last_string.twin)
 					elseif key.is_equal ("pose:") then
 						file.read_double
 						x := file.last_double

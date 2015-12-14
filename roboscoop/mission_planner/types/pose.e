@@ -76,7 +76,7 @@ feature -- Access
 	get_string: STRING
 			-- Return string representation of pose.
 		do
-			Result := "position: " + position.get_string + "%Norientation: " + orientation.get_string + "%Nframe: "+ frame
+			Result := "position: " + position.get_string + " orientation: " + orientation.get_string + " frame: "+ frame
 		end
 
 	euclidean_distance (other: separate POSE): DOUBLE

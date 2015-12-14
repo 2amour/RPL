@@ -1,3 +1,4 @@
+frame: map
 pose: 0.5 0.5 0.0
 pose: 1.5 0.5 0.0
 pose: 1.5 1.5 1.57

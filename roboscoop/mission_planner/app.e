@@ -82,7 +82,46 @@ feature {NONE} -- Implementation
 				topic_parameters := topic_parameters_parser.last_parameters
 			end
 
+			debug
+				debug_parser
+			end
+
 			create parameters_bag.make_with_attributes (parameters, topic_parameters)
 		end
+
+	debug_parser
+			-- Debuger function that prints out parsed inputs.
+		local
+			i: INTEGER
+		do
+			io.put_string ("%N Parameters: %N")
+			io.put_string ("%T Frame: " + parameters.frame + "%N")
+			io.put_string ("%T Threhsold: " + parameters.way_point_threshold.out + "%N")
+
+			from
+				i := 1
+			until
+				i > parameters.way_points.count
+			loop
+				io.put_string ("%T i: " + i.out + " pose: " + parameters.way_points[i].get_string + "%N")
+				i := i + 1
+			end
+
+			io.put_string ("Topics: %N")
+			io.put_string ("%T Map: " + topic_parameters.map + "%N")
+			io.put_string ("%T Node name: " + topic_parameters.node_name + "%N")
+			io.put_string ("%T Object recognition request: " + topic_parameters.object_recognition_request + "%N")
+			io.put_string ("%T Object recognition signaler: " + topic_parameters.object_recognition_signaler + "%N")
+			io.put_string ("%T Odometry: " + topic_parameters.odometry + "%N")
+			io.put_string ("%T Path: " + topic_parameters.path + "%N")
+			io.put_string ("%T Path Planner goal: " + topic_parameters.path_planner_goal + "%N")
+			io.put_string ("%T Path Planner start: " + topic_parameters.path_planner_start + "%N")
+			io.put_string ("%T Path Planner map: " + topic_parameters.planner_map+"%N")
+			io.put_string ("%T Path Planner map frame: " + topic_parameters.planner_map_frame + "%N")
+			io.put_string ("%T Path Planner sensed obstacles: " + topic_parameters.sensed_obstacle + "%N")
+			io.put_string ("%T Thymio target: " + topic_parameters.target + "%N")
+
+		end
+
 
 end
