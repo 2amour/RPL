@@ -20,16 +20,28 @@ feature {NONE} -- Initialization
 			create subscriber.make
 			subscribe_empty (subscriber, Current, topic_name)
 			data := False
+			is_new_val := False
 		end
 
 feature -- Access
 
+	set_new_val (a_val: BOOLEAN)
+			-- Set new value
+		do
+			is_new_val := a_val
+		end
+
+	is_new_val: BOOLEAN
+			-- Has a new value reached.
+
 	data: BOOLEAN
+			-- Current new value.
 
 	update_state (msg: separate BOOLEAN_MSG)
 			-- Update current state with the values from `msg'.
 		do
 			data := msg.data
+			is_new_val := True
 		end
 
 feature {NONE} -- Implementation

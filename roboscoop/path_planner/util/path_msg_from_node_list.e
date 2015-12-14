@@ -20,13 +20,10 @@ feature -- Access
 			header := create {HEADER_MSG}.make_now (create {STRING_8}.make_from_separate (initial_pose.frame))
 			create a_poses.make_filled (create {POSE_STAMPED_MSG}.make_empty, 1, path.count)
 
-			a_poses.put (create {POSE_STAMPED_MSG}.make_from_separate (initial_pose.get_pose_stamped_msg), 1)
-			path.remove
-
+			idx := 1
 			from
-				idx := 2
 			until
-				idx > path.count - 1
+				path.is_empty
 			loop
 				pose := create {POSE_MSG}.make_with_values (create {POINT_MSG}.make_from_separate (path.item.position), create {QUATERNION_MSG}.make_empty)
 				a_poses.put (create {POSE_STAMPED_MSG}.make_with_values (header, pose), idx)
@@ -34,8 +31,8 @@ feature -- Access
 				idx := idx + 1
 			end
 
-			a_poses.put (create {POSE_STAMPED_MSG}.make_from_separate (final_pose.get_pose_stamped_msg), path.count)
-			path.remove
+			a_poses.force (create {POSE_STAMPED_MSG}.make_from_separate (initial_pose.get_pose_stamped_msg), 1)
+			a_poses.force (create {POSE_STAMPED_MSG}.make_from_separate (final_pose.get_pose_stamped_msg), a_poses.count)
 
 			create msg.make_with_values (header, a_poses)
 			Result := msg

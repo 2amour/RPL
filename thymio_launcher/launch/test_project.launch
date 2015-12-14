@@ -1,6 +1,6 @@
 <launch>
 	<!-- Map Launch -->
-	<arg name="map_file" default="$(find thymio_launcher)/map/TestMap2.yaml"/>
+	<arg name="map_file" default="$(find thymio_launcher)/map/testenvironment.yaml"/>
 	<node name="map_server" pkg="map_server" type="map_server" args="$(arg map_file)" />
 	
 	<!-- RViz Launcher -->
