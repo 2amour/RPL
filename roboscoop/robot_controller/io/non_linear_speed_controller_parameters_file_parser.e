@@ -24,6 +24,7 @@ feature
 feature -- Access
 
 	parse_file (file_path: separate STRING)
+			-- Parse file.
 		local
 
 			file: PLAIN_TEXT_FILE
@@ -62,5 +63,6 @@ feature -- Access
 		end
 
 	last_parameters: NON_LINEAR_SPEED_CONTROLLER_PARAMETERS
+			-- Parameters parsed.
 
 end

@@ -15,7 +15,7 @@ create
 feature {NONE} -- Implementation
 
 	make
-			-- Create Current
+			-- Create Current.
 		do
 			is_error_found := False
 			create last_parameters.make
@@ -24,6 +24,7 @@ feature {NONE} -- Implementation
 feature -- Access
 
 	parse_file (file_path: separate STRING)
+			-- Parse file.
 		local
 
 			file: PLAIN_TEXT_FILE
@@ -66,5 +67,6 @@ feature -- Access
 		end
 
 	last_parameters: GOAL_PARAMETERS
+			-- Parameters parsed.
 
 end

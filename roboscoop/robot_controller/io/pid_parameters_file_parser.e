@@ -24,6 +24,7 @@ feature -- Initialization
 feature -- Access
 
 	parse_file (file_path: separate STRING)
+			-- Parse file.
 		local
 			file: PLAIN_TEXT_FILE
 			key: STRING
@@ -63,4 +64,5 @@ feature -- Access
 		end
 
 		last_parameters: PID_PARAMETERS
+				-- Parameters parsed.
 end

@@ -14,5 +14,6 @@ feature {ANY} -- Access
 		end
 
 	is_error_found: BOOLEAN
+			-- Whether an error has been found.
 
 end
