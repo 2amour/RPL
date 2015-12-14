@@ -64,7 +64,9 @@ feature {MISSION_PLANNER_BEHAVIOUR} -- Execute algorithm
 				create current_point.make_from_msg (odometry_sig.data.pose.pose.position)
 				mission_sig.set_localized_handled (False)
 
+
 				if localization_sig.data then
+					-- SEQUENTIAL FLAGS
 					if mission_sig.at_a_way_point (current_point) then
 						mission_sig.request_localization (False)
 						if mission_sig.is_waypoint_reached then
@@ -78,6 +80,7 @@ feature {MISSION_PLANNER_BEHAVIOUR} -- Execute algorithm
 						mission_sig.set_waypoint_reached (True)
 					end
 
+					-- TARGET UPDATE
 					if mission_sig.discovered_obstacle then
 						mission_sig.path.go_i_th (mission_sig.way_points_idx.item)
 						target_pub.publish_pose (mission_sig.get_current_path_pose)
@@ -87,13 +90,13 @@ feature {MISSION_PLANNER_BEHAVIOUR} -- Execute algorithm
 						if current_point.euclidean_distance(mission_sig.get_current_path_pose.position) < mission_sig.goal_threshold then
 							mission_sig.path.forth
 							target_pub.publish_pose (mission_sig.get_current_path_pose)
+						elseif localization_sig.is_new_val then
+							target_pub.publish_pose (mission_sig.get_current_path_pose)
 						end
 					end
 
-					if not target_pub.has_published then
-						target_pub.publish_pose (create {POSE}.make_default)
-					end
 				else
+					localization_sig.set_new_val (False)
 					mission_sig.request_localization (True)
 					target_pub.publish_pose (create {POSE}.make_with_values (current_point,
 						create {QUATERNION}.make_from_heading (odometry_sig.theta + {DOUBLE_MATH}.pi_2), mission_sig.frame))
@@ -120,12 +123,11 @@ feature {MISSION_PLANNER_BEHAVIOUR} -- Execute algorithm
 				io.put_string ("Recieved path size: " + path_sig.data.poses.count.out + "%N")
 
 				current_pose := create {POSE}.make_from_unstamped_msg (path_sig.data.poses[1].pose, path_sig.data.header.frame_id)
-
 				path.put (current_pose)
 				from
 					idx := 2
 				until
-					idx > path_sig.count-1
+					idx > path_sig.data.poses.count-1
 				loop
 					next_pose := create {POSE}.make_from_unstamped_msg (path_sig.data.poses[idx].pose, path_sig.data.header.frame_id)
 					following_pose := create {POSE}.make_from_unstamped_msg (path_sig.data.poses[idx+1].pose, path_sig.data.header.frame_id)
@@ -136,9 +138,9 @@ feature {MISSION_PLANNER_BEHAVIOUR} -- Execute algorithm
 						path.put (current_pose)
 						current_pose := next_pose
 					end
+
 					idx := idx + 1
 				end
-
 				path.put (create {POSE}.make_from_unstamped_msg (path_sig.data.poses[idx].pose, path_sig.data.header.frame_id))
 
 				from
@@ -147,8 +149,8 @@ feature {MISSION_PLANNER_BEHAVIOUR} -- Execute algorithm
 					mission_sig.update_path (path.item)
 					path.remove
 				end
-				mission_sig.set_way_point_idx
 				io.put_string ("Processed path size: " + mission_sig.path.count.out + "%N")
+				mission_sig.set_way_point_idx
 
 				if not mission_sig.way_points.islast then
 					mission_sig.request_path (True)
@@ -164,16 +166,12 @@ feature {MISSION_PLANNER_BEHAVIOUR} -- Execute algorithm
 			not mission_sig.path.islast
 			mission_sig.is_path_requested
 			not obstacle_sig.is_new_val
-
-		local
-			current_idx: INTEGER_32
 		do
 			if not s_sig.is_stop_requested then
 				io.put_string ("Request path%N")
-				current_idx := mission_sig.way_points.index
 				-- This are inverted! also reinvert in reconstruction
-				goal_pub.publish_pose (mission_sig.way_points.at (current_idx))
-				start_pub.publish_pose (mission_sig.way_points.at (current_idx+1))
+				goal_pub.publish_pose (mission_sig.way_points.at (mission_sig.way_points.index))
+				start_pub.publish_pose (mission_sig.way_points.at (mission_sig.way_points.index+1))
 				mission_sig.way_points.forth
 				mission_sig.request_path (False)
 			end

@@ -44,15 +44,15 @@ feature {ANY} -- Access
 	search_strategy: separate LABEL_CORRECTING_GRAPH_SEARCH_STRATEGY
 			-- search strategy.
 
-	set_start (point: separate POSE)
+	set_start (pose: separate POSE)
 			-- set the start.
 		do
 			if attached start_pose as sp then
-				changed_start := not (sp.position.x = point.position.x and sp.position.y = point.position.y and sp.position.z = point.position.z)
+				changed_start := not (sp.position.x = pose.position.x and sp.position.y = pose.position.y and sp.position.z = pose.position.z)
 			else
 				changed_start := True
 			end
-			create start_pose.make_from_separate (point)
+			create start_pose.make_from_separate (pose)
 		end
 
 	processed_start_point
@@ -61,16 +61,16 @@ feature {ANY} -- Access
 			changed_start := False
 		end
 
-	set_goal (point: separate POSE)
+	set_goal (pose: separate POSE)
 			-- set the goal.
 		do
 			if attached goal_pose as gp then
-				changed_goal := not (gp.position.x = point.position.x and gp.position.y = point.position.y and gp.position.z = point.position.z)
+				changed_goal := not (gp.position.x = pose.position.x and gp.position.y = pose.position.y and gp.position.z = pose.position.z)
 			else
 				changed_goal := True
 			end
 
-			create goal_pose.make_from_separate (point)
+			create goal_pose.make_from_separate (pose)
 		end
 
 	processed_goal_point
