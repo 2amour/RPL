@@ -55,6 +55,7 @@ feature -- Access
 			-- Setter for `target_pose'.
 		do
 			target_pose := create {POSE_2D}.make_from_separate (a_target_pose)
+			orientation_controller.reset
 		end
 
 	set_turning_angular_speed (a_turning_angular_speed: REAL_64)
@@ -160,14 +161,15 @@ feature {NONE} -- Implementation
 
 	rotate (a_current_orientation, a_target_orientation: REAL_64)
 			-- Proceed to rotate to reach the target orientation.
+		local
+			error: DOUBLE
 		do
-			linear_speed_command := 0.0
+			error := a_target_orientation - a_current_orientation
+			error := math.atan2 (math.sine (error), math.cosine (error))
+			orientation_controller.set_error (error)
 
-			if a_current_orientation > a_target_orientation then
-				angular_speed_command := -turning_angular_speed
-			else
-				angular_speed_command := turning_angular_speed
-			end
+			angular_speed_command := orientation_controller.get_output
+			linear_speed_command := 0.0
 		end
 
 	set_drive_velocity (a_drive: separate DIFFERENTIAL_DRIVE; a_linear_speed_command, a_angular_speed_command: REAL_64)

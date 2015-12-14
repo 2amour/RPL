@@ -24,8 +24,8 @@ feature {NONE} -- Initialization
 			create current_pose.make
 			create intial_point_wall.make
 
-			reached_goal_position_threshold := go_to_goal_pose_controller_parameters.reached_point_threshold
-			reached_goal_orientation_threshold := go_to_goal_pose_controller_parameters.reached_orientation_threshold
+			reached_pose_position_threshold := go_to_goal_pose_controller_parameters.reached_point_threshold
+			reached_pose_orientation_threshold := go_to_goal_pose_controller_parameters.reached_orientation_threshold
 			timestamp := 0.0
 			min_distance := {REAL_64}.max_value
 
@@ -48,11 +48,11 @@ feature -- Access
 	goal: POSE_2D
 			-- Goal coordinates.
 
-	reached_goal_position_threshold: REAL_64
-			-- Threshold for considering when the goal position is reached.
+	reached_pose_position_threshold: REAL_64
+			-- Threshold for considering when the pose position is reached.
 
-	reached_goal_orientation_threshold: REAL_64
-			-- Threshold for considering when the goal orientation is reached.
+	reached_pose_orientation_threshold: REAL_64
+			-- Threshold for considering when the pose orientation is reached.
 
 	current_pose: POSE_2D
 			-- Present position and orientation.
