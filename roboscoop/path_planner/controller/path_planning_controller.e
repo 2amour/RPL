@@ -25,29 +25,29 @@ feature {NONE} -- Initialization
 		end
 
 
-feature {PATH_PLANNING_BEHAVIOUR} -- Execute algorithm
+feature {PATH_PLANNING_BEHAVIOUR} -- Access
 
-	update_start_point (start_sig: separate POINT_SIGNALER; path_planning_sig: separate PATH_PLANNING_SIGNALER; s_sig: separate STOP_SIGNALER)
-			-- Update start point.
+	update_start_pose (start_sig: separate POSE_SIGNALER; path_planning_sig: separate PATH_PLANNING_SIGNALER; s_sig: separate STOP_SIGNALER)
+			-- Update start pose.
 		require
-			start_sig.new_point
+			start_sig.timestamp > last_start_updated_timestamp
 		do
+			last_start_updated_timestamp := start_sig.timestamp
 			if not s_sig.is_stop_requested then
 				io.put_string ("Recieved start point %N")
-				path_planning_sig.set_start (start_sig.point)
-				start_sig.set_new_point(False)
+				path_planning_sig.set_start (create {POSE}.make_from_msg (start_sig.data))
 			end
 		end
 
-	update_goal_point (goal_sig: separate POINT_SIGNALER; path_planning_sig: separate PATH_PLANNING_SIGNALER; s_sig: separate STOP_SIGNALER)
-			-- Update goal point.
+	update_goal_pose (goal_sig: separate POSE_SIGNALER; path_planning_sig: separate PATH_PLANNING_SIGNALER; s_sig: separate STOP_SIGNALER)
+			-- Update goal pose.
 		require
-			goal_sig.new_point
+			goal_sig.timestamp > last_goal_updated_timestamp
 		do
+			last_goal_updated_timestamp := goal_sig.timestamp
 			if not s_sig.is_stop_requested then
 				io.put_string ("Recieved goal point %N")
-				path_planning_sig.set_goal (goal_sig.point)
-				goal_sig.set_new_point(False)
+				path_planning_sig.set_goal (create {POSE}.make_from_msg (goal_sig.data))
 			end
 		end
 
@@ -70,8 +70,8 @@ feature {PATH_PLANNING_BEHAVIOUR} -- Execute algorithm
 			-- Execute search algorithm.
 		require
 			map_params_sig.is_created
-			attached path_planning_sig.start_point
-			attached path_planning_sig.goal_point
+			attached path_planning_sig.start_pose
+			attached path_planning_sig.goal_pose
 			map_params_sig.is_changed or (path_planning_sig.changed_start and path_planning_sig.changed_goal)
 		local
 			start_point: POINT
@@ -84,8 +84,8 @@ feature {PATH_PLANNING_BEHAVIOUR} -- Execute algorithm
 
 		do
 			if not s_sig.is_stop_requested then
-				if (attached path_planning_sig.start_point as sp) and
-				   (attached path_planning_sig.goal_point as gp) then
+				if (attached path_planning_sig.start_pose as sp) and
+				   (attached path_planning_sig.goal_pose as gp) then
 
 					if map_params_sig.is_changed then
 						io.put_string ("start building %N")
@@ -94,8 +94,8 @@ feature {PATH_PLANNING_BEHAVIOUR} -- Execute algorithm
 						io.put_string ("end building %N")
 					end
 
-					create start_point.make_from_separate (sp)
-					create goal_point.make_from_separate (gp)
+					create start_point.make_from_separate ((create {POSE}.make_from_separate (sp)).position)
+					create goal_point.make_from_separate ((create {POSE}.make_from_separate (gp)).position)
 
 					search_strategy.make_with_size (grid.nodes.count)
 
@@ -104,13 +104,21 @@ feature {PATH_PLANNING_BEHAVIOUR} -- Execute algorithm
 
 					path := search_strategy.search (start_node, goal_node, path_planning_sig.edge_cost_strategy, path_planning_sig.heuristic_strategy)
 
-					path_publisher.publish_path_from_nodes (path, path_planning_sig.frame)
+					path_publisher.publish_path_from_nodes (sp, gp, path)
 
 					path_planning_sig.processed_start_point
 					path_planning_sig.processed_goal_point
 				end
 			end
 		end
+
+feature {PATH_PLANNING_BEHAVIOUR} -- Precondition check.
+
+	last_start_updated_timestamp: REAL_64
+			-- Timestamp of last time `start_pose' was updated.
+
+	last_goal_updated_timestamp: REAL_64
+			-- Timestamp of last time `goal_pose' was updated.
 
 feature {NONE} -- Implementation
 
@@ -121,6 +129,6 @@ feature {NONE} -- Implementation
 			-- Grid graph wrapper.
 
 	search_strategy: A_STAR -- REMOVE THIS TODO
-			-- Search strategy
+			-- Search strategy.
 end
 
