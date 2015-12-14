@@ -32,6 +32,9 @@ feature {NONE} -- Initialize
 			planner_map_frame := "/map"
 			object_recognition_request := "/object_recognition/request"
 			object_recognition_signaler := "/object_recognition/image_recieved"
+
+			localization_request := "/localization/request"
+			localization_signaler := "/localization/is_localized"
 		end
 
 feature {ANY} -- Constants
@@ -136,11 +139,31 @@ feature {ANY} -- Constants
 		end
 
 	object_recognition_signaler: STRING
+			-- Topic for signaling object_recognition completion.
 
 	set_object_recognition_signaler(a_object_recognition_signaler: separate STRING)
 			-- Set the object recognition signaler topic.
 		do
 			object_recognition_signaler := create {STRING}.make_from_separate (a_object_recognition_signaler)
+		end
+
+
+	localization_request: STRING
+			-- Topic to request localization algorithm.
+
+	set_localization_request(a_localization_request: separate STRING)
+			-- Set the request localization topic.
+		do
+			localization_request := create {STRING}.make_from_separate (a_localization_request)
+		end
+
+	localization_signaler: STRING
+			-- Topic to check if robot is localized.
+
+	set_localization_signaler(a_localization_signaler: separate STRING)
+			-- Set the localization status topic.
+		do
+			localization_signaler := create {STRING}.make_from_separate (a_localization_signaler)
 		end
 
 end

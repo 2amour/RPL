@@ -22,7 +22,7 @@ feature {NONE} -- Initialization
 			create path_signaler.make_with_topic (parameters_bag.mission_planner_topics.path)
 			create object_recognition_signaler.make_with_topic (parameters_bag.mission_planner_topics.object_recognition_signaler)
 
-			create localization_publisher.make_with_topic ("/localization/request") -- TODO REMOVE HARDCODE
+			create localization_publisher.make_with_topic (parameters_bag.mission_planner_topics.localization_request)
 
 			create start_publisher.make_with_topic (parameters_bag.mission_planner_topics.path_planner_start)
 			create goal_publisher.make_with_topic (parameters_bag.mission_planner_topics.path_planner_goal)
@@ -30,7 +30,7 @@ feature {NONE} -- Initialization
 			create map_publisher.make_with_topic (parameters_bag.mission_planner_topics.planner_map)
 			set_map_frame (map_publisher, parameters_bag.mission_planner_topics.planner_map_frame)
 			create object_recognition_publisher.make_with_topic (parameters_bag.mission_planner_topics.object_recognition_request)
-			create localization_signaler.make_with_topic ("/localization/is_localized") -- TODO REMOVE HARDCODE
+			create localization_signaler.make_with_topic (parameters_bag.mission_planner_topics.localization_signaler)
 			create stop_signaler.make
 		end
 

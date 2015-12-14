@@ -107,7 +107,6 @@ feature {MISSION_PLANNER_BEHAVIOUR} -- Execute algorithm
 			path_sig.is_new_val
 			path_sig.data.poses.count > 1
 			not mission_sig.is_path_requested
-
 		local
 			path: ARRAYED_STACK[POSE]
 			--angles: ARRAYED_STACK[REAL_64]
@@ -120,7 +119,7 @@ feature {MISSION_PLANNER_BEHAVIOUR} -- Execute algorithm
 				create path.make (0)
 				io.put_string ("Recieved path size: " + path_sig.data.poses.count.out + "%N")
 
-				current_pose := create {POSE}.make_from_unstamped_msg (path_sig.data.poses[1].pose, mission_sig.frame)
+				current_pose := create {POSE}.make_from_unstamped_msg (path_sig.data.poses[1].pose, path_sig.data.header.frame_id)
 
 				path.put (current_pose)
 				from
@@ -128,8 +127,8 @@ feature {MISSION_PLANNER_BEHAVIOUR} -- Execute algorithm
 				until
 					idx > path_sig.count-1
 				loop
-					next_pose := create {POSE}.make_from_unstamped_msg (path_sig.data.poses[idx].pose, mission_sig.frame)
-					following_pose := create {POSE}.make_from_unstamped_msg (path_sig.data.poses[idx+1].pose, mission_sig.frame)
+					next_pose := create {POSE}.make_from_unstamped_msg (path_sig.data.poses[idx].pose, path_sig.data.header.frame_id)
+					following_pose := create {POSE}.make_from_unstamped_msg (path_sig.data.poses[idx+1].pose, path_sig.data.header.frame_id)
 
 					if {DOUBLE_MATH}.dabs (current_pose.position.get_angle (next_pose.position) - current_pose.position.get_angle (following_pose.position)) < {TRIGONOMETRY_MATH}.pi_16 and
 					   current_pose.euclidean_distance (next_pose) > mission_sig.goal_threshold
@@ -140,7 +139,7 @@ feature {MISSION_PLANNER_BEHAVIOUR} -- Execute algorithm
 					idx := idx + 1
 				end
 
-				path.put (create {POSE}.make_from_unstamped_msg (path_sig.data.poses[idx].pose, mission_sig.frame))
+				path.put (create {POSE}.make_from_unstamped_msg (path_sig.data.poses[idx].pose, path_sig.data.header.frame_id))
 
 				from
 				until (path.is_empty)

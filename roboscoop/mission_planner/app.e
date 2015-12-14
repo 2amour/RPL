@@ -108,18 +108,26 @@ feature {NONE} -- Implementation
 			end
 
 			io.put_string ("Topics: %N")
-			io.put_string ("%T Map: " + topic_parameters.map + "%N")
+
 			io.put_string ("%T Node name: " + topic_parameters.node_name + "%N")
+
+			io.put_string ("%T Global Map: " + topic_parameters.map + "%N")
+
 			io.put_string ("%T Object recognition request: " + topic_parameters.object_recognition_request + "%N")
 			io.put_string ("%T Object recognition signaler: " + topic_parameters.object_recognition_signaler + "%N")
+
 			io.put_string ("%T Odometry: " + topic_parameters.odometry + "%N")
+			io.put_string ("%T Thymio target: " + topic_parameters.target + "%N")
+			io.put_string ("%T Sensed obstacles: " + topic_parameters.sensed_obstacle + "%N")
+
 			io.put_string ("%T Path: " + topic_parameters.path + "%N")
 			io.put_string ("%T Path Planner goal: " + topic_parameters.path_planner_goal + "%N")
 			io.put_string ("%T Path Planner start: " + topic_parameters.path_planner_start + "%N")
 			io.put_string ("%T Path Planner map: " + topic_parameters.planner_map+"%N")
 			io.put_string ("%T Path Planner map frame: " + topic_parameters.planner_map_frame + "%N")
-			io.put_string ("%T Path Planner sensed obstacles: " + topic_parameters.sensed_obstacle + "%N")
-			io.put_string ("%T Thymio target: " + topic_parameters.target + "%N")
+
+			io.put_string ("%T Localization request: " + topic_parameters.localization_request + "%N")
+			io.put_string ("%T Localization signaler: " + topic_parameters.localization_signaler + "%N")
 
 		end
 

@@ -81,6 +81,12 @@ feature {ANY} -- Access.
                     elseif key.is_equal("is_image_recieved:") then
                         file.read_word_thread_aware
                         last_parameters.set_object_recognition_signaler (file.last_string.twin)
+                    elseif key.is_equal("req_localization:") then
+						file.read_word_thread_aware
+						last_parameters.set_localization_request (file.last_string.twin)
+                    elseif key.is_equal("is_localized:") then
+                        file.read_word_thread_aware
+                        last_parameters.set_localization_signaler (file.last_string.twin)
 					elseif not key.is_empty then
 						io.putstring ("Parser error while parsing file '" + file.name + "': Key '" + key + "' not recognized%N")
 						is_error_found := True
