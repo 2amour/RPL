@@ -36,8 +36,12 @@ public:
 	// Set visualizer for publishing output.
 	virtual void setVisualizer(const boost::shared_ptr<Visualizer>& vis) = 0;
 
-	// Start loclaization algorithm.
-	virtual void localize(const boost::shared_ptr<Pose<float> >& x_t, const MsgLaserScan::ConstPtr& z_t) = 0;
+	// Start localization algorithm, returns a boolean saying if we are localized.
+	virtual bool localize(const boost::shared_ptr<Pose<float> >& x_t, const MsgLaserScan::ConstPtr& z_t, const boost::shared_ptr<Pose<float> >& localization) = 0;
+
+	// Reset algorithm.
+	virtual void reset () = 0;
+
 };
 
 // Particle Filter localization algortithm.
@@ -57,7 +61,10 @@ public:
 	void setVisualizer(const boost::shared_ptr<Visualizer>&);
 
 	// Start localization algorithm.
-	void localize(const boost::shared_ptr<Pose<float> >& x_t, const MsgLaserScan::ConstPtr& z_t);
+	bool localize(const boost::shared_ptr<Pose<float> >& x_t, const MsgLaserScan::ConstPtr& z_t, const boost::shared_ptr<Pose<float> >& localization);
+
+	// Reset algorithm.
+	void reset ();
 
 private:
 
@@ -66,6 +73,12 @@ private:
 
 	// Control input at time t.
 	boost::shared_ptr<Control<float> > u_t ;
+
+	// Odometry input at time t.
+	boost::shared_ptr<Pose<float> > x_t1 ;
+
+	// Odometry input at time t - 1.
+	boost::shared_ptr<Pose<float> > x_t0 ;
 
 	// Motion updater.
 	boost::shared_ptr<MotionUpdater> p_motion_updater;
@@ -79,19 +92,36 @@ private:
 	// Particles publisher.
 	boost::shared_ptr<Visualizer> p_visualizer;
 
-	// Map.
-	MsgMap::ConstPtr map;
-
-	// Number of jumps between map cells for first sampling of the particles set.
-	int cells_jumped;
-
-	// Map properties.
-	int width, height, size;
-	float resolution;
+	// Are we localized?
+	bool getLocalization (const boost::shared_ptr<Pose<float> >& localization);
 
 	// Get particles from map.
 	void getParticlesFromMap ();
 
+	// Map.
+	MsgMap::ConstPtr map;
+
+	// Make a local map.
+	void makeLocalMap (const MsgLaserScan::ConstPtr& sensor, const boost::shared_ptr<Pose<float> >& curr_pose);
+
+	// Local map.
+	std::vector<Particle> local_map;
+
+	// Number of jumps between map cells for first sampling of the particles set.
+	int cells_jumped;
+
+	// Angle step between orientations of the initial particles in the map.
+	float delta_theta;
+
+	// Cumulated weight of particles;
+	float cw;
+
+	// Threshold for deciding whether we are localized or not.
+	float angle_threshold, position_threshold;
+
+	// Map properties.
+	int width, height, size;
+	float resolution;
 };
 
 #endif /* LOCALIZATION_INCLUDE_ALGORITHMS_LOCALIZER_LOCALIZATION_ALGORITHM_H_ */

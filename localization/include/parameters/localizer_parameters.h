@@ -21,6 +21,7 @@
 // Forward declaration of virtual classes.
 class LocalizationAlgorithm; ///< Localization generic algorithm.
 class Visualizer; ///< Visualizer generic class.
+class LocalizationPublisher; ///< Publisher of the localization pose generic class.
 
 // Algorithm parameters.
 class AlgorithmParameters {
@@ -50,6 +51,9 @@ public:
 
 	// Other parameters.
 	int cells_jumped; ///< Number of cells to jump when creating the particles set.
+	float delta_theta; ///< Angle step between angles of the initial particles.
+	float angle_threshold; ///< Angle threshold for deciding whether we are localized or not.
+	float position_threshold; ///< Position threshold for deciding whether we are localized or not.
 };
 
 // Parameters for general virtual class of localizers.
@@ -61,7 +65,13 @@ struct LocalizerParameters
 	// Set of algorithm parameters.
   boost::shared_ptr<AlgorithmParameters> algo_params;
 
-  // Visualizer for output publisher.
+  // Visualizer for particles publisher.
+	boost::shared_ptr<LocalizationPublisher> pose_publisher;
+
+	// Flag publisher for knowing if we are localized.
+	ros::Publisher flag_publisher;
+
+  // Visualizer for particles publisher.
   boost::shared_ptr<Visualizer> visualizer;
 };
 

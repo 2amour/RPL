@@ -73,9 +73,6 @@ private:
 	// Local map.
 	MsgMap::ConstPtr local_map;
 
-	// Transform polar coordinates to cartesian.
-	Point2D<float> polar2Cartesian (float radius, float angle);
-
 	// Global map properties.
 	int global_width;
 	int global_height;

@@ -81,4 +81,7 @@ struct Orientation3D {
 	T roll;
 };
 
+// Transform polar coordinates to cartesian.
+Point2D<float> polar2Cartesian (float radius, float angle);
+
 #endif /* LOCALIZATION_INCLUDE_TYPES_POSE_H_ */

@@ -98,12 +98,19 @@ parseTopics (TopicsParameters& topics_params_output)
     std::cerr << "Tf topic name is missing, no input available.\n";
     error = true;
   }
+  else if (!nh.getParam("topics/onOff", topics_params.onOffSubscriber))
+	{
+		std::cerr << "OnOff topic name is missing, no input available.\n";
+		error = true;
+	}
   else
   {
     std::cerr << "Topics parameters parsed.\n";
   }
 
-  nh.param<std::string>("topics/publisher", topics_params.publisher, "output");
+  nh.param<std::string>("topics/publisher", topics_params.publisher, "localization/localization_odometry");
+  nh.param<std::string>("topics/flag", topics_params.flag, "localization/is_localized");
+  nh.param<std::string>("topics/visualizer", topics_params.visualizer, "localization/visualizer");
 
   // Store parameters.
   topics_params_output = topics_params;
@@ -143,13 +150,14 @@ parseLocalizer (LocalizerParameters& localizer_params_output)
 			ParticleFilterParameters particle_filter_params;
 			error = parseParticleFilterParams(particle_filter_params);
 
-			// Parse frame_id for visualizer
+			// Parse frame_id for visualizer.
 			std::string frame_id;
 			nh.param<std::string>("visualizer/frame_id", frame_id, "odometry_link");
 
-			// Create visualizer and algorithm.
+			// Create publisher, visualizer and algorithm.
 			if (!error)
 			{
+				localizer_params.pose_publisher = boost::make_shared<LocalizationPublisher>(frame_id);
 				localizer_params.visualizer = boost::make_shared<ParticlesVisualizer>(frame_id);
 				localizer_params.algorithm = boost::make_shared<ParticleFilter>(particle_filter_params);
 			}
@@ -207,16 +215,11 @@ parseParticleFilterParams(ParticleFilterParameters& particle_filter_params_outpu
 		error = true;
 	}
 
-  // Parse other needed parameters
-  if (!nh.getParam("localizer/others/cells_jumped", cells_jumped))
-  {
-  		std::cerr << "Number of cells to be jumped is missing, no input available.\n";
-  		error = true;
-  }
-  else
-  {
-		particle_filter_params.cells_jumped = cells_jumped;
-  }
+  // Parse other needed parameters.
+  nh.param<int>("localizer/others/cells_jumped", particle_filter_params.cells_jumped, 1); // Parse cells_jumped parameter.
+  nh.param<float>("localizer/others/delta_theta", particle_filter_params.delta_theta, 0.15); // Parse delta_theta parameter.
+  nh.param<float>("localizer/others/position_threshold", particle_filter_params.position_threshold, 1); // Parse position_threshold parameter.
+  nh.param<float>("localizer/others/angle_threshold", particle_filter_params.angle_threshold, 1); // Parse angle threshold parameter.
 
   // Resolve type of motion updater and create an instance.
   if (motion_updater == "Sample_odometry_motion_model")

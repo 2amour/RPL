@@ -45,3 +45,12 @@ Pose<T>::Pose (T position3D[3], T euler_angles[3])
 template class Pose<float>;
 template class Pose<double>;
 
+// Transform polar coordinates to cartesian coordinates.
+Point2D<float>
+polar2Cartesian (float radius, float angle)
+{
+	Point2D<float> cartesian;
+	cartesian.x = (radius*cosf(angle));
+	cartesian.y = (radius*sinf(angle));
+	return cartesian;
+}

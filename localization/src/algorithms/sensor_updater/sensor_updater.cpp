@@ -157,13 +157,5 @@ MapMatching::setMap (const MsgMap::ConstPtr& map_input)
 	global_map = map_input;
 }
 
-// Transform polar coordinates to cartesian coordinates.
-Point2D<float>
-MapMatching::polar2Cartesian (float radius, float angle)
-{
-	Point2D<float> cartesian;
-	cartesian.x = (radius*cosf(angle));
-	cartesian.y = (radius*sinf(angle));
-	return cartesian;
-}
+
 

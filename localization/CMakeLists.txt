@@ -108,7 +108,7 @@ find_package(catkin REQUIRED COMPONENTS
 ## CATKIN_DEPENDS: catkin_packages dependent projects also need
 ## DEPENDS: system dependencies of this project that dependent projects also need
 catkin_package(
-# INCLUDE_DIRS include
+   INCLUDE_DIRS include
 #  LIBRARIES localization
 #  CATKIN_DEPENDS other_catkin_pkg
 #  DEPENDS system_lib
@@ -151,12 +151,22 @@ add_executable(localization src/localization.cpp
 							src/probability_distributions/probability_distributions.cpp
 							src/visualizer/visualizer.cpp)
 
+add_executable(scan_remapper src/scan_remapper.cpp
+							 src/io/ros_topic_parser.cpp)
+
 ## Add cmake target dependencies of the executable
 ## same as for the library above
-# add_dependencies(localization_node ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
+add_dependencies(localization ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
+add_dependencies(scan_remapper ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
 
 ## Specify libraries to link a library or executable target against
 target_link_libraries(localization
+  ${catkin_LIBRARIES}
+  ${roslib_LIBRARIES}
+  ${PCL_LIBRARIES}
+)
+
+target_link_libraries(scan_remapper
   ${catkin_LIBRARIES}
   ${roslib_LIBRARIES}
   ${PCL_LIBRARIES}

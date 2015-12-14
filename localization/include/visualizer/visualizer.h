@@ -10,10 +10,15 @@
 #define LOCALIZATION_INCLUDE_VISUALIZER_VISUALIZER_H_
 
 #include <ros/publisher.h>
+#include <tf/transform_broadcaster.h>
 #include <geometry_msgs/PoseArray.h>
+#include <nav_msgs/Odometry.h>
+#include <tf/transform_listener.h>
 
 #include "types/pose.h"
 #include "tf/tf.h"
+
+typedef nav_msgs::Odometry MsgOdometry; ///< Message for odometry.
 
 // Deferred class for data publishers.
 class Visualizer {
@@ -24,8 +29,9 @@ public:
 	// Set publisher.
 	virtual void setPublisher (const ros::Publisher p) = 0;
 
-	// Publish particles.
-	virtual void publishParticles (const std::vector<Particle>& particles) = 0;
+	// Publish PoseArray.
+	virtual void publish (const std::vector<Particle>& particles) = 0;
+
 };
 
 // Particles specific visualizer
@@ -42,12 +48,66 @@ public:
 	void setPublisher (const ros::Publisher p);
 
 	// Publishes the particles.
-	void publishParticles (const std::vector<Particle>& particles);
+	void publish (const std::vector<Particle>& particles);
 
 private:
 
 	// Frame id for message header.
 	std::string frame_id;
+
+	// Publisher.
+	ros::Publisher pub;
+};
+
+// Localization publisher
+class LocalizationPublisher
+{
+public:
+	// Constructor.
+	LocalizationPublisher (std::string f_id);
+
+	// Destructor.
+	virtual ~LocalizationPublisher ();
+
+	// Sets the ROS publisher.
+	void setPublisher (const ros::Publisher p);
+
+	// Publishes the pose of the robot.
+	void publish(const boost::shared_ptr<Pose<float> >& particles, const MsgOdometry::ConstPtr& m_t);
+
+	// Publishes a transform with the location information.
+	void
+	publishTF(const boost::shared_ptr<Pose<float> >& localization, const MsgOdometry::ConstPtr& m_t);
+
+private:
+
+	// Transform broadcaster for changing the odometry link frame of the robot to the believed location.
+	tf::TransformBroadcaster  _transform_broadcaster;
+
+	// Frame id for message header.
+	std::string frame_id;
+
+	// Publisher.
+	ros::Publisher pub;
+};
+
+// Localization publisher
+class FlagPublisher
+{
+public:
+	// Constructor.
+	FlagPublisher ();
+
+	// Destructor.
+	virtual ~FlagPublisher ();
+
+	// Sets the ROS publisher.
+	void setPublisher (const ros::Publisher p);
+
+	// Publishes whether we are localized or not.
+	void publish(bool flag);
+
+private:
 
 	// Publisher.
 	ros::Publisher pub;

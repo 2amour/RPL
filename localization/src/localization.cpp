@@ -22,6 +22,7 @@
 #include <nav_msgs/Odometry.h>
 #include <nav_msgs/OccupancyGrid.h>
 #include <geometry_msgs/PoseArray.h>
+#include <std_msgs/Bool.h>
 
 #include "parameters/parameters_bag.h"
 #include "io/parser_sequencer.h"
@@ -50,18 +51,25 @@ int main(int argc, char** argv)
 	}
 
   // Creates a publisher for poses and sends it to the visualizer.
-  ros::Publisher visualizer_pub = nh.advertise<geometry_msgs::PoseArray>(params_bag.topics.publisher, 100);
+  ros::Publisher visualizer_pub = nh.advertise<geometry_msgs::PoseArray>(params_bag.topics.visualizer, 100);
   params_bag.localizer.visualizer->setPublisher(visualizer_pub);
+  ros::Publisher localization_pub = nh.advertise<nav_msgs::Odometry>(params_bag.topics.publisher, 100);
+  params_bag.localizer.pose_publisher->setPublisher(localization_pub);
+  ros::Publisher flag_pub = nh.advertise<std_msgs::Bool>(params_bag.topics.flag, 100);
+  params_bag.localizer.flag_publisher = flag_pub;
 
   // Initialize localization sequencer.
 	LocalizationSequencer localizer (params_bag.localizer);
+
+	// Enable-Disable flag.
+	ros::Subscriber on_off_sub = nh.subscribe(params_bag.topics.onOffSubscriber, 1, &LocalizationSequencer::onOffCallback, &localizer);
 
   // Get map.
   message_filters::Subscriber<MsgMap> map_sub(nh, params_bag.topics.map, 1);
   map_sub.registerCallback(boost::bind(&LocalizationSequencer::sendMap, &localizer, _1));
 
 	// Subscribe to odometry.
-	message_filters::Subscriber<MsgOdometry> motion_sub(nh, params_bag.topics.odometry, 1);
+	message_filters::Subscriber<MsgOdometry> motion_sub(nh, params_bag.topics.odometry, 100);
 
 	// Subscribe to sensor.
 	message_filters::Subscriber<MsgLaserScan> sensor_sub(nh, params_bag.topics.sensor, 1);
@@ -69,7 +77,13 @@ int main(int argc, char** argv)
 	// Set synchronisation of messages.
 	message_filters::Synchronizer<SyncPolicy> sync(SyncPolicy(10), motion_sub, sensor_sub);
 
-	// Register callback.
+	// Register motion callback for publishing transform.
+	motion_sub.registerCallback(boost::bind(static_cast<void (LocalizationSequencer::*)( const MsgOdometry::ConstPtr& )>(&LocalizationSequencer::publishTF), &localizer, _1));
+
+	// Register motion callback for publishing transform.
+	sensor_sub.registerCallback(boost::bind(static_cast<void (LocalizationSequencer::*)( const MsgLaserScan::ConstPtr& )>(&LocalizationSequencer::publishTF), &localizer, _1));
+
+	// Register synchronised callback.
 	sync.registerCallback(boost::bind(&LocalizationSequencer::update, &localizer, _1, _2));
 
 	// Spin.
