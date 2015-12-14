@@ -109,50 +109,44 @@ feature {MISSION_PLANNER_BEHAVIOUR} -- Execute algorithm
 			not mission_sig.is_path_requested
 
 		local
-			path: ARRAYED_STACK[POINT]
-			angles: ARRAYED_STACK[REAL_64]
+			path: ARRAYED_STACK[POSE]
+			--angles: ARRAYED_STACK[REAL_64]
 			current_angle: REAL_64
-			current_point, next_point, following_point: POINT
+			current_pose, next_pose, following_pose: POSE
 			idx: INTEGER_32
 		do
 			if not s_sig.is_stop_requested then
 				path_sig.set_new_val (False)
 				create path.make (0)
-				create angles.make (0)
 				io.put_string ("Recieved path size: " + path_sig.data.poses.count.out + "%N")
 
-				current_point := create {POINT}.make_from_msg (path_sig.data.poses[1].pose.position)
-				current_angle := path_sig.data.poses[1].pose.orientation.theta
+				current_pose := create {POSE}.make_from_unstamped_msg (path_sig.data.poses[1].pose, mission_sig.frame)
 
-				path.put (current_point)
-				angles.put (current_angle)
+				path.put (current_pose)
 				from
 					idx := 2
 				until
 					idx > path_sig.count-1
 				loop
-					next_point := create {POINT}.make_from_msg (path_sig.data.poses[idx].pose.position)
-					following_point := create {POINT}.make_from_msg (path_sig.data.poses[idx+1].pose.position)
+					next_pose := create {POSE}.make_from_unstamped_msg (path_sig.data.poses[idx].pose, mission_sig.frame)
+					following_pose := create {POSE}.make_from_unstamped_msg (path_sig.data.poses[idx+1].pose, mission_sig.frame)
 
-					if {DOUBLE_MATH}.dabs (current_point.get_angle (next_point) - current_point.get_angle (following_point)) < {TRIGONOMETRY_MATH}.pi_16 and
-					   current_point.euclidean_distance (next_point) > mission_sig.goal_threshold
+					if {DOUBLE_MATH}.dabs (current_pose.position.get_angle (next_pose.position) - current_pose.position.get_angle (following_pose.position)) < {TRIGONOMETRY_MATH}.pi_16 and
+					   current_pose.euclidean_distance (next_pose) > mission_sig.goal_threshold
 					then
-						path.put (current_point)
-						angles.put (current_point.get_angle (next_point))
-						current_point := create {POINT}.make_from_separate (next_point)
+						path.put (current_pose)
+						current_pose := next_pose
 					end
 					idx := idx + 1
 				end
 
-				path.put (create {POINT}.make_from_msg (path_sig.data.poses[idx].pose.position))
-				angles.put (path_sig.data.poses[idx].pose.orientation.theta)
+				path.put (create {POSE}.make_from_unstamped_msg (path_sig.data.poses[idx].pose, mission_sig.frame))
 
 				from
-				until (path.is_empty or angles.empty)
+				until (path.is_empty)
 				loop
-					mission_sig.update_path (create{POSE}.make_with_values (path.item, create {QUATERNION}.make_from_heading (angles.item), mission_sig.frame))
+					mission_sig.update_path (path.item)
 					path.remove
-					angles.remove
 				end
 				mission_sig.set_way_point_idx
 				io.put_string ("Processed path size: " + mission_sig.path.count.out + "%N")
@@ -165,7 +159,7 @@ feature {MISSION_PLANNER_BEHAVIOUR} -- Execute algorithm
 			end
 		end
 
-	request_path (mission_sig: separate MISSION_PLANNER_SIGNALER; obstacle_sig: separate POINT_SIGNALER; start_pub, goal_pub: separate POINT_PUBLISHER; s_sig: separate STOP_SIGNALER)
+	request_path (mission_sig: separate MISSION_PLANNER_SIGNALER; obstacle_sig: separate POINT_SIGNALER; start_pub, goal_pub: separate POSE_PUBLISHER; s_sig: separate STOP_SIGNALER)
 			-- Request a new path to the path_planner.
 		require
 			not mission_sig.path.islast
@@ -179,8 +173,8 @@ feature {MISSION_PLANNER_BEHAVIOUR} -- Execute algorithm
 				io.put_string ("Request path%N")
 				current_idx := mission_sig.way_points.index
 				-- This are inverted! also reinvert in reconstruction
-				goal_pub.publish_point (mission_sig.way_points.at (current_idx).position)
-				start_pub.publish_point (mission_sig.way_points.at (current_idx+1).position)
+				goal_pub.publish_pose (mission_sig.way_points.at (current_idx))
+				start_pub.publish_pose (mission_sig.way_points.at (current_idx+1))
 				mission_sig.way_points.forth
 				mission_sig.request_path (False)
 			end

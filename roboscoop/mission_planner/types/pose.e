@@ -7,7 +7,7 @@ class
 	POSE
 
 create
-	make_default, make_with_values, make_from_separate, make_from_msg
+	make_default, make_with_values, make_from_separate, make_from_msg, make_from_unstamped_msg
 
 feature {NONE} -- Initialization
 	make_default
@@ -42,6 +42,14 @@ feature {NONE} -- Initialization
 			create frame.make_from_separate (msg.header.frame_id)
 		end
 
+	make_from_unstamped_msg (msg: separate POSE_MSG; a_frame: separate STRING)
+			-- Make `Current' with given values.
+		do
+			create position.make_from_msg (msg.position)
+			create orientation.make_from_msg (msg.orientation)
+			create frame.make_from_separate (a_frame)
+		end
+
 feature -- Access
 
 	position: POINT
@@ -69,5 +77,17 @@ feature -- Access
 			-- Return string representation of pose.
 		do
 			Result := "position: " + position.get_string + "%Norientation: " + orientation.get_string + "%Nframe: "+ frame
+		end
+
+	euclidean_distance (other: separate POSE): DOUBLE
+			-- Get euclidean distance between two poses.
+		do
+			Result := position.euclidean_distance (other.position)
+		end
+
+	get_angle (other: separate POSE): DOUBLE
+			-- Return angle of the vector (in 2D only) connecting two points
+		do
+			Result := other.orientation.get_theta - orientation.get_theta
 		end
 end

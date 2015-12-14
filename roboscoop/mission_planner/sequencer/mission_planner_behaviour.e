@@ -22,7 +22,7 @@ feature {NONE} -- Initialization
 			create path_signaler.make_with_topic (parameters_bag.mission_planner_topics.path)
 			create object_recognition_signaler.make_with_topic (parameters_bag.mission_planner_topics.object_recognition_signaler)
 
-			create localization_publisher.make_with_topic ("/localization/request")
+			create localization_publisher.make_with_topic ("/localization/request") -- TODO REMOVE HARDCODE
 
 			create start_publisher.make_with_topic (parameters_bag.mission_planner_topics.path_planner_start)
 			create goal_publisher.make_with_topic (parameters_bag.mission_planner_topics.path_planner_goal)
@@ -30,10 +30,7 @@ feature {NONE} -- Initialization
 			create map_publisher.make_with_topic (parameters_bag.mission_planner_topics.planner_map)
 			set_map_frame (map_publisher, parameters_bag.mission_planner_topics.planner_map_frame)
 			create object_recognition_publisher.make_with_topic (parameters_bag.mission_planner_topics.object_recognition_request)
-			create localization_signaler.make_with_topic ("/localization/is_localized")
-
-			io.put_string ("Publish empty message topic: " + parameters_bag.mission_planner_topics.object_recognition_request + "%N")
-
+			create localization_signaler.make_with_topic ("/localization/is_localized") -- TODO REMOVE HARDCODE
 			create stop_signaler.make
 		end
 
@@ -86,10 +83,10 @@ feature {NONE} -- Implementation
 	path_signaler: separate PATH_SIGNALER_WITH_FLAG
 			-- Current state of the path.
 
-	start_publisher: separate POINT_PUBLISHER
+	start_publisher: separate POSE_PUBLISHER
 			-- Publisher of start point.
 
-	goal_publisher: separate POINT_PUBLISHER
+	goal_publisher: separate POSE_PUBLISHER
 			-- Publisher of goal point.
 
 	-- OBJECT RECOGNITION RELATED PUBLISHERS
