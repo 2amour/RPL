@@ -1,0 +1,3 @@
+# Other parameters for localizer algorithm
+cells_jumped: 17 # Number of cells of the map to be jumped when doing the first set of particles
+delta_theta: 0.15 # Angle steps between particles' orientations.

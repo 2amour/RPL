@@ -1,0 +1,2 @@
+# Resampler parameters
+type: Roulette_wheel_sampler # Type of resampler to be used.

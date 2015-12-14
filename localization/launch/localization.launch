@@ -1,0 +1,23 @@
+<launch>
+
+	<rosparam command="load" file="$(find localization)/parameters/topics_parameters/topics_parameters.yaml" ns="topics"/>
+	
+	<rosparam command="load" file="$(find localization)/parameters/localizer_parameters/algorithm_parameters.yaml" ns="localizer/algorithm"/>
+	<rosparam command="load" file="$(find localization)/parameters/localizer_parameters/motion_updater_parameters.yaml" ns="localizer/motion_updater"/>
+	<rosparam command="load" file="$(find localization)/parameters/localizer_parameters/sensor_updater_parameters.yaml" ns="localizer/sensor_updater"/>
+	<rosparam command="load" file="$(find localization)/parameters/localizer_parameters/resampler_parameters.yaml" ns="localizer/resampler"/>
+	<rosparam command="load" file="$(find localization)/parameters/localizer_parameters/other_parameters.yaml" ns="localizer/others"/>
+
+	<!-- State here the absolute path to the directory having the bag file -->
+	<arg name="absolute_path" default="/home/toni/data/localization/" />
+	<!-- Change this path to where you have your bag file -->
+	<arg name="file_1" default="localization" />
+	<node pkg="rosbag" type="play" name="player" output="screen" args="--clock $(arg absolute_path)$(arg file_1).bag"/>
+	
+	<node name="localization" pkg="localization" type="localization" clear_params="true" output= "screen"/>
+
+	<node pkg="tf" type="static_transform_publisher" name="link1_broadcaster" args="0 0 0 0 0 0 odometry_link map 100" />
+
+	<node name="rviz" pkg="rviz" type="rviz"/>
+	
+</launch>
