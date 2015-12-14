@@ -20,13 +20,13 @@ feature {NONE} -- Initialization
 
 feature {ANY} -- Access
 
-	publish_path_from_nodes (path: separate LIST [SPATIAL_GRAPH_NODE]; frame: separate STRING_8)
+	publish_path_from_nodes (initial_pose, final_pose: separate POSE; path: separate LIST [SPATIAL_GRAPH_NODE])
 			-- Publishing path.
 		local
 			path_getter: PATH_MSG_FROM_NODE_LIST
 		do
 			create path_getter
-			publisher.publish (path_getter.get_path_msg_from_nodes (path, frame))
+			publisher.publish (path_getter.get_path_msg_from_nodes (initial_pose, final_pose, path))
 		end
 
 	publish_path_from_points (path: separate LIST [separate POINT]; frame: separate STRING_8)

@@ -8,7 +8,7 @@ class
 
 feature -- Access
 
-	get_path_msg_from_nodes (path: separate LIST [SPATIAL_GRAPH_NODE]; frame: separate STRING_8): separate PATH_MSG
+	get_path_msg_from_nodes (initial_pose, final_pose: separate POSE; path: separate LIST [SPATIAL_GRAPH_NODE]): separate PATH_MSG
 			-- Get path_msg from a list of nodes.
 		local
 			msg: PATH_MSG
@@ -17,18 +17,26 @@ feature -- Access
 			a_poses: ARRAY [POSE_STAMPED_MSG]
 			idx: INTEGER_32
 		do
-			header := create {HEADER_MSG}.make_now (create {STRING_8}.make_from_separate (frame))
+			header := create {HEADER_MSG}.make_now (create {STRING_8}.make_from_separate (initial_pose.frame))
 			create a_poses.make_filled (create {POSE_STAMPED_MSG}.make_empty, 1, path.count)
-			idx := 1
+
+			a_poses.put (create {POSE_STAMPED_MSG}.make_from_separate (initial_pose.get_pose_stamped_msg), 1)
+			path.remove
+
 			from
+				idx := 2
 			until
-				path.is_empty
+				idx > path.count - 1
 			loop
 				pose := create {POSE_MSG}.make_with_values (create {POINT_MSG}.make_from_separate (path.item.position), create {QUATERNION_MSG}.make_empty)
 				a_poses.put (create {POSE_STAMPED_MSG}.make_with_values (header, pose), idx)
 				path.remove
 				idx := idx + 1
 			end
+
+			a_poses.put (create {POSE_STAMPED_MSG}.make_from_separate (final_pose.get_pose_stamped_msg), path.count)
+			path.remove
+
 			create msg.make_with_values (header, a_poses)
 			Result := msg
 		end

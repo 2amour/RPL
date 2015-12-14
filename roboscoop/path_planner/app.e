@@ -95,7 +95,32 @@ feature {NONE} -- Implementation
 				topic_parameters := topic_parameters_parser.last_parameters
 			end
 
+			debug
+				debug_parser
+			end
+
 			create parameters_bag.make_with_attributes (map_parameters, algorithm_parameters, topic_parameters)
+		end
+
+
+	debug_parser
+			-- Debuger function that prints out parsed inputs.
+		do
+			io.put_string ("%NAlgorithm Parameters: %N")
+			io.put_string ("%T Frame: " + algorithm_parameters.frame_id + "%N")
+
+			io.put_string ("Map Parameters: %N")
+			io.put_string ("%T Bock width: " + map_parameters.block_width.out  + " Block height: " + map_parameters.block_height.out + "%N")
+			io.put_string ("%T Inflation: " + map_parameters.inflation.out +  "%N")
+
+			io.put_string ("Topics: %N")
+			io.put_string ("%T Node name: " + topic_parameters.node_name + "%N")
+			io.put_string ("%T Map: " + topic_parameters.map + "%N")
+			io.put_string ("%T Start pose: " + topic_parameters.start + "%N")
+			io.put_string ("%T Goal pose: " + topic_parameters.goal + "%N")
+			io.put_string ("%T Output path: " + topic_parameters.path + "%N")
+
+
 		end
 
 end

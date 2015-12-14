@@ -23,7 +23,7 @@ feature {NONE} -- Initialization
 			create path_publisher.make_with_topic (param_bag.path_planner_topics.path)
 			create stop_signaler.make
 
-			create path_planning_signaler.make_with_attributes (param_bag.path_planner_parameters.search_strategy, param_bag.path_planner_parameters.edge_cost, param_bag.path_planner_parameters.heuristic_cost, param_bag.path_planner_parameters.frame_id)
+			create path_planning_signaler.make_with_attributes (param_bag.path_planner_parameters.search_strategy, param_bag.path_planner_parameters.edge_cost, param_bag.path_planner_parameters.heuristic_cost)
 			create map_parameters_signaler.make_with_attributes (param_bag.map_parameters.block_width, param_bag.map_parameters.block_height, param_bag.map_parameters.inflation, param_bag.map_parameters.connectivity_strategy)
 		end
 
@@ -51,11 +51,11 @@ feature -- Access
 
 feature {NONE} -- Implementation
 
-	start_signaler: separate POINT_SIGNALER
-			-- Signaler of the start position.
+	start_signaler: separate POSE_SIGNALER
+			-- Signaler of the start pose.
 
-	goal_signaler: separate POINT_SIGNALER
-			-- Signaler of the goal position.
+	goal_signaler: separate POSE_SIGNALER
+			-- Signaler of the goal pose.
 
 	path_planning_signaler: separate PATH_PLANNING_SIGNALER
 			-- Signaler with path planning algorithm states.
@@ -76,8 +76,8 @@ feature {NONE} -- Implementation
 			-- Start controllers asynchronously.
 		do
 			a.repeat_until_stop_requested (agent a.search (map_signaler, map_parameters_signaler, path_planning_signaler, path_publisher, stop_signaler))
-			b.repeat_until_stop_requested (agent b.update_start_point (start_signaler, path_planning_signaler, stop_signaler))
-			c.repeat_until_stop_requested (agent c.update_goal_point (goal_signaler, path_planning_signaler, stop_signaler))
+			b.repeat_until_stop_requested (agent b.update_start_pose (start_signaler, path_planning_signaler, stop_signaler))
+			c.repeat_until_stop_requested (agent c.update_goal_pose (goal_signaler, path_planning_signaler, stop_signaler))
 			d.repeat_until_stop_requested (agent d.update_map (map_signaler, map_parameters_signaler, stop_signaler))
 		end
 
