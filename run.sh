@@ -1,7 +1,39 @@
 #! /bin/bash
 
-roboscoop/robot_controller/EIFGENs/robot_controller/F_code/robot_controller roboscoop/robot_controller/execution_parameters_files/files_parameters.txt &
+# Executables
+ROBOT_CONTROLLER_EXECUTABLE=roboscoop/robot_controller/EIFGENs/robot_controller/W_code/robot_controller
+PATH_PLANNER_EXECUTABLE=roboscoop/path_planner/EIFGENs/path_planner/W_code/path_planner
+MISSION_PLANNER_EXECUTABLE=roboscoop/mission_planner/EIFGENs/mission_planner/W_code/mission_planner
 
-roboscoop/path_planner/EIFGENs/path_planner/F_code/path_planner roboscoop/path_planner/execution_parameters_files/path_planner_params.txt roboscoop/path_planner/execution_parameters_files/map_params.txt roboscoop/path_planner/execution_parameters_files/path_planner_topics.txt &
+# Arguments
+ROBOT_CONTROLLER_ARGS_DIR=roboscoop/robot_controller/execution_parameters_files
+ROBOT_CONTROLLER_ARGS="$ROBOT_CONTROLLER_ARGS_DIR/files_parameters.txt"
 
-roboscoop/mission_planner/EIFGENs/mission_planner/F_code/mission_planner roboscoop/mission_planner/execution_parameters_files/mission_planner_parameters.txt roboscoop/mission_planner/execution_parameters_files/mission_planner_topics.txt &
+PATH_PLANNER_ARGS_DIR=roboscoop/path_planner/execution_parameters_files
+PATH_PLANNER_ARGS="$PATH_PLANNER_ARGS_DIR/path_planner_params.txt $PATH_PLANNER_ARGS_DIR/map_params.txt $PATH_PLANNER_ARGS_DIR/path_planner_topics.txt"
+
+MISSION_PLANNER_ARGS_DIR=roboscoop/mission_planner/execution_parameters_files
+MISSION_PLANNER_ARGS="$MISSION_PLANNER_ARGS_DIR/mission_planner_parameters.txt $MISSION_PLANNER_ARGS_DIR/mission_planner_topics.txt"
+
+intexit() {
+    # Kill all subprocesses (all processes in the current process group)
+    kill -HUP -$$
+}
+
+hupexit() {
+    # HUP'd (probably by intexit)
+    echo
+    echo "Interrupted"
+    exit
+}
+
+trap hupexit HUP
+trap intexit INT
+
+$ROBOT_CONTROLLER_EXECUTABLE $ROBOT_CONTROLLER_ARGS &
+
+$PATH_PLANNER_EXECUTABLE $PATH_PLANNER_ARGS &
+
+$MISSION_PLANNER_EXECUTABLE $MISSION_PLANNER_ARGS &
+
+wait
