@@ -42,8 +42,8 @@ feature {ANY} -- Access.
 				until
 					file.off
 				loop
-					file.read_word
-					create key.make_from_string (file.last_string)
+					file.read_word_thread_aware
+					key := file.last_string.twin 
 					if key.is_equal ("block_height:") then
 						file.read_integer
 						last_parameters.set_block_height (file.last_integer)

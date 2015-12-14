@@ -33,7 +33,6 @@ feature {ANY} -- Access
 			file_checker: FILE_CHECKER
 		do
 			edge_key := "" heuristic_key := "" search_key:= ""
-
 			create f_path.make_from_separate (file_path)
 			create file.make (f_path)
 			create file_checker
@@ -45,14 +44,14 @@ feature {ANY} -- Access
 				until
 					file.off
 				loop
-					file.read_word
-					create key.make_from_string (file.last_string)
+					file.read_word_thread_aware
+					key := file.last_string.twin
 					if key.is_equal ("frame_id:") then
-						file.read_word
-						last_parameters.set_frame_id (file.last_string)
+						file.read_word_thread_aware
+						last_parameters.set_frame_id (file.last_string.twin)
 					elseif key.is_equal ("edge_cost:") then
-						file.read_word
-						create edge_key.make_from_string (file.last_string)
+						file.read_word_thread_aware
+						edge_key := file.last_string.twin
 						if edge_key.is_equal ("euclidean") then
 							last_parameters.set_edge_cost (create {EUCLIDEAN_HEURISTIC})
 						elseif edge_key.is_equal ("infinity") then
@@ -68,8 +67,8 @@ feature {ANY} -- Access
 							is_error_found := True
 						end
 					elseif key.is_equal ("heuristic:") then
-						file.read_word
-						create heuristic_key.make_from_string (file.last_string)
+						file.read_word_thread_aware
+						heuristic_key := file.last_string.twin
 						if heuristic_key.is_equal ("euclidean") then
 							last_parameters.set_heuristic_cost (create {EUCLIDEAN_HEURISTIC})
 						elseif heuristic_key.is_equal ("infinity") then
@@ -85,8 +84,8 @@ feature {ANY} -- Access
 							is_error_found := True
 						end
 					elseif key.is_equal ("search_strategy:") then
-						file.read_word
-						create search_key.make_from_string (file.last_string)
+						file.read_word_thread_aware
+						search_key := file.last_string.twin
 						if search_key.is_equal ("dijkstra") then
 							last_parameters.set_search_strategy (create {A_STAR}.make_default)
 						elseif heuristic_key.is_equal ("bfs") then
