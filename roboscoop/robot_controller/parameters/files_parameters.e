@@ -18,6 +18,8 @@ feature {NONE} -- Implementation
 			-- Create empty files parameters object.
 		do
 			create ros_topics_file_path.make_empty
+			create thymio_topic_path.make_empty
+			create led_code_file_path.make_empty
 			create goal_parameters_file_path.make_empty
 			create go_to_goal_pid_parameters_file_path.make_empty
 			create follow_wall_pid_parameters_file_path.make_empty
@@ -32,11 +34,13 @@ feature {NONE} -- Implementation
 			create range_sensors_parameters_file_path.make_empty
 		end
 
-	make_with_attributes (a_ros_path, a_goal_path, a_go_to_goal_pid_path, a_follow_wall_pid_path, a_leave_wall_pid_path,
+	make_with_attributes (a_ros_path, a_thymio_topic_path, a_led_path, a_goal_path, a_go_to_goal_pid_path, a_follow_wall_pid_path, a_leave_wall_pid_path,
 							a_go_to_goal_nlsc_path, a_follow_wall_nlsc_path, a_leave_wall_nlsc_path, a_go_to_goal_pose_controller_path, a_follow_wall_pose_controller_path, a_leave_wall_pose_controller_path, a_wall_follow_path, a_range_sensors_path: STRING)
 			-- Create files parameters object with attributes.
 		do
 			ros_topics_file_path := a_ros_path
+			thymio_topic_path := a_thymio_topic_path
+			led_code_file_path := a_led_path
 			goal_parameters_file_path := a_goal_path
 			go_to_goal_pid_parameters_file_path := a_go_to_goal_pid_path
 			follow_wall_pid_parameters_file_path := a_follow_wall_pid_path
@@ -55,6 +59,8 @@ feature {NONE} -- Implementation
 			-- Create files parameters object from separate object.
 		do
 			make_with_attributes(create {STRING}.make_from_separate (other.ros_topics_file_path),
+								 create {STRING}.make_from_separate (other.thymio_topic_path),
+								 create {STRING}.make_from_separate (other.led_code_file_path),
 								 create {STRING}.make_from_separate (other.goal_parameters_file_path),
 								 create {STRING}.make_from_separate (other.go_to_goal_pid_parameters_file_path),
 								 create {STRING}.make_from_separate (other.follow_wall_pid_parameters_file_path),
@@ -73,6 +79,12 @@ feature -- Access
 
 	ros_topics_file_path: STRING
 			-- ROS topics file path.
+
+	thymio_topic_path: STRING
+			-- Thymio topics file path.
+
+	led_code_file_path: STRING
+			-- LED code parameters file path.
 
 	goal_parameters_file_path: STRING
 			-- Goal parameters file path.
@@ -109,6 +121,18 @@ feature -- Access
 
 	range_sensors_parameters_file_path: STRING
 			-- Range sensors parameters file path.
+
+	set_led_code_file_path (a_file_path: STRING)
+			-- Setter for `led_code_file_path'.
+		do
+			led_code_file_path.copy (a_file_path)
+		end
+
+	set_thymio_topic_path (a_file_path: STRING)
+			-- Setter for `thymio_topic_path'.
+		do
+			thymio_topic_path.copy(a_file_path)
+		end
 
 	set_goal_parameters_file_path (files_goal_parameters_file_path: STRING)
 			-- Setter for `goal_parameters_file_path'.

@@ -43,10 +43,10 @@ feature {NONE} -- Initialization
 
 			-- Initialize behaviour.
 			create tangent_bug_behaviour.make_with_attributes (topics, tangent_bug_params)
-			create led_behaviour.make_with_attributes (topics)
+			create led_behaviour.make_with_attributes (topics, led_code)
 
 			-- Create a robot object.
-			create thymio.make_with_attributes (range_sensors_params)
+			create thymio.make_with_attributes (thymio_topics, range_sensors_params)
 
 			-- Set robot behaviour
 			set_robot_behaviour (thymio, tangent_bug_behaviour)
@@ -73,6 +73,18 @@ feature {NONE} -- Implementation
 
 	topics_parser: ROBOT_CONTROLLER_TOPICS_PARSER
 			-- Parser for the parameters for topics for the robot controller.
+
+	thymio_topics: THYMIO_TOPIC_PARAMETERS
+			-- Parameters for topics for the robot controller.
+
+	thymio_topics_parser: THYMIO_TOPIC_PARAMETERS_FILE_PARSER
+			-- Parser for the parameters for topics for the robot controller.
+
+	led_code: LED_CODE_PARAMETERS
+			-- Parameters for LED code for led controller.
+
+	led_code_parser: LED_CODE_FILE_PARSER
+			-- Parser for the LED code of led controller.
 
 	files_params: FILES_PARAMETERS
 			-- Parameters for the paths of the files with parameters.
@@ -153,7 +165,23 @@ feature {NONE} -- Implementation
 			if topics_parser.is_error_found then
 				(create {EXCEPTIONS}).die (-1)
 			else
-				topics := topics_parser.last_parameters
+				create topics.make_from_separate (topics_parser.last_parameters)
+			end
+
+			create thymio_topics_parser.make
+			thymio_topics_parser.parse_file (files_params.thymio_topic_path)
+			if thymio_topics_parser.is_error_found then
+				(create {EXCEPTIONS}).die (-1)
+			else
+				create thymio_topics.make_from_separate (thymio_topics_parser.last_parameters)
+			end
+
+			create led_code_parser.make
+			led_code_parser.parse_file (files_params.led_code_file_path)
+			if led_code_parser.is_error_found then
+				(create {EXCEPTIONS}).die (-1)
+			else
+				create led_code.make_from_separate (led_code_parser.last_parameters)
 			end
 
 			create goal_params_file_parser.make
@@ -161,7 +189,7 @@ feature {NONE} -- Implementation
 			if goal_params_file_parser.is_error_found then
 				(create {EXCEPTIONS}).die (-1)
 			else
-				goal_params := goal_params_file_parser.last_parameters
+				create goal_params.make_from_separate (goal_params_file_parser.last_parameters)
 			end
 
 			create pid_params_file_parser.make

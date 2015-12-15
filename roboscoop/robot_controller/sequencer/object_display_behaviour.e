@@ -13,13 +13,13 @@ create
 
 feature {NONE} -- Initialization
 
-	make_with_attributes (ros_topics_params: separate ROBOT_CONTROLLER_TOPIC_PARAMETERS)
+	make_with_attributes (ros_topics_params: separate ROBOT_CONTROLLER_TOPIC_PARAMETERS; led_code: separate LED_CODE_PARAMETERS)
 			-- Create behaviour with given attributes.
 		do
 			create stop_signaler.make
 			create circular_leds.make_with_topic (ros_topics_params.circular_leds_topic)
 			create marker_signaler.make_with_topic (ros_topics_params.visualization_marker)
-			create led_signaler.make_with_attributes (<<0.0, 1.0, 0.0>>) -- TODO-REMOVE HARD CODING
+			create led_signaler.make_with_attributes (led_code.get_code)
 		end
 
 feature -- Access

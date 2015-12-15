@@ -15,16 +15,16 @@ create
 
 feature {NONE} -- Initialization
 
-	make_with_attributes (range_sensors_parameters: separate RANGE_SENSORS_PARAMETERS)
+	make_with_attributes (thymio_topics: separate THYMIO_TOPIC_PARAMETERS; range_sensors_parameters: separate RANGE_SENSORS_PARAMETERS)
 			-- Create a robot with range sensors parameters.
 		do
 			-- Initialize sensors.
-			create odometry_signaler.make_with_topic ({THYMIO_TOPICS}.odometry)
-			create range_sensors.make ({THYMIO_TOPICS}.prox_horizontal, range_sensors_parameters)
-			create ground_sensors.make ({THYMIO_TOPICS}.prox_ground)
+			create odometry_signaler.make_with_topic (thymio_topics.odometry)
+			create range_sensors.make (thymio_topics.range_sensors, range_sensors_parameters)
+			create ground_sensors.make (thymio_topics.ground_sensors)
 
 			-- Initialize actuators.
-			create diff_drive.make_with_topic ({THYMIO_TOPICS}.velocity)
+			create diff_drive.make_with_topic (thymio_topics.velocity)
 		end
 
 feature -- Constants

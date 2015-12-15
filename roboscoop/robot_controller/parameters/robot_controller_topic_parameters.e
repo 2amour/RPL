@@ -8,10 +8,10 @@ class
 
 inherit
 
-	TOPIC_PARAMETERS
+	PARAMETERS
 
 create
-	make_default, make_with_attributes
+	make_default, make_from_separate
 
 feature {NONE} -- Initialize
 
@@ -32,47 +32,95 @@ feature {NONE} -- Initialize
 
 		end
 
-	make_with_attributes (a_name, a_path, a_pose, a_odometry, a_obstacle, a_goal, a_circular_led, a_viz_mark: STRING)
-			-- Make with attributes
+	make_from_separate (other: separate ROBOT_CONTROLLER_TOPIC_PARAMETERS)
+			-- Make from separate.
 		do
-			name := a_name
-			path := a_path
-			pose := a_pose
+			create name.make_from_separate (other.name)
+			create path.make_from_separate (other.path)
+			create pose.make_from_separate (other.pose)
 
-			mission_odometry := a_odometry
-			sensed_obstacles := a_obstacle
-			goal := a_goal
+			create mission_odometry.make_from_separate (other.mission_odometry)
+			create sensed_obstacles.make_from_separate (other.sensed_obstacles)
 
+			create goal.make_from_separate (other.goal)
 
-			circular_leds_topic := a_circular_led
-			visualization_marker := a_viz_mark
+			create circular_leds_topic.make_from_separate (other.circular_leds_topic)
+			create visualization_marker.make_from_separate (other.visualization_marker)
+
 		end
 
-	make_from_separate (other: separate like Current)
-			-- Create object as a copy of a separate object.
-		do
-			make_with_attributes (create {STRING}.make_from_separate (other.name),
-								  create {STRING}.make_from_separate (other.path),
-								  create {STRING}.make_from_separate (other.pose),
-								  create {STRING}.make_from_separate (other.mission_odometry),
-								  create {STRING}.make_from_separate (other.sensed_obstacles),
-								  create {STRING}.make_from_separate (other.goal),
-								  create {STRING}.make_from_separate (other.circular_leds_topic),
-								  create {STRING}.make_from_separate (other.visualization_marker))
-		end
+feature -- Access
 
-feature {ANY} -- Access
+		name: STRING
+				-- Node name.
 
-		name: STRING_8
-		path: STRING_8
-		pose: STRING_8
+		set_name (a_topic: separate STRING)
+				-- Set node name.
+			do
+				create name.make_from_separate (a_topic)
+			end
 
-		mission_odometry: STRING_8
-		sensed_obstacles: STRING_8
+		path: STRING
+			-- Path topic .
 
-		goal: STRING_8
+		set_path (a_topic: separate STRING)
+				-- Set path topic.
+			do
+				create path.make_from_separate (a_topic)
+			end
 
-		circular_leds_topic: STRING_8
-		visualization_marker: STRING_8
+		pose: STRING
+			-- Pose topic .
+
+		set_pose (a_topic: separate STRING)
+				-- Set pose topic.
+			do
+				create pose.make_from_separate (a_topic)
+			end
+
+		mission_odometry: STRING
+				-- Mission odometry topic .
+
+		set_mission_odometry (a_topic: separate STRING)
+				-- Set mission odometry topic.
+			do
+				create mission_odometry.make_from_separate (a_topic)
+			end
+
+		sensed_obstacles: STRING
+			-- Sensed obstacles topic .
+
+		set_sensed_obstacles (a_topic: separate STRING)
+				-- Set sensed obstacles topic.
+			do
+				create sensed_obstacles.make_from_separate (a_topic)
+			end
+
+		goal: STRING
+			-- goal odometry topic .
+
+		set_goal (a_topic: separate STRING)
+				-- Set mission odometry topic.
+			do
+				create goal.make_from_separate (a_topic)
+			end
+
+		circular_leds_topic: STRING
+			-- Circular_leds topic .
+
+		set_circular_leds (a_topic: separate STRING)
+				-- Set circular leds topic.
+			do
+				create circular_leds_topic.make_from_separate (a_topic)
+			end
+
+		visualization_marker: STRING
+			-- Visualization marker topic .
+
+		set_visualization_marker (a_topic: separate STRING)
+				-- Set visualization marker topic.
+			do
+				create visualization_marker.make_from_separate (a_topic)
+			end
 
 end
