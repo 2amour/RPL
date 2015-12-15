@@ -6,11 +6,11 @@
 	<!-- Turn depth image from PrimeSense into point cloud. -->
 	<include file="$(find roboscoop_ros)/launch/cloudify.launch" />
 
-	<!-- Sumulate laserscan by depth image. -->
+	<!-- Simulate laserscan by depth image. -->
 	<node name="laserscan" 
 		pkg="depthimage_to_laserscan" 
 		type="depthimage_to_laserscan"
-		args="image:=/camera/depth/image"
+		args="image:=/camera/depth/image _range_min:=0.15 _range_max:=1.90"
 		output="screen">
 	</node>
 

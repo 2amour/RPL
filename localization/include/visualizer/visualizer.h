@@ -59,7 +59,7 @@ private:
 	ros::Publisher pub;
 };
 
-// Localization publisher
+// Localization publisher.
 class LocalizationPublisher
 {
 public:
@@ -72,12 +72,14 @@ public:
 	// Sets the ROS publisher.
 	void setPublisher (const ros::Publisher p);
 
-	// Publishes the pose of the robot.
-	void publish(const boost::shared_ptr<Pose<float> >& particles, const MsgOdometry::ConstPtr& m_t);
+	// Publishes the believed pose of the robot.
+	void publishBelievedOdometry(const boost::shared_ptr<Pose<float> >& position, const MsgOdometry::ConstPtr& m_t);
+
+	// Publishes odometry of the robot with respect to last localization.
+	void publishOdometry(const MsgOdometry::ConstPtr& m_t);
 
 	// Publishes a transform with the location information.
-	void
-	publishTF(const boost::shared_ptr<Pose<float> >& localization, const MsgOdometry::ConstPtr& m_t);
+	void publishTF(const boost::shared_ptr<Pose<float> >& localization, const MsgOdometry::ConstPtr& m_t);
 
 private:
 

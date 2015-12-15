@@ -9,7 +9,7 @@ class
 feature -- Constants
 
 	-- Used topics.
-	odometry: STRING_8 = "/thymio_driver/odometry"
+	odometry: STRING_8 = "/localization/odometry"
 	velocity: STRING_8 = "/thymio_driver/cmd_vel"
 	prox_horizontal: STRING_8 = "/thymio_driver/prox_horizontal"
 	prox_ground: STRING_8 = "/thymio_driver/prox_ground"

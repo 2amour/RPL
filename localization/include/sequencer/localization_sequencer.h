@@ -52,10 +52,7 @@ public:
 	void onOffCallback (const onOff& on_off);
 
 	// Publishes a transform between base link and map so that base link is over the believed location.
-	void publishTF (const MsgOdometry::ConstPtr& motion);
-
-	// Publishes a transform between base link and map so that base link is over the believed location.
-	void publishTF (const MsgLaserScan::ConstPtr& sensor);
+	void publishOdometry (const MsgOdometry::ConstPtr& motion);
 
 private:
 

@@ -43,7 +43,6 @@ int main(int argc, char** argv)
   // Get parameters.
 	ParametersBag params_bag;
 	ParserSequencer parser;
-
 	if (parser.parseAll (params_bag))
 	{
 		std::cerr << "Error call in parser sequencer, exiting application." << std::endl;
@@ -78,10 +77,7 @@ int main(int argc, char** argv)
 	message_filters::Synchronizer<SyncPolicy> sync(SyncPolicy(10), motion_sub, sensor_sub);
 
 	// Register motion callback for publishing transform.
-	motion_sub.registerCallback(boost::bind(static_cast<void (LocalizationSequencer::*)( const MsgOdometry::ConstPtr& )>(&LocalizationSequencer::publishTF), &localizer, _1));
-
-	// Register motion callback for publishing transform.
-	sensor_sub.registerCallback(boost::bind(static_cast<void (LocalizationSequencer::*)( const MsgLaserScan::ConstPtr& )>(&LocalizationSequencer::publishTF), &localizer, _1));
+	motion_sub.registerCallback(boost::bind(&LocalizationSequencer::publishOdometry, &localizer, _1));
 
 	// Register synchronised callback.
 	sync.registerCallback(boost::bind(&LocalizationSequencer::update, &localizer, _1, _2));

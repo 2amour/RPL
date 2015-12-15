@@ -86,9 +86,9 @@ LocalizationPublisher::setPublisher (const ros::Publisher p)
 	pub = p;
 }
 
-// Publish particles.
+// Publish believed localization of the robot.
 void
-LocalizationPublisher::publish (const boost::shared_ptr<Pose<float> >& localization, const MsgOdometry::ConstPtr& m_t)
+LocalizationPublisher::publishBelievedOdometry (const boost::shared_ptr<Pose<float> >& localization, const MsgOdometry::ConstPtr& m_t)
 {
 	// Create pose ROS msg.
 	geometry_msgs::Pose pose;
@@ -169,8 +169,14 @@ LocalizationPublisher::publishTF(const boost::shared_ptr<Pose<float> >& localiza
   transform.stamp_ = m_t->header.stamp;
 
   _transform_broadcaster.sendTransform(transform);
+}
 
-
+// Publish Odometry of the robot.
+void
+LocalizationPublisher::publishOdometry (const MsgOdometry::ConstPtr& m_t)
+{
+	// Publish msg.
+	pub.publish (*m_t.get());
 }
 
 

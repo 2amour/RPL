@@ -108,7 +108,7 @@ parseTopics (TopicsParameters& topics_params_output)
     std::cerr << "Topics parameters parsed.\n";
   }
 
-  nh.param<std::string>("topics/publisher", topics_params.publisher, "localization/localization_odometry");
+  nh.param<std::string>("topics/publisher", topics_params.publisher, "localization/odometry");
   nh.param<std::string>("topics/flag", topics_params.flag, "localization/is_localized");
   nh.param<std::string>("topics/visualizer", topics_params.visualizer, "localization/visualizer");
 

@@ -60,7 +60,7 @@ LocalizationSequencer::start ()
 	// Start localization.
 	if (algorithm->localize(x_t, z_t, localization))
 		{
-			localization_pub->publish(localization, m_t);
+			localization_pub->publishBelievedOdometry(localization, m_t);
 			isFirstTimeLocalized = true;
 			isLocalized.data = true;
 			flag_pub.publish(isLocalized);
@@ -72,9 +72,9 @@ LocalizationSequencer::start ()
 		}
 }
 
-// Publishes a transform between base link and map so that base link is over the believed location.
+// Publishes believed odometry or robot odometry depending on whether we are localized or not.
 void
-LocalizationSequencer::publishTF (const MsgOdometry::ConstPtr& motion)
+LocalizationSequencer::publishOdometry (const MsgOdometry::ConstPtr& motion)
 {
 	// Create Pose.
 	boost::shared_ptr<Pose<float> > ptr_x_t (new Pose<float>());
@@ -95,15 +95,14 @@ LocalizationSequencer::publishTF (const MsgOdometry::ConstPtr& motion)
 	// Publishes localization odometry of the robot if first time localized even if afterwards we lose localization.
 	if (isFirstTimeLocalized)
 		{
-			localization_pub->publish(localization, motion);
+			// Publish believed odometry of the robot.
+			localization_pub->publishBelievedOdometry(localization, motion);
 		}
-}
-
-// Publishes a transform between base link and map so that base link is over the believed location.
-void
-LocalizationSequencer::publishTF (const MsgLaserScan::ConstPtr& sensor)
-{
-	//localization_pub->publishTF(localization, m_t);
+	else
+		{
+			// Publish real odometry of the robot.
+			localization_pub->publishOdometry(motion);
+		}
 }
 
 // Localization sequencer send map to algorithm.
@@ -121,7 +120,7 @@ LocalizationSequencer::sendMap (const MsgMap::ConstPtr& map_input)
 void
 LocalizationSequencer::update (const MsgOdometry::ConstPtr& motion, const MsgLaserScan::ConstPtr& sensor)
 {
-	// Check whether it is requested to start localization algorithm.
+	// Check whether it is requested to localize.
 	if (is_on)
 		{
 			// Create Pose.
@@ -147,17 +146,18 @@ LocalizationSequencer::update (const MsgOdometry::ConstPtr& motion, const MsgLas
 		}
 	else
 		{
-			algorithm->reset();
+			//algorithm->reset();
 		}
 }
 
+// On off command for localization.
 void
 LocalizationSequencer::onOffCallback (const onOff& flag_on_off)
 {
 	is_on = flag_on_off->data;
 }
 
-//
+// Update localization pose by applying a motion update without noise.
 void
 LocalizationSequencer::updatePose (const Control<float>& control, Pose<float>& initial_pose)
 {
@@ -183,7 +183,7 @@ LocalizationSequencer::updatePose (const Control<float>& control, Pose<float>& i
 
 		// Recover relative motion parameters from robot control.
 		rot1 = atan2(diffy, diffx) - theta0;
-		trans = sqrt( pow(diffx,2) + pow(diffy,2));
+		trans = sqrt(pow(diffx,2) + pow(diffy,2));
 		rot2 = theta1 - theta0 - rot1;
 
 		// Update the output pose.
@@ -192,6 +192,7 @@ LocalizationSequencer::updatePose (const Control<float>& control, Pose<float>& i
 		y_ = y + trans*sinf(theta + rot1);
 		theta_ = theta + rot1 + rot2;
 
+		// Store result.
 		float position [2] = {x_, y_};
 		float orientation [1] = {theta_};
 		Pose<float> result (position, orientation);
