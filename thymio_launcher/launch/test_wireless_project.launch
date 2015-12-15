@@ -1,24 +1,21 @@
 <launch>
+    <!-- Wireless ThymioII setup -->
+    <include file="$(find roboscoop_ros)/launch/wireless_thymio.launch" />
+
 	<!-- Map Launch -->
-	<arg name="map_file" default="$(find thymio_launcher)/map/testenvironment.yaml"/>
+	<arg name="map_file" default="$(find thymio_launcher)/map/testenvironment.yaml" />
 	<node name="map_server" pkg="map_server" type="map_server" args="$(arg map_file)" />
-	
+
 	<!-- RViz Launcher -->
 	<arg name="config_file" default="$(find thymio_launcher)/config/project.rviz" />
 	<node name="rviz" pkg="rviz" type="rviz" args="-d $(arg config_file)"/>
 
-	<!-- Camera Driver -->
-    <!--<include file="$(find openni2_launch)/launch/openni2.launch"/>-->
-
-	<!-- Thymio Driver -->
-	<include file="$(find thymio_navigation_driver)/launch/aseba_thymio.launch"/>
-
 	<!-- Tfs -->
-	<node pkg="tf" type="static_transform_publisher" name="odometry_link_map_broadcaster" args="0.0 0.0 0.0 0.0 0.0 0.0 /odometry_link /map 10" />
-	<node pkg="tf" type="static_transform_publisher" name="camera_link_base_broadcaster" args="0.0 0.0 -0.14 0.0 0.0 0.0 /base_link /camera_link 10" />
+	<node pkg="tf" type="static_transform_publisher" name="odometry_link_map_broadcaster" args="0.0 0.0 0.0 0.0 0.0 0.0 odometry_link map 10" />
+	<!--<node pkg="tf" type="static_transform_publisher" name="camera_link_base_broadcaster" args="0.0 0.0 -0.14 0.0 0.0 0.0 base_link camera_link 10" />-->
 
 	<!-- Object recognition Launcher -->
-	<arg name="output" default="screen" />	
+	<arg name="output" default="screen" />
 	<arg name="model_file" default="stack_classes.txt" />
 	<arg name="model_path" default="$(find object_recognition)/image_classes/$(arg model_file)" />
 	<rosparam command="load" file="$(find object_recognition)/parameters/object_recognition_parameters.yaml" />

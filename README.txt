@@ -1,13 +1,13 @@
 ==================================
-= Third group assignment README =
+= Fourth group assignment README =
 ==================================
 
 Description
 ===========
 
-This application lets the user make the ThymioII robot move towards a goal and recognise detected objects in a set of specified way-points. This behaviour is performed while avoiding known and unknown obstacles as shown in past assignments.
+Considering that the ThymioII robot is initially placed at any location within a known environment, this application makes the robot localize itself using sensorial data and move towards a specified goal in this environment while looking for some objects (ie. humanoid dolls) in its way. This behaviour is performed while avoiding known and unknown obstacles as shown in past assignments.
 
-There is a main mission planner that sequences in parallel a path-planner, a robot controller and an object recognition module. In order to try to increase modularity and reusability and also so independent tasks can be executed in different computers, it has been decided to separate responsabilities in different Eiffel applications. The communication between the applications is done by means of ROS topics and has been designed in terms of modularity.
+The application consists in a main mission planner that sequences in parallel a path-planner, a robot controller, a localization module and an object recognition module. In order to try to increase modularity and reusability and also so independent tasks can be executed in different computers, it has been decided to separate responsabilities in different Eiffel applications. The communication between the applications is done by means of ROS topics and has been designed in terms of modularity.
 
 Following, a description for the parts can be read:
 
@@ -55,6 +55,11 @@ This application can be used to recognise some objects in a scene by matching th
 Then, it extracts caracteristic features from some provided point clouds (which represent already known objects) and computes how 'similar' those features and the object features are, concluding in suggesting in which category (of known objects) the detected object could belong.
 
 The chosen algorithm for 'extracting' those features (or describing the object) was Spin Image. This algorithm consists in computing a 2D image for every chosen keypoint of the object and compare those images to see how 'related' two objects are. As an intuition of how the algorithm compute those images, we can imagine *spinning* a plane arround the point on a given direction (for instance it's normal) and recording how many of the surrounding points 'fall into' or 'hit' every specific area division of the plane. Therefore, this algorithm describe every point in terms of how their neighbours are found in space.
+
+Localization
+------------
+
+<TODO>
 
 
 Usage
@@ -137,6 +142,11 @@ image_classes/
 
 object_recognition_parameters.yaml
     Object recognition parameters. The ROS parameters server is used for this purpose.
+
+Localization
+------------
+
+<TODO>
 
 
 File structure
@@ -385,6 +395,10 @@ robot_controller
  |
  |_spin_training.cpp 			(Spin training algorithm main file)
 
+Localization
+------------
+<TODO>
+
 
 How does it work?
 =================
@@ -442,3 +456,7 @@ Object Recognition
 4. It then does a euclidean clustering and perfoms, for each of the clusters, an object recognition algorithm (Spin Image, in this particular application). 
 
 5. In order to recognise a known model, it first gets the spin image and compares it to the list of precomputed spin images of different models. When the correlation between spin images is high, a match is set. This procedure is repeated for all key-points and, when a given percentage of points match between the scene and the model, the cluster is set to the model particular category.
+
+Localization
+------------
+<TODO>
