@@ -1,0 +1,44 @@
+initial_goal:
+	0.0 0.0 0.0
+goal_threshold:	0.02
+
+desired_wall_distance:						0.18
+safe_outer_corner_turn_offset:				0.2	0.03
+safe_outer_corner_turn_offset_threshold:	0.06
+safe_leaving_wall_vertical_distance:		0.09
+
+go_to_goal:
+	pid:
+		p:	0.6
+		i:	0.0
+		d:	0.0
+	speed_controller:
+		maximum_speed: 		0.08
+		angular_decay_rate:	2
+	point_threshold:		0.05
+	orientation_threshold:	5.00
+
+follow_wall:
+	pid:
+		p:	0.6
+		i:	0.0
+		d:	0.0
+	speed_controller:
+		maximum_speed: 		0.08
+		angular_decay_rate:	8
+	point_threshold:		0.05
+	orientation_threshold:	5.00
+
+leave_wall:
+	pid:
+		p:	0.6
+		i:	0.0
+		d:	0.0
+	speed_controller:
+		maximum_speed: 		0.08
+		angular_decay_rate:	4
+	point_threshold:		0.05
+	orientation_threshold:	5.00
+
+led_rgb_code:
+	0.0 1.0 0.0

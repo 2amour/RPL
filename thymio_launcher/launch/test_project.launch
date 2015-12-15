@@ -15,7 +15,7 @@
 
 	<!-- Tfs -->
 	<node pkg="tf" type="static_transform_publisher" name="odometry_link_map_broadcaster" args="0.0 0.0 0.0 0.0 0.0 0.0 /map /odometry_link 10" />
-	<node pkg="tf" type="static_transform_publisher" name="camera_link_base_broadcaster" args="0.0 0.0 0.14 0.0 0.0 0.0 /camera_link /base_link 10" />
+	<node pkg="tf" type="static_transform_publisher" name="camera_base_link_broadcaster" args="0.0 0.0 0.14 0.0 0.0 0.0 /base_link /camera_link 10" />
 
 	<!-- Object recognition Launcher -->
 	<arg name="output" default="screen" />	
