@@ -4,7 +4,7 @@
 	<include file="$(find roboscoop_ros)/launch/thymio_driver.launch" />
 
 	<!-- Turn depth image from PrimeSense into point cloud. -->
-	<include file="$(find roboscoop_ros)/launch/cloudify_rgb.launch" />
+	<include file="$(find roboscoop_ros)/launch/cloudify.launch" />
 
 	<!-- Sumulate laserscan by depth image. -->
 	<node name="laserscan" 
@@ -15,6 +15,6 @@
 	</node>
 
 	<!-- Rviz. -->
-	<node name="rviz" pkg="rviz" type="rviz" />
+	<!--<node name="rviz" pkg="rviz" type="rviz" />-->
 
 </launch>
