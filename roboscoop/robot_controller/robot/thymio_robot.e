@@ -32,7 +32,7 @@ feature -- Constants
 	robot_base_size: REAL_64 = 0.11
 			-- Robot's width.
 
-	max_linear_speed: REAL_64 = 0.08
+	max_linear_speed: REAL_64 = 0.30
 			-- Maximum linear speed of the robot.
 
 feature -- Access
