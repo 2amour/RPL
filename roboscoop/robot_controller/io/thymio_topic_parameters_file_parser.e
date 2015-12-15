@@ -43,16 +43,16 @@ feature -- Access
 				 loop
 				 	file.read_word_thread_aware
 					key := file.last_string
-				 	if key.is_equal ("odometry") then
+				 	if key.is_equal ("odometry:") then
 						file.read_word_thread_aware
 						last_parameters.set_odometry (file.last_string.twin)
-					elseif key.is_equal ("range_sensors") then
+					elseif key.is_equal ("range_sensors:") then
 						file.read_word_thread_aware
 						last_parameters.set_range_sensors (file.last_string.twin)
-					elseif key.is_equal ("ground_sensors") then
+					elseif key.is_equal ("ground_sensors:") then
 						file.read_word_thread_aware
 						last_parameters.set_ground_sensors (file.last_string.twin)
-					elseif key.is_equal ("velocity") then
+					elseif key.is_equal ("velocity:") then
 						file.read_word_thread_aware
 						last_parameters.set_velocity (file.last_string.twin)
 					end

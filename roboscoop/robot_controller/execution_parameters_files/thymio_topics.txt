@@ -1,0 +1,4 @@
+odometry:			/localization/odometry
+velocity:			/thymio_driver/cmd_vel
+range_sensors:		/thymio_driver/prox_horizontal
+ground_sensors:		/thymio_driver/prox_ground

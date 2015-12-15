@@ -11,3 +11,5 @@ Leave_wall_pose_controller_parameters_file_path					roboscoop/robot_controller/e
 Wall_following_parameters_file_path								roboscoop/robot_controller/execution_parameters_files/wall_following_parameters.txt
 Range_sensors_parameters_file_path								roboscoop/robot_controller/execution_parameters_files/range_sensors_parameters.txt
 ROS_topics_file_path											roboscoop/robot_controller/execution_parameters_files/ros_topics.txt
+Thymio_topics_file_path											roboscoop/robot_controller/execution_parameters_files/thymio_topics.txt
+LED_code_file_path												roboscoop/robot_controller/execution_parameters_files/LED_code_file_path.txt

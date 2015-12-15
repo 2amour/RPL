@@ -296,7 +296,11 @@ feature {NONE} -- Implementation
 
 			io.put_string ("%NFile paths:%N")
 			io.put_string ("%TGoal parameters file path: " + files_params.goal_parameters_file_path + "%N")
-			io.put_string ("%ROS topics parameters file path: " + files_params.ros_topics_file_path + "%N")
+			io.put_string ("%TROS topics parameters file path: " + files_params.ros_topics_file_path + "%N")
+			io.put_string ("%TThymio topics parameters file path: " + files_params.thymio_topic_path + "%N")
+			io.put_string ("%LED code parameters file path: " + files_params.led_code_file_path + "%N")
+
+
 			io.put_string ("%TRange sensors parameters file path: " + files_params.range_sensors_parameters_file_path + "%N")
 			io.put_string ("%TWall following parameters file path: " + files_params.wall_following_parameters_file_path + "%N")
 
@@ -322,17 +326,15 @@ feature {NONE} -- Implementation
             io.put_string ("%TSensed obstacles: " + topics.sensed_obstacles + "%N")
             io.put_string ("%TVisualization marker: " + topics.visualization_marker + "%N")
 
+			io.put_string ("%NThymio Topics:%N")
+            io.put_string ("%TThymio odometry: " + thymio_topics.odometry + "%N")
+            io.put_string ("%TThymio velocity: " + thymio_topics.velocity + "%N")
+            io.put_string ("%TThymio range sensors: " + thymio_topics.range_sensors + "%N")
+            io.put_string ("%TThymio ground sensors: " + thymio_topics.ground_sensors + "%N")
+
             io.put_string ("%NRange sensor parameters: %N")
             io.put_string ("%TClose obstacle threshold: " + range_sensors_params.close_obstacle_threshold.out + "%N")
             io.put_string ("%TSensor count: " + range_sensors_params.sensor_count.out + "%N")
-            from
-                i := 1
-            until
-                i > range_sensors_params.sensor_count
-            loop
-                io.put_string ("%T%Ti: " + i.out + " pose: " + range_sensors_params.sensors_poses.out + "%N")
-                i := i + 1
-            end
 
             io.put_string ("%NGo to goal parameters: %N")
             io.put_string ("%TAngular decay rate: " + gtg_pose_controller_params.nlsc_parameters.angular_decay_rate.out + "%N")
@@ -363,5 +365,10 @@ feature {NONE} -- Implementation
             io.put_string ("%TReached orientation threshold: " + lw_pose_controller_params.reached_orientation_threshold.out + "%N")
             io.put_string ("%TReached point threshold: " + lw_pose_controller_params.reached_point_threshold.out + "%N")
             io.put_string ("%TTurning angular speed: " + lw_pose_controller_params.turning_angular_speed.out + "%N")
+
+            io.put_string ("%NLED CODE: %N")
+            io.put_string ("%TRed channel: " + led_code.r.out + "%N")
+            io.put_string ("%TGreen channel: " + led_code.g.out + "%N")
+            io.put_string ("%TBlue channel: " + led_code.b.out + "%N")
         end
 end
