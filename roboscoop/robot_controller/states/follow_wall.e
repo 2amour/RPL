@@ -101,9 +101,9 @@ feature -- Access
 				t_sig.set_leave_wall_with_target (best_point)
 			end
 
-			if t_sig.goal.get_position.get_euclidean_distance (t_sig.current_pose.get_position) < t_sig.reached_goal_position_threshold then
+			if t_sig.goal.get_position.get_euclidean_distance (t_sig.current_pose.get_position) < t_sig.reached_pose_position_threshold then
 				t_sig.set_go_to_goal
-			elseif t_sig.intial_point_wall.get_euclidean_distance (t_sig.current_pose.get_position) < t_sig.reached_goal_position_threshold and t_sig.has_turned_back then
+			elseif t_sig.intial_point_wall.get_euclidean_distance (t_sig.current_pose.get_position) < t_sig.reached_pose_position_threshold and t_sig.has_turned_back then
 				t_sig.set_unreachable_goal
 			end
 

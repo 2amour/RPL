@@ -9,6 +9,8 @@ find_package(catkin REQUIRED COMPONENTS
             roscpp
             rospy
             std_msgs
+            nav_msgs
+            tf
             )
 
 ## System dependencies are found with CMake's conventions
@@ -104,6 +106,8 @@ include_directories(
 
 ## Declare a cpp executable
 add_executable(clock_server src/clock_server.cpp)
+add_executable(odometry_tf_publisher src/odometry_tf_publisher.cpp)
+
 
 ## Add cmake target dependencies of the executable/library
 ## as an example, message headers may need to be generated before nodes
@@ -111,6 +115,8 @@ add_executable(clock_server src/clock_server.cpp)
 
 ## Specify libraries to link a library or executable target against
 target_link_libraries(clock_server ${catkin_LIBRARIES})
+target_link_libraries(odometry_tf_publisher ${catkin_LIBRARIES})
+
 
 #############
 ## Install ##

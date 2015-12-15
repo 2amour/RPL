@@ -1,5 +1,8 @@
 #! /bin/bash
 
+# ROS launch
+ROS_LAUNCH_COMMAND="roslaunch thymio_launcher test_project.launch"
+
 # Executables
 ROBOT_CONTROLLER_EXECUTABLE=roboscoop/robot_controller/EIFGENs/robot_controller/W_code/robot_controller
 PATH_PLANNER_EXECUTABLE=roboscoop/path_planner/EIFGENs/path_planner/W_code/path_planner
@@ -29,6 +32,10 @@ hupexit() {
 
 trap hupexit HUP
 trap intexit INT
+
+$ROS_LAUNCH_COMMAND &
+
+sleep 1
 
 $ROBOT_CONTROLLER_EXECUTABLE $ROBOT_CONTROLLER_ARGS &
 
