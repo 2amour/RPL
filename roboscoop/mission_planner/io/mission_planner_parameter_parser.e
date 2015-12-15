@@ -66,6 +66,9 @@ feature {ANY} -- Access.
 					elseif key.is_equal ("way_point_threshold:") then
 						file.read_double
 						last_parameters.set_threshold (file.last_double)
+					elseif key.is_equal ("open_loop_offset:") then
+						file.read_double
+						last_parameters.set_open_loop_offset (file.last_double)
 					elseif not key.is_empty then
 						io.putstring ("Parser error while parsing file '" + file.name + "': Key '" + key + "' not recognized%N")
 						is_error_found := True

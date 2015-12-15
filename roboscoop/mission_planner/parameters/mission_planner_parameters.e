@@ -45,9 +45,18 @@ feature {ANY} -- Acces
 			-- Threshold to change way point.
 
 	set_threshold (threshold: REAL_64)
-			-- Set threhsold to change way point.
+			-- Set threshold to change way point.
 		do
 			way_point_threshold := threshold
+		end
+
+	open_loop_offset: REAL_64
+			-- Angle offset in radians to put in open loop.
+
+	set_open_loop_offset (offset: REAL_64)
+			-- Set angle offset in radians to put in open loop.
+		do
+			open_loop_offset := offset
 		end
 
 end

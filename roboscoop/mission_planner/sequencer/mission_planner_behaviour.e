@@ -14,7 +14,7 @@ feature {NONE} -- Initialization
 	make_with_attributes (parameters_bag: MISSION_PLANNER_PARAMETERS_BAG)
 			-- Create `Current' with attributes.
 		do
-			create mission_signaler.make_with_attributes (parameters_bag.mission_planner_parameters.frame, parameters_bag.mission_planner_parameters.way_points, parameters_bag.mission_planner_parameters.way_point_threshold)
+			create mission_signaler.make_with_attributes (parameters_bag.mission_planner_parameters.frame, parameters_bag.mission_planner_parameters.way_points, parameters_bag.mission_planner_parameters.way_point_threshold, parameters_bag.mission_planner_parameters.open_loop_offset)
 
 			create obstacle_signaler.make_with_topic (parameters_bag.mission_planner_topics.sensed_obstacle)
 			create map_signaler.make_with_topic (parameters_bag.mission_planner_topics.map)

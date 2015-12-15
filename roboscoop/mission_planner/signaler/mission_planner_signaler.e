@@ -11,7 +11,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make_with_attributes (a_frame: separate STRING; wp: separate ARRAYED_LIST[separate POSE]; thresh: REAL_64)
+	make_with_attributes (a_frame: separate STRING; wp: separate ARRAYED_LIST[separate POSE]; thresh, ol_offset: REAL_64)
 			-- Make `Current' and assign its attributes.
 		local
 			i: INTEGER_32
@@ -27,6 +27,8 @@ feature {NONE} -- Initialization
 			way_points.start
 
 			goal_threshold := thresh
+			open_loop_offset := ol_offset
+
 			is_path_requested := True
 			is_obj_recognition_requested := False
 
@@ -65,6 +67,9 @@ feature {ANY} -- Access
 
 	goal_threshold: REAL_64
 			-- Threshold to switch way_points in path.
+
+	open_loop_offset: REAL_64
+			-- Angle offset in radians to put in open loop.
 
 	is_localization_requested: BOOLEAN
 			-- Require localization algorithm.

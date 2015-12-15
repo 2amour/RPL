@@ -68,8 +68,8 @@ feature {MISSION_PLANNER_BEHAVIOUR} -- Execute algorithm
 				if localization_sig.data then
 					-- SEQUENTIAL FLAGS
 					if mission_sig.at_a_way_point (current_point) then
-						mission_sig.request_localization (False)
 						if mission_sig.is_waypoint_reached then
+							mission_sig.request_localization (False)
 							mission_sig.request_object_recognition (True)
 							mission_sig.set_waypoint_reached (False)
 							if not mission_sig.way_points_idx.islast then
@@ -99,7 +99,7 @@ feature {MISSION_PLANNER_BEHAVIOUR} -- Execute algorithm
 					localization_sig.set_new_val (False)
 					mission_sig.request_localization (True)
 					target_pub.publish_pose (create {POSE}.make_with_values (current_point,
-						create {QUATERNION}.make_from_heading (odometry_sig.theta + {DOUBLE_MATH}.pi_2), mission_sig.frame))
+						create {QUATERNION}.make_from_heading (odometry_sig.theta + mission_sig.open_loop_offset), mission_sig.frame))
 				end
 			end
 		end
