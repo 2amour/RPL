@@ -145,7 +145,7 @@ feature {NONE} -- Implementation
 			if files_params_file_parser.is_error_found then
 				(create {EXCEPTIONS}).die (-1)
 			else
-				files_params := files_params_file_parser.last_parameters
+				create files_params.make_from_separate (files_params_file_parser.last_parameters)
 			end
 
 			create topics_parser.make
@@ -169,21 +169,21 @@ feature {NONE} -- Implementation
 			if pid_params_file_parser.is_error_found then
 				(create {EXCEPTIONS}).die (-1)
 			else
-				gtg_pid_params := pid_params_file_parser.last_parameters
+				create gtg_pid_params.make_from_separate (pid_params_file_parser.last_parameters)
 			end
 
 			pid_params_file_parser.parse_file (files_params.follow_wall_pid_parameters_file_path)
 			if pid_params_file_parser.is_error_found then
 				(create {EXCEPTIONS}).die (-1)
 			else
-				fw_pid_params := pid_params_file_parser.last_parameters
+				create fw_pid_params.make_from_separate (pid_params_file_parser.last_parameters)
 			end
 
 			pid_params_file_parser.parse_file (files_params.leave_wall_pid_parameters_file_path)
 			if pid_params_file_parser.is_error_found then
 				(create {EXCEPTIONS}).die (-1)
 			else
-				lw_pid_params := pid_params_file_parser.last_parameters
+				create lw_pid_params.make_from_separate (pid_params_file_parser.last_parameters)
 			end
 
 			create nlsc_params_file_parser.make
@@ -191,21 +191,21 @@ feature {NONE} -- Implementation
 			if nlsc_params_file_parser.is_error_found then
 				(create {EXCEPTIONS}).die (-1)
 			else
-				gtg_nlsc_params := nlsc_params_file_parser.last_parameters
+				create gtg_nlsc_params.make_from_separate (nlsc_params_file_parser.last_parameters)
 			end
 
 			nlsc_params_file_parser.parse_file (files_params.follow_wall_nlsc_parameters_file_path)
 			if nlsc_params_file_parser.is_error_found then
 				(create {EXCEPTIONS}).die (-1)
 			else
-				fw_nlsc_params := nlsc_params_file_parser.last_parameters
+				create fw_nlsc_params.make_from_separate (nlsc_params_file_parser.last_parameters)
 			end
 
 			nlsc_params_file_parser.parse_file (files_params.leave_wall_nlsc_parameters_file_path)
 			if nlsc_params_file_parser.is_error_found then
 				(create {EXCEPTIONS}).die (-1)
 			else
-				lw_nlsc_params := nlsc_params_file_parser.last_parameters
+				create lw_nlsc_params.make_from_separate (nlsc_params_file_parser.last_parameters)
 			end
 
 			create pose_controller_params_file_parser.make
@@ -213,7 +213,7 @@ feature {NONE} -- Implementation
 			if pose_controller_params_file_parser.is_error_found then
 				(create {EXCEPTIONS}).die (-1)
 			else
-				gtg_pose_controller_params := pose_controller_params_file_parser.last_parameters
+				create gtg_pose_controller_params.make_from_separate (pose_controller_params_file_parser.last_parameters)
 				gtg_pose_controller_params.set_pid_parameters (gtg_pid_params)
 				gtg_pose_controller_params.set_nlsc_parameters (gtg_nlsc_params)
 			end
@@ -222,16 +222,16 @@ feature {NONE} -- Implementation
 			if pose_controller_params_file_parser.is_error_found then
 				(create {EXCEPTIONS}).die (-1)
 			else
-				fw_pose_controller_params := pose_controller_params_file_parser.last_parameters
+				create fw_pose_controller_params.make_from_separate (pose_controller_params_file_parser.last_parameters)
 				fw_pose_controller_params.set_pid_parameters (fw_pid_params)
 				fw_pose_controller_params.set_nlsc_parameters (fw_nlsc_params)
 			end
 
-			pose_controller_params_file_parser.parse_file (files_params.follow_wall_pose_controller_parameters_file_path)
+			pose_controller_params_file_parser.parse_file (files_params.leave_wall_pose_controller_parameters_file_path)
 			if pose_controller_params_file_parser.is_error_found then
 				(create {EXCEPTIONS}).die (-1)
 			else
-				lw_pose_controller_params := pose_controller_params_file_parser.last_parameters
+				create lw_pose_controller_params.make_from_separate (pose_controller_params_file_parser.last_parameters)
 				lw_pose_controller_params.set_pid_parameters (lw_pid_params)
 				lw_pose_controller_params.set_nlsc_parameters (lw_nlsc_params)
 			end
@@ -241,7 +241,7 @@ feature {NONE} -- Implementation
 			if wall_following_params_file_parser.is_error_found then
 				(create {EXCEPTIONS}).die (-1)
 			else
-				wall_following_params := wall_following_params_file_parser.last_parameters
+				create wall_following_params.make_from_separate (wall_following_params_file_parser.last_parameters)
 			end
 
 			create range_sensors_params_file_parser.make
@@ -249,9 +249,91 @@ feature {NONE} -- Implementation
 			if range_sensors_params_file_parser.is_error_found then
 				(create {EXCEPTIONS}).die (-1)
 			else
-				range_sensors_params :=  range_sensors_params_file_parser.last_parameters
+				create range_sensors_params.make_from_separate (range_sensors_params_file_parser.last_parameters)
 			end
 
 			create tangent_bug_params.make_with_attributes (goal_params, wall_following_params, gtg_pose_controller_params, fw_pose_controller_params, lw_pose_controller_params)
+
+			debug
+				debug_parser
+			end
 		end
+
+	debug_parser
+            -- Debuger function that prints out parsed inputs.
+        local
+            i: INTEGER
+        do
+            io.put_string ("%NParameters:%N")
+
+			io.put_string ("%NFile paths:%N")
+			io.put_string ("%TGoal parameters file path: " + files_params.goal_parameters_file_path + "%N")
+			io.put_string ("%ROS topics parameters file path: " + files_params.ros_topics_file_path + "%N")
+			io.put_string ("%TRange sensors parameters file path: " + files_params.range_sensors_parameters_file_path + "%N")
+			io.put_string ("%TWall following parameters file path: " + files_params.wall_following_parameters_file_path + "%N")
+
+			io.put_string ("%TGo to goal nlsc parameters file path: " + files_params.go_to_goal_nlsc_parameters_file_path + "%N")
+			io.put_string ("%TGo to goal pid parameters file path: " + files_params.go_to_goal_pid_parameters_file_path + "%N")
+			io.put_string ("%TGo to goal pose parameters file path: " + files_params.go_to_goal_pose_controller_parameters_file_path + "%N")
+
+			io.put_string ("%TFollow wall nlsc parameters file path: " + files_params.follow_wall_nlsc_parameters_file_path + "%N")
+			io.put_string ("%TFollow wall pid parameters file path: " + files_params.follow_wall_pid_parameters_file_path + "%N")
+			io.put_string ("%TFollow wall pose parameters file path: " + files_params.follow_wall_pose_controller_parameters_file_path + "%N")
+
+			io.put_string ("%TLeave wall nlsc parameters file path: " + files_params.leave_wall_nlsc_parameters_file_path + "%N")
+			io.put_string ("%TLeave wall pid parameters file path: " + files_params.leave_wall_pid_parameters_file_path + "%N")
+			io.put_string ("%TLeave wall pose parameters file path: " + files_params.leave_wall_pose_controller_parameters_file_path + "%N")
+
+            io.put_string ("%NTopics:%N")
+            io.put_string ("%TNode name: " + topics.name + "%N")
+            io.put_string ("%TCircular leds: " + topics.circular_leds_topic + "%N")
+            io.put_string ("%TGoal: " + topics.goal + "%N")
+            io.put_string ("%TMission odometry: " + topics.mission_odometry + "%N")
+            io.put_string ("%TPath: " + topics.path + "%N")
+            io.put_string ("%TPose: " + topics.pose + "%N")
+            io.put_string ("%TSensed obstacles: " + topics.sensed_obstacles + "%N")
+            io.put_string ("%TVisualization marker: " + topics.visualization_marker + "%N")
+
+            io.put_string ("%NRange sensor parameters: %N")
+            io.put_string ("%TClose obstacle threshold: " + range_sensors_params.close_obstacle_threshold.out + "%N")
+            io.put_string ("%TSensor count: " + range_sensors_params.sensor_count.out + "%N")
+            from
+                i := 1
+            until
+                i > range_sensors_params.sensor_count
+            loop
+                io.put_string ("%T%Ti: " + i.out + " pose: " + range_sensors_params.sensors_poses.out + "%N")
+                i := i + 1
+            end
+
+            io.put_string ("%NGo to goal parameters: %N")
+            io.put_string ("%TAngular decay rate: " + gtg_pose_controller_params.nlsc_parameters.angular_decay_rate.out + "%N")
+            io.put_string ("%TMaximum speed: " + gtg_pose_controller_params.nlsc_parameters.maximum_speed.out + "%N")
+            io.put_string ("%TKp: " + gtg_pose_controller_params.pid_parameters.kp.out + "%N")
+            io.put_string ("%TKi: " + gtg_pose_controller_params.pid_parameters.ki.out + "%N")
+            io.put_string ("%TKd: " + gtg_pose_controller_params.pid_parameters.kd.out + "%N")
+            io.put_string ("%TReached orientation threshold: " + gtg_pose_controller_params.reached_orientation_threshold.out + "%N")
+            io.put_string ("%TReached point threshold: " + gtg_pose_controller_params.reached_point_threshold.out + "%N")
+            io.put_string ("%TTurning angular speed: " + gtg_pose_controller_params.turning_angular_speed.out + "%N")
+
+            io.put_string ("%NFollow wall parameters: %N")
+            io.put_string ("%TAngular decay rate: " + fw_pose_controller_params.nlsc_parameters.angular_decay_rate.out + "%N")
+            io.put_string ("%TMaximum speed: " + fw_pose_controller_params.nlsc_parameters.maximum_speed.out + "%N")
+            io.put_string ("%TKp: " + fw_pose_controller_params.pid_parameters.kp.out + "%N")
+            io.put_string ("%TKi: " + fw_pose_controller_params.pid_parameters.ki.out + "%N")
+            io.put_string ("%TKd: " + fw_pose_controller_params.pid_parameters.kd.out + "%N")
+            io.put_string ("%TReached orientation threshold: " + fw_pose_controller_params.reached_orientation_threshold.out + "%N")
+            io.put_string ("%TReached point threshold: " + fw_pose_controller_params.reached_point_threshold.out + "%N")
+            io.put_string ("%TTurning angular speed: " + fw_pose_controller_params.turning_angular_speed.out + "%N")
+
+            io.put_string ("%NLeave wall parameters: %N")
+            io.put_string ("%TAngular decay rate: " + lw_pose_controller_params.nlsc_parameters.angular_decay_rate.out + "%N")
+            io.put_string ("%TMaximum speed: " + lw_pose_controller_params.nlsc_parameters.maximum_speed.out + "%N")
+            io.put_string ("%TKp: " + lw_pose_controller_params.pid_parameters.kp.out + "%N")
+            io.put_string ("%TKi: " + lw_pose_controller_params.pid_parameters.ki.out + "%N")
+            io.put_string ("%TKd: " + lw_pose_controller_params.pid_parameters.kd.out + "%N")
+            io.put_string ("%TReached orientation threshold: " + lw_pose_controller_params.reached_orientation_threshold.out + "%N")
+            io.put_string ("%TReached point threshold: " + lw_pose_controller_params.reached_point_threshold.out + "%N")
+            io.put_string ("%TTurning angular speed: " + lw_pose_controller_params.turning_angular_speed.out + "%N")
+        end
 end
