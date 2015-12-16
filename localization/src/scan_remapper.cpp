@@ -21,6 +21,7 @@ void scan_callback(const sensor_msgs::LaserScan::ConstPtr& msg){
   sensor_msgs::LaserScan new_msg;
   new_msg = *msg.get();
   new_msg.header.frame_id = NEW_FRAME;
+  new_msg.header.stamp = ros::Time::now();
   scan_publisher.publish(new_msg);
 }
 

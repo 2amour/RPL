@@ -5,7 +5,6 @@ Panels:
     Property Tree Widget:
       Expanded:
         - /Global Options1
-        - /Laser scan1
       Splitter Ratio: 0.666667
     Tree Height: 747
   - Class: rviz/Selection
@@ -27,7 +26,7 @@ Panels:
     Experimental: false
     Name: Time
     SyncMode: 0
-    SyncSource: ""
+    SyncSource: Laser scan
 Visualization Manager:
   Class: ""
   Displays:
@@ -64,6 +63,8 @@ Visualization Manager:
           Value: true
         camera_rgb_optical_frame:
           Value: true
+        map:
+          Value: true
         odometry_link:
           Value: true
         thymio_prox_ground_0_link:
@@ -90,28 +91,29 @@ Visualization Manager:
       Show Axes: true
       Show Names: false
       Tree:
-        odometry_link:
-          base_link:
-            camera_link:
-              {}
-            thymio_prox_ground_0_link:
-              {}
-            thymio_prox_ground_1_link:
-              {}
-            thymio_prox_horizontal_0_link:
-              {}
-            thymio_prox_horizontal_1_link:
-              {}
-            thymio_prox_horizontal_2_link:
-              {}
-            thymio_prox_horizontal_3_link:
-              {}
-            thymio_prox_horizontal_4_link:
-              {}
-            thymio_prox_horizontal_5_link:
-              {}
-            thymio_prox_horizontal_6_link:
-              {}
+        map:
+          odometry_link:
+            base_link:
+              camera_link:
+                {}
+              thymio_prox_ground_0_link:
+                {}
+              thymio_prox_ground_1_link:
+                {}
+              thymio_prox_horizontal_0_link:
+                {}
+              thymio_prox_horizontal_1_link:
+                {}
+              thymio_prox_horizontal_2_link:
+                {}
+              thymio_prox_horizontal_3_link:
+                {}
+              thymio_prox_horizontal_4_link:
+                {}
+              thymio_prox_horizontal_5_link:
+                {}
+              thymio_prox_horizontal_6_link:
+                {}
       Update Interval: 0
       Value: true
     - Alpha: 1
@@ -179,7 +181,7 @@ Visualization Manager:
       Channel Name: intensity
       Class: rviz/LaserScan
       Color: 255; 255; 255
-      Color Transformer: ""
+      Color Transformer: Intensity
       Decay Time: 0
       Enabled: true
       Invert Rainbow: false
@@ -188,20 +190,20 @@ Visualization Manager:
       Min Color: 0; 0; 0
       Min Intensity: 0
       Name: Laser scan
-      Position Transformer: ""
+      Position Transformer: XYZ
       Queue Size: 10
       Selectable: true
       Size (Pixels): 3
       Size (m): 0.01
       Style: Flat Squares
-      Topic: /scan
+      Topic: /scanremap
       Use Fixed Frame: true
       Use rainbow: true
       Value: true
   Enabled: true
   Global Options:
     Background Color: 48; 48; 48
-    Fixed Frame: odometry_link
+    Fixed Frame: map
     Frame Rate: 30
   Name: root
   Tools:
@@ -282,5 +284,5 @@ Window Geometry:
   Views:
     collapsed: true
   Width: 927
-  X: 962
+  X: 972
   Y: 14
