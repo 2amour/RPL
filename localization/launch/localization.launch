@@ -1,36 +1,4 @@
 <launch>
-
-	<!-- Connect to camera -->
-	<include file="$(find openni2_launch)/launch/openni2.launch"/>
-
-	<!-- Turn depth image from PrimeSense into point cloud. -->
-	<include file="$(find roboscoop_ros)/launch/cloudify_rgb.launch" />
-
-	<!-- Simulate laserscan by depth image. -->
-	
-	<node name="laserscan" 
-		pkg="depthimage_to_laserscan" 
-		type="depthimage_to_laserscan"
-		args="image:=/camera/depth/image _range_min:=0.15 _range_max:=1.90"
-		output="screen">
-	</node>
-
-	<node name="scan_remapper" pkg="localization" type="scan_remapper" output= "screen" />	
-
-	<!-- Map Launch -->
-	<arg name="map_file" default="$(find localization)/testenvironment.yaml"/>
-	<node name="map_server" pkg="map_server" type="map_server" args="$(arg map_file)" />
-
-	<!-- Connect to the robot -->
-	<include file="$(find thymio_navigation_driver)/launch/aseba_thymio.launch"/>
-
-	<!-- Make laser scan -->
-	<node name="depthimage_to_laserscan" pkg="depthimage_to_laserscan" type="depthimage_to_laserscan" />
-	
-	<!-- Initialize rviz -->
-	<node name="rviz" pkg="rviz" type="rviz"/>
-
-	<!-- Load localization parameters -->
 	<rosparam command="load" file="$(find localization)/parameters/topics_parameters/topics_parameters.yaml" ns="topics"/>
 	<rosparam command="load" file="$(find localization)/parameters/localizer_parameters/algorithm_parameters.yaml" ns="localizer/algorithm"/>
 	<rosparam command="load" file="$(find localization)/parameters/localizer_parameters/motion_updater_parameters.yaml" ns="localizer/motion_updater"/>
@@ -38,7 +6,6 @@
 	<rosparam command="load" file="$(find localization)/parameters/localizer_parameters/resampler_parameters.yaml" ns="localizer/resampler"/>
 	<rosparam command="load" file="$(find localization)/parameters/localizer_parameters/other_parameters.yaml" ns="localizer/others"/>
 
-	<!-- Initialize localization node -->
-	<node name="localization" pkg="localization" type="localization" clear_params="true" output= "screen"/>
-	
+	<node name="scan_remapper" pkg="localization" type="scan_remapper" output= "screen" />
+	<node name="localization" pkg="localization" type="localization" clear_params="true" output= "screen" />
 </launch>
