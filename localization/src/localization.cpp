@@ -65,22 +65,19 @@ int main(int argc, char** argv)
 
   // Get map.
   message_filters::Subscriber<MsgMap> map_sub(nh, params_bag.topics.map, 1);
-  map_sub.registerCallback(boost::bind(&LocalizationSequencer::sendMap, &localizer, _1));
+  map_sub.registerCallback(boost::bind(&LocalizationSequencer::updatedMap, &localizer, _1));
 
 	// Subscribe to odometry.
-	message_filters::Subscriber<MsgOdometry> motion_sub(nh, params_bag.topics.odometry, 100);
+	message_filters::Subscriber<MsgOdometry> motion_sub(nh, params_bag.topics.odometry, 1);
 
 	// Subscribe to sensor.
 	message_filters::Subscriber<MsgLaserScan> sensor_sub(nh, params_bag.topics.sensor, 1);
 
-	// Set synchronisation of messages.
-	message_filters::Synchronizer<SyncPolicy> sync(SyncPolicy(10), motion_sub, sensor_sub);
+	// Register motion callback for publishing transform.
+	motion_sub.registerCallback(boost::bind(&LocalizationSequencer::updateOdometry, &localizer, _1));
 
 	// Register motion callback for publishing transform.
-	motion_sub.registerCallback(boost::bind(&LocalizationSequencer::publishOdometry, &localizer, _1));
-
-	// Register synchronised callback.
-	sync.registerCallback(boost::bind(&LocalizationSequencer::update, &localizer, _1, _2));
+	sensor_sub.registerCallback(boost::bind(&LocalizationSequencer::updateScan, &localizer, _1));
 
 	// Spin.
 	ros::spin();

@@ -74,13 +74,15 @@ LocalizationSequencer::start ()
 
 // Publishes believed odometry or robot odometry depending on whether we are localized or not.
 void
-LocalizationSequencer::publishOdometry (const MsgOdometry::ConstPtr& motion)
+LocalizationSequencer::updateOdometry (const MsgOdometry::ConstPtr& motion)
 {
+	std::cout << "Odometry" << std::endl;
 	// Create Pose.
 	boost::shared_ptr<Pose<float> > ptr_x_t (new Pose<float>());
 
 	// Change message to Pose<float> type.
 	odometry2Posef (motion, ptr_x_t);
+	m_t = motion;
 
 	// Store odometry.
 	u_t->array[0] = u_t->array[1]; ///< Store odometry at time t-1.
@@ -107,7 +109,7 @@ LocalizationSequencer::publishOdometry (const MsgOdometry::ConstPtr& motion)
 
 // Localization sequencer send map to algorithm.
 void
-LocalizationSequencer::sendMap (const MsgMap::ConstPtr& map_input)
+LocalizationSequencer::updatedMap (const MsgMap::ConstPtr& map_input)
 {
 	// Set map to ready.
 	map_ready = true;
@@ -116,39 +118,40 @@ LocalizationSequencer::sendMap (const MsgMap::ConstPtr& map_input)
 	algorithm->setMap(map_input);
 }
 
-// Localization sequencer update.
+// Update from scan msg.
 void
-LocalizationSequencer::update (const MsgOdometry::ConstPtr& motion, const MsgLaserScan::ConstPtr& sensor)
+LocalizationSequencer::updateScan (const MsgLaserScan::ConstPtr& sensor)
 {
-	// Check whether it is requested to localize.
-	if (is_on)
-		{
-			// Create Pose.
-			boost::shared_ptr<Pose<float> > ptr_x_t (new Pose<float>());
+	std::cout << "scan" << std::endl;
+		// Check whether it is requested to localize.
+		if (is_on)
+			{
+				// Create Pose.
+				boost::shared_ptr<Pose<float> > ptr_x_t (new Pose<float>());
 
-			// Change message to Pose type.
-			odometry2Posef (motion, ptr_x_t);
+				// Change message to Pose type.
+				odometry2Posef (m_t, ptr_x_t);
 
-			// Store input.
-			x_t = ptr_x_t; ///< Store pose at time t.
+				// Store input.
+				x_t = ptr_x_t; ///< Store pose at time t.
 
-			m_t = motion; ///< Store odometry msg at time t.
-			z_t = sensor; ///< Store sensor msg at time t.
+				z_t = sensor; ///< Store sensor msg at time t.
 
-			u_t->array[0] = u_t->array[1]; ///< Store pose at time t-1.
-			u_t->array[1] = *x_t; ///< Store pose at time t.
+				u_t->array[0] = u_t->array[1]; ///< Store pose at time t-1.
+				u_t->array[1] = *x_t; ///< Store pose at time t.
 
-			// If map is set then start localization.
-			if (map_ready)
-				{
-					start ();
-				}
-		}
-	else
-		{
-			//algorithm->reset();
-		}
+				// If map is set then start localization.
+				if (map_ready)
+					{
+						start ();
+					}
+			}
+		else
+			{
+				//algorithm->reset();
+			}
 }
+
 
 // On off command for localization.
 void

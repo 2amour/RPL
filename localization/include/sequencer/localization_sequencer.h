@@ -43,16 +43,16 @@ public:
 	virtual ~LocalizationSequencer ();
 
 	// Send map to algorithm.
-	void sendMap (const MsgMap::ConstPtr& map_input);
+	void updatedMap (const MsgMap::ConstPtr& map_input);
 
-	// Update inputs.
-	void update (const MsgOdometry::ConstPtr& motion, const MsgLaserScan::ConstPtr& sensor);
+	// Update scan.
+	void updateScan (const MsgLaserScan::ConstPtr& sensor);
+
+	// Publishes a transform between base link and map so that base link is over the believed location.
+	void updateOdometry (const MsgOdometry::ConstPtr& motion);
 
 	// Stores on off flag.
 	void onOffCallback (const onOff& on_off);
-
-	// Publishes a transform between base link and map so that base link is over the believed location.
-	void publishOdometry (const MsgOdometry::ConstPtr& motion);
 
 private:
 

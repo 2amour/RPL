@@ -59,12 +59,13 @@ ParticleFilter::getParticlesFromMap ()
 	// Shared pointer of set of particles.
 	boost::shared_ptr<std::vector<Particle> > particles (new std::vector<Particle>);
 
+
 	// Create intial particles in the map.
-	for (int i = 0; i < width; i += cells_jumped)
+	for (int i = cells_jumped; i < (int)width/2; i += cells_jumped)
 		{
-			for (int j = 0; j < height; j += cells_jumped)
+			for (int j = 1; j < (int)height/2; j += cells_jumped)
 				{
-					if (map->data[i+j*width]==0)
+					if (map->data[i+j*(int)(width/2)]==0)
 						{
 							for (float theta = 0; theta < 2*M_PI; theta += delta_theta)
 								{
