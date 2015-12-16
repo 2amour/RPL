@@ -1,0 +1,10 @@
+<launch>	
+	<rosparam> use_sim_time: true </rosparam>
+	<node pkg="tf" type="static_transform_publisher" name="baseorigin" args="1.55 0.25 0 2.1 0 0 map odometry_link 100" />
+	
+	<arg name="rviz_file" default="$(find localization)/config/localization.rviz" />
+	<node name="rviz" pkg="rviz" type="rviz" args="-d $(arg rviz_file)"/>
+
+	<arg name="rosbag_file" default="$(find localization)/bagfiles/localization.bag" />
+	<node pkg="rosbag" type="play" name="player" output="screen" args="--clock $(arg rosbag_file)" />
+</launch>

@@ -1,0 +1,21 @@
+odometry:
+    topic_name: "/thymio_driver/odometry"
+    queue_size: 1
+out_odometry:
+    topic_name: "/localization/odometry"
+    queue_size: 1
+request:
+    topic_name: "/localization/request"
+    queue_size: 1
+is_localized:
+    topic_name: "/localization/is_localized"
+    queue_size: 1
+scan:
+    topic_name: "/scan"
+    queue_size: 1
+particle_array:
+    topic_name: "/localization/particle_array"
+    queue_size: 1
+map:
+    topic_name: "/map"
+    queue_size: 1

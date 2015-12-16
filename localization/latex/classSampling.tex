@@ -1,0 +1,125 @@
+\hypertarget{classSampling}{\section{Sampling Class Reference}
+\label{classSampling}\index{Sampling@{Sampling}}
+}
+
+
+Abstract class for implementing the sampling strategy pattern.  
+
+
+
+
+{\ttfamily \#include $<$sampling.\-h$>$}
+
+Inheritance diagram for Sampling\-:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=2.000000cm]{classSampling}
+\end{center}
+\end{figure}
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+virtual std\-::vector$<$ \hyperlink{classParticle}{Particle} $>$ \hyperlink{classSampling_ae9a5648926dda0a5d5ed4b55b9d96436}{resample} (std\-::vector$<$ \hyperlink{classParticle}{Particle} $>$ particles, int number\-\_\-of\-\_\-particles, nav\-\_\-msgs\-::\-Occupancy\-Grid map)=0
+\begin{DoxyCompactList}\small\item\em Virtual Deconstructor. \end{DoxyCompactList}\item 
+std\-::string \hyperlink{classSampling_ac355e000a52390164b1aaef3bdb384d2}{get\-\_\-name} ()
+\item 
+\hyperlink{classParticle}{Particle} \hyperlink{classSampling_acc4b8eb8fb757ee597b11594ce04f875}{random\-\_\-sample} (nav\-\_\-msgs\-::\-Occupancy\-Grid map)
+\item 
+std\-::vector$<$ \hyperlink{classParticle}{Particle} $>$ \hyperlink{classSampling_ae6b476b809237740fa413849caf6cab4}{renormalize} (std\-::vector$<$ \hyperlink{classParticle}{Particle} $>$ vector)
+\end{DoxyCompactItemize}
+\subsection*{Protected Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\hypertarget{classSampling_a42167134f19c2ad42aa796538356a7f8}{std\-::string \hyperlink{classSampling_a42167134f19c2ad42aa796538356a7f8}{\-\_\-name}}\label{classSampling_a42167134f19c2ad42aa796538356a7f8}
+
+\begin{DoxyCompactList}\small\item\em sampling algorithm name. \end{DoxyCompactList}\item 
+\hypertarget{classSampling_a77715cbe9a03102aa672fd34c776f042}{std\-::random\-\_\-device \hyperlink{classSampling_a77715cbe9a03102aa672fd34c776f042}{rd}}\label{classSampling_a77715cbe9a03102aa672fd34c776f042}
+
+\begin{DoxyCompactList}\small\item\em random device. \end{DoxyCompactList}\item 
+\hypertarget{classSampling_a696ac24b511359adaf2298c19b0d5883}{std\-::mt19937 \hyperlink{classSampling_a696ac24b511359adaf2298c19b0d5883}{\-\_\-gen}}\label{classSampling_a696ac24b511359adaf2298c19b0d5883}
+
+\begin{DoxyCompactList}\small\item\em random number generator. \end{DoxyCompactList}\item 
+\hypertarget{classSampling_a7dbb70549c2a72232358578f82173af7}{std\-::uniform\-\_\-real\-\_\-distribution\\*
+$<$ double $>$ \hyperlink{classSampling_a7dbb70549c2a72232358578f82173af7}{\-\_\-distribution}}\label{classSampling_a7dbb70549c2a72232358578f82173af7}
+
+\begin{DoxyCompactList}\small\item\em uniform distribution generator between 0 and 1. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+Abstract class for implementing the sampling strategy pattern. 
+
+\subsection{Member Function Documentation}
+\hypertarget{classSampling_ac355e000a52390164b1aaef3bdb384d2}{\index{Sampling@{Sampling}!get\-\_\-name@{get\-\_\-name}}
+\index{get\-\_\-name@{get\-\_\-name}!Sampling@{Sampling}}
+\subsubsection[{get\-\_\-name}]{\setlength{\rightskip}{0pt plus 5cm}std\-::string Sampling\-::get\-\_\-name (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)}}\label{classSampling_ac355e000a52390164b1aaef3bdb384d2}
+Get sampling algorihtm name. \begin{DoxyReturn}{Returns}
+output set of particles. 
+\end{DoxyReturn}
+\hypertarget{classSampling_acc4b8eb8fb757ee597b11594ce04f875}{\index{Sampling@{Sampling}!random\-\_\-sample@{random\-\_\-sample}}
+\index{random\-\_\-sample@{random\-\_\-sample}!Sampling@{Sampling}}
+\subsubsection[{random\-\_\-sample}]{\setlength{\rightskip}{0pt plus 5cm}{\bf Particle} Sampling\-::random\-\_\-sample (
+\begin{DoxyParamCaption}
+\item[{nav\-\_\-msgs\-::\-Occupancy\-Grid}]{map}
+\end{DoxyParamCaption}
+)}}\label{classSampling_acc4b8eb8fb757ee597b11594ce04f875}
+Get random particle from map 
+\begin{DoxyParams}{Parameters}
+{\em map} & map where particles should be sampled. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+
+\end{DoxyReturn}
+\hypertarget{classSampling_ae6b476b809237740fa413849caf6cab4}{\index{Sampling@{Sampling}!renormalize@{renormalize}}
+\index{renormalize@{renormalize}!Sampling@{Sampling}}
+\subsubsection[{renormalize}]{\setlength{\rightskip}{0pt plus 5cm}std\-::vector$<${\bf Particle}$>$ Sampling\-::renormalize (
+\begin{DoxyParamCaption}
+\item[{std\-::vector$<$ {\bf Particle} $>$}]{vector}
+\end{DoxyParamCaption}
+)}}\label{classSampling_ae6b476b809237740fa413849caf6cab4}
+Renormalize a vector of particles so sum(weights)=1 
+\begin{DoxyParams}{Parameters}
+{\em vector} & vector of particles. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+renormalized vector of particles . 
+\end{DoxyReturn}
+\hypertarget{classSampling_ae9a5648926dda0a5d5ed4b55b9d96436}{\index{Sampling@{Sampling}!resample@{resample}}
+\index{resample@{resample}!Sampling@{Sampling}}
+\subsubsection[{resample}]{\setlength{\rightskip}{0pt plus 5cm}virtual std\-::vector$<${\bf Particle}$>$ Sampling\-::resample (
+\begin{DoxyParamCaption}
+\item[{std\-::vector$<$ {\bf Particle} $>$}]{particles, }
+\item[{int}]{number\-\_\-of\-\_\-particles, }
+\item[{nav\-\_\-msgs\-::\-Occupancy\-Grid}]{map}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [pure virtual]}}}\label{classSampling_ae9a5648926dda0a5d5ed4b55b9d96436}
+
+
+Virtual Deconstructor. 
+
+Resampling according to strategy. 
+\begin{DoxyParams}{Parameters}
+{\em particles} & initial vector of particles. \\
+\hline
+{\em number\-\_\-of\-\_\-particles} & number of output particles. \\
+\hline
+{\em map} & map where particles should be sampled. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+output resampled particles. 
+\end{DoxyReturn}
+
+
+Implemented in \hyperlink{classRouletteWheelSampling_ad9634cbe5aa5b112c823d252a1497313}{Roulette\-Wheel\-Sampling}, and \hyperlink{classStochasticUniversalSampling_aa46ab5185de58679355e388eb3e05d6d}{Stochastic\-Universal\-Sampling}.
+
+
+
+The documentation for this class was generated from the following file\-:\begin{DoxyCompactItemize}
+\item 
+include/localization/sampling\-\_\-strategies/\hyperlink{sampling_8h}{sampling.\-h}\end{DoxyCompactItemize}

@@ -1,0 +1,201 @@
+\hypertarget{classParticleFilter}{\section{Particle\-Filter Class Reference}
+\label{classParticleFilter}\index{Particle\-Filter@{Particle\-Filter}}
+}
+
+
+Implementation of the particle filter algorithm.  
+
+
+
+
+{\ttfamily \#include $<$particle\-\_\-filter.\-h$>$}
+
+Inheritance diagram for Particle\-Filter\-:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=2.000000cm]{classParticleFilter}
+\end{center}
+\end{figure}
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\hypertarget{classParticleFilter_ac5aeadcc4bf1f9f6a459562813e5b45f}{\hyperlink{classParticleFilter_ac5aeadcc4bf1f9f6a459562813e5b45f}{Particle\-Filter} ()}\label{classParticleFilter_ac5aeadcc4bf1f9f6a459562813e5b45f}
+
+\begin{DoxyCompactList}\small\item\em Default Constructor. \end{DoxyCompactList}\item 
+\hyperlink{classParticleFilter_aa1d16a1ae1d879c428e70e9c7ff62f00}{Particle\-Filter} (int number\-\_\-of\-\_\-particles, int random\-\_\-particles)
+\item 
+void \hyperlink{classParticleFilter_a111b1663c1865bd86e9f8666ebc88fb2}{motion\-\_\-update} (const nav\-\_\-msgs\-::\-Odometry\-::\-Const\-Ptr \&msg)
+\item 
+void \hyperlink{classParticleFilter_aa710931651bed02761e166cd77a49780}{sensor\-\_\-update} (const sensor\-\_\-msgs\-::\-Laser\-Scan\-::\-Const\-Ptr \&msg)
+\item 
+void \hyperlink{classParticleFilter_a84265f4c32f6d157da1d40677c6c47cf}{resample} ()
+\item 
+std\-::vector\\*
+$<$ geometry\-\_\-msgs\-::\-Pose\-With\-Covariance\-Stamped $>$ \hyperlink{classParticleFilter_ac52e683f06369ef3e4741c5730db20d7}{get\-\_\-poses} ()
+\item 
+geometry\-\_\-msgs\-::\-Pose\-With\-Covariance\-Stamped \hyperlink{classParticleFilter_a7357ebc3eae177cead406c621940fe7c}{get\-\_\-best\-\_\-pose} ()
+\item 
+void \hyperlink{classParticleFilter_ab9a2cc375944db98ec7d6756660ae00e}{set\-\_\-map} (const nav\-\_\-msgs\-::\-Occupancy\-Grid\-::\-Const\-Ptr \&msg)
+\item 
+void \hyperlink{classParticleFilter_a789d8d5c9ccf81e10d5caa04fe11aa1a}{set\-\_\-number\-\_\-of\-\_\-particles} (int number\-\_\-of\-\_\-particles)
+\item 
+void \hyperlink{classParticleFilter_ac53de03b18934fa3cef2541497319bbe}{set\-\_\-random\-\_\-particles} (int random\-\_\-particles)
+\item 
+void \hyperlink{classParticleFilter_a6fa1de91f0c822573c6b9e0eac15050d}{reset\-\_\-particles} ()
+\item 
+std\-::vector$<$ \hyperlink{classParticle}{Particle} $>$ \hyperlink{classParticleFilter_a64c877049ce27490531fe0d437949929}{get\-\_\-particles} ()
+\end{DoxyCompactItemize}
+\subsection*{Additional Inherited Members}
+
+
+\subsection{Detailed Description}
+Implementation of the particle filter algorithm. 
+
+\subsection{Constructor \& Destructor Documentation}
+\hypertarget{classParticleFilter_aa1d16a1ae1d879c428e70e9c7ff62f00}{\index{Particle\-Filter@{Particle\-Filter}!Particle\-Filter@{Particle\-Filter}}
+\index{Particle\-Filter@{Particle\-Filter}!ParticleFilter@{Particle\-Filter}}
+\subsubsection[{Particle\-Filter}]{\setlength{\rightskip}{0pt plus 5cm}Particle\-Filter\-::\-Particle\-Filter (
+\begin{DoxyParamCaption}
+\item[{int}]{number\-\_\-of\-\_\-particles, }
+\item[{int}]{random\-\_\-particles}
+\end{DoxyParamCaption}
+)}}\label{classParticleFilter_aa1d16a1ae1d879c428e70e9c7ff62f00}
+Class constructor. 
+\begin{DoxyParams}{Parameters}
+{\em number\-\_\-of\-\_\-particles} & number of particles. \\
+\hline
+{\em random\-\_\-particles} & number of random particles to init in every iteration. \\
+\hline
+\end{DoxyParams}
+
+
+\subsection{Member Function Documentation}
+\hypertarget{classParticleFilter_a7357ebc3eae177cead406c621940fe7c}{\index{Particle\-Filter@{Particle\-Filter}!get\-\_\-best\-\_\-pose@{get\-\_\-best\-\_\-pose}}
+\index{get\-\_\-best\-\_\-pose@{get\-\_\-best\-\_\-pose}!ParticleFilter@{Particle\-Filter}}
+\subsubsection[{get\-\_\-best\-\_\-pose}]{\setlength{\rightskip}{0pt plus 5cm}geometry\-\_\-msgs\-::\-Pose\-With\-Covariance\-Stamped Particle\-Filter\-::get\-\_\-best\-\_\-pose (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [virtual]}}}\label{classParticleFilter_a7357ebc3eae177cead406c621940fe7c}
+Get the best pose \begin{DoxyReturn}{Returns}
+pose with covariance 
+\end{DoxyReturn}
+
+
+Implements \hyperlink{classPoseFilter_a64686b9d07bd339cdd7c269b4c173404}{Pose\-Filter}.
+
+\hypertarget{classParticleFilter_a64c877049ce27490531fe0d437949929}{\index{Particle\-Filter@{Particle\-Filter}!get\-\_\-particles@{get\-\_\-particles}}
+\index{get\-\_\-particles@{get\-\_\-particles}!ParticleFilter@{Particle\-Filter}}
+\subsubsection[{get\-\_\-particles}]{\setlength{\rightskip}{0pt plus 5cm}std\-::vector$<${\bf Particle}$>$ Particle\-Filter\-::get\-\_\-particles (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)}}\label{classParticleFilter_a64c877049ce27490531fe0d437949929}
+Get the particles. \begin{DoxyReturn}{Returns}
+vector of particles. 
+\end{DoxyReturn}
+\hypertarget{classParticleFilter_ac52e683f06369ef3e4741c5730db20d7}{\index{Particle\-Filter@{Particle\-Filter}!get\-\_\-poses@{get\-\_\-poses}}
+\index{get\-\_\-poses@{get\-\_\-poses}!ParticleFilter@{Particle\-Filter}}
+\subsubsection[{get\-\_\-poses}]{\setlength{\rightskip}{0pt plus 5cm}std\-::vector$<$geometry\-\_\-msgs\-::\-Pose\-With\-Covariance\-Stamped$>$ Particle\-Filter\-::get\-\_\-poses (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [virtual]}}}\label{classParticleFilter_ac52e683f06369ef3e4741c5730db20d7}
+Retrieve the estimated poses \begin{DoxyReturn}{Returns}
+vector of poses with covariances. 
+\end{DoxyReturn}
+
+
+Implements \hyperlink{classPoseFilter_af84e0ef9dbca4892408930383acbe810}{Pose\-Filter}.
+
+\hypertarget{classParticleFilter_a111b1663c1865bd86e9f8666ebc88fb2}{\index{Particle\-Filter@{Particle\-Filter}!motion\-\_\-update@{motion\-\_\-update}}
+\index{motion\-\_\-update@{motion\-\_\-update}!ParticleFilter@{Particle\-Filter}}
+\subsubsection[{motion\-\_\-update}]{\setlength{\rightskip}{0pt plus 5cm}void Particle\-Filter\-::motion\-\_\-update (
+\begin{DoxyParamCaption}
+\item[{const nav\-\_\-msgs\-::\-Odometry\-::\-Const\-Ptr \&}]{msg}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [virtual]}}}\label{classParticleFilter_a111b1663c1865bd86e9f8666ebc88fb2}
+Execute motion update step. 
+\begin{DoxyParams}{Parameters}
+{\em msg} & odometry msg pointer. \\
+\hline
+\end{DoxyParams}
+
+
+Implements \hyperlink{classPoseFilter_ad40e8f2ae14a14211f3729a4869e312d}{Pose\-Filter}.
+
+\hypertarget{classParticleFilter_a84265f4c32f6d157da1d40677c6c47cf}{\index{Particle\-Filter@{Particle\-Filter}!resample@{resample}}
+\index{resample@{resample}!ParticleFilter@{Particle\-Filter}}
+\subsubsection[{resample}]{\setlength{\rightskip}{0pt plus 5cm}void Particle\-Filter\-::resample (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)}}\label{classParticleFilter_a84265f4c32f6d157da1d40677c6c47cf}
+Execute resampling algorithm \hypertarget{classParticleFilter_a6fa1de91f0c822573c6b9e0eac15050d}{\index{Particle\-Filter@{Particle\-Filter}!reset\-\_\-particles@{reset\-\_\-particles}}
+\index{reset\-\_\-particles@{reset\-\_\-particles}!ParticleFilter@{Particle\-Filter}}
+\subsubsection[{reset\-\_\-particles}]{\setlength{\rightskip}{0pt plus 5cm}void Particle\-Filter\-::reset\-\_\-particles (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)}}\label{classParticleFilter_a6fa1de91f0c822573c6b9e0eac15050d}
+Reset the particles. \hypertarget{classParticleFilter_aa710931651bed02761e166cd77a49780}{\index{Particle\-Filter@{Particle\-Filter}!sensor\-\_\-update@{sensor\-\_\-update}}
+\index{sensor\-\_\-update@{sensor\-\_\-update}!ParticleFilter@{Particle\-Filter}}
+\subsubsection[{sensor\-\_\-update}]{\setlength{\rightskip}{0pt plus 5cm}void Particle\-Filter\-::sensor\-\_\-update (
+\begin{DoxyParamCaption}
+\item[{const sensor\-\_\-msgs\-::\-Laser\-Scan\-::\-Const\-Ptr \&}]{msg}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [virtual]}}}\label{classParticleFilter_aa710931651bed02761e166cd77a49780}
+Execute sensor correcting step. 
+\begin{DoxyParams}{Parameters}
+{\em msg} & laser msg pointer. \\
+\hline
+\end{DoxyParams}
+
+
+Implements \hyperlink{classPoseFilter_a42d8e867c65b45894f934d7b2c60b684}{Pose\-Filter}.
+
+\hypertarget{classParticleFilter_ab9a2cc375944db98ec7d6756660ae00e}{\index{Particle\-Filter@{Particle\-Filter}!set\-\_\-map@{set\-\_\-map}}
+\index{set\-\_\-map@{set\-\_\-map}!ParticleFilter@{Particle\-Filter}}
+\subsubsection[{set\-\_\-map}]{\setlength{\rightskip}{0pt plus 5cm}void Particle\-Filter\-::set\-\_\-map (
+\begin{DoxyParamCaption}
+\item[{const nav\-\_\-msgs\-::\-Occupancy\-Grid\-::\-Const\-Ptr \&}]{msg}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [virtual]}}}\label{classParticleFilter_ab9a2cc375944db98ec7d6756660ae00e}
+Set map to the algorithm 
+\begin{DoxyParams}{Parameters}
+{\em msg} & occupancy grid msg pointer. \\
+\hline
+\end{DoxyParams}
+
+
+Reimplemented from \hyperlink{classPoseFilter_ab5a6b461992f3ce218b308a59f50a83f}{Pose\-Filter}.
+
+\hypertarget{classParticleFilter_a789d8d5c9ccf81e10d5caa04fe11aa1a}{\index{Particle\-Filter@{Particle\-Filter}!set\-\_\-number\-\_\-of\-\_\-particles@{set\-\_\-number\-\_\-of\-\_\-particles}}
+\index{set\-\_\-number\-\_\-of\-\_\-particles@{set\-\_\-number\-\_\-of\-\_\-particles}!ParticleFilter@{Particle\-Filter}}
+\subsubsection[{set\-\_\-number\-\_\-of\-\_\-particles}]{\setlength{\rightskip}{0pt plus 5cm}void Particle\-Filter\-::set\-\_\-number\-\_\-of\-\_\-particles (
+\begin{DoxyParamCaption}
+\item[{int}]{number\-\_\-of\-\_\-particles}
+\end{DoxyParamCaption}
+)}}\label{classParticleFilter_a789d8d5c9ccf81e10d5caa04fe11aa1a}
+Set the number of particles to the algorithm. 
+\begin{DoxyParams}{Parameters}
+{\em number\-\_\-of\-\_\-particles} & \\
+\hline
+\end{DoxyParams}
+\hypertarget{classParticleFilter_ac53de03b18934fa3cef2541497319bbe}{\index{Particle\-Filter@{Particle\-Filter}!set\-\_\-random\-\_\-particles@{set\-\_\-random\-\_\-particles}}
+\index{set\-\_\-random\-\_\-particles@{set\-\_\-random\-\_\-particles}!ParticleFilter@{Particle\-Filter}}
+\subsubsection[{set\-\_\-random\-\_\-particles}]{\setlength{\rightskip}{0pt plus 5cm}void Particle\-Filter\-::set\-\_\-random\-\_\-particles (
+\begin{DoxyParamCaption}
+\item[{int}]{random\-\_\-particles}
+\end{DoxyParamCaption}
+)}}\label{classParticleFilter_ac53de03b18934fa3cef2541497319bbe}
+Set the number of random particles to be reset in each iteration. 
+\begin{DoxyParams}{Parameters}
+{\em random\-\_\-particles} & \\
+\hline
+\end{DoxyParams}
+
+
+The documentation for this class was generated from the following file\-:\begin{DoxyCompactItemize}
+\item 
+include/localization/filtering\-\_\-strategies/\hyperlink{particle__filter_8h}{particle\-\_\-filter.\-h}\end{DoxyCompactItemize}

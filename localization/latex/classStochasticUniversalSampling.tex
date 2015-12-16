@@ -1,0 +1,63 @@
+\hypertarget{classStochasticUniversalSampling}{\section{Stochastic\-Universal\-Sampling Class Reference}
+\label{classStochasticUniversalSampling}\index{Stochastic\-Universal\-Sampling@{Stochastic\-Universal\-Sampling}}
+}
+
+
+Stochastic universal implementation of sampling strategy pattern for particles.  
+
+
+
+
+{\ttfamily \#include $<$stochastic\-\_\-universal\-\_\-sampling.\-h$>$}
+
+Inheritance diagram for Stochastic\-Universal\-Sampling\-:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=2.000000cm]{classStochasticUniversalSampling}
+\end{center}
+\end{figure}
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\hypertarget{classStochasticUniversalSampling_ac6d8388314fb9eec1341b6879eec4cca}{\hyperlink{classStochasticUniversalSampling_ac6d8388314fb9eec1341b6879eec4cca}{Stochastic\-Universal\-Sampling} ()}\label{classStochasticUniversalSampling_ac6d8388314fb9eec1341b6879eec4cca}
+
+\begin{DoxyCompactList}\small\item\em Default Constructor. \end{DoxyCompactList}\item 
+std\-::vector$<$ \hyperlink{classParticle}{Particle} $>$ \hyperlink{classStochasticUniversalSampling_aa46ab5185de58679355e388eb3e05d6d}{resample} (std\-::vector$<$ \hyperlink{classParticle}{Particle} $>$ particles, int number\-\_\-of\-\_\-particles, nav\-\_\-msgs\-::\-Occupancy\-Grid map)
+\end{DoxyCompactItemize}
+\subsection*{Additional Inherited Members}
+
+
+\subsection{Detailed Description}
+Stochastic universal implementation of sampling strategy pattern for particles. 
+
+\subsection{Member Function Documentation}
+\hypertarget{classStochasticUniversalSampling_aa46ab5185de58679355e388eb3e05d6d}{\index{Stochastic\-Universal\-Sampling@{Stochastic\-Universal\-Sampling}!resample@{resample}}
+\index{resample@{resample}!StochasticUniversalSampling@{Stochastic\-Universal\-Sampling}}
+\subsubsection[{resample}]{\setlength{\rightskip}{0pt plus 5cm}std\-::vector$<${\bf Particle}$>$ Stochastic\-Universal\-Sampling\-::resample (
+\begin{DoxyParamCaption}
+\item[{std\-::vector$<$ {\bf Particle} $>$}]{particles, }
+\item[{int}]{number\-\_\-of\-\_\-particles, }
+\item[{nav\-\_\-msgs\-::\-Occupancy\-Grid}]{map}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [virtual]}}}\label{classStochasticUniversalSampling_aa46ab5185de58679355e388eb3e05d6d}
+Resampling according to strategy. 
+\begin{DoxyParams}{Parameters}
+{\em particles} & initial vector of particles. \\
+\hline
+{\em number\-\_\-of\-\_\-particles} & number of output particles. \\
+\hline
+{\em map} & map where particles should be sampled. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+output resampled particles. 
+\end{DoxyReturn}
+
+
+Implements \hyperlink{classSampling_ae9a5648926dda0a5d5ed4b55b9d96436}{Sampling}.
+
+
+
+The documentation for this class was generated from the following file\-:\begin{DoxyCompactItemize}
+\item 
+include/localization/sampling\-\_\-strategies/\hyperlink{stochastic__universal__sampling_8h}{stochastic\-\_\-universal\-\_\-sampling.\-h}\end{DoxyCompactItemize}

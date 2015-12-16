@@ -1,0 +1,105 @@
+\hypertarget{classMotionUpdate}{\section{Motion\-Update Class Reference}
+\label{classMotionUpdate}\index{Motion\-Update@{Motion\-Update}}
+}
+
+
+Abstract class for implementing the motion update strategy pattern.  
+
+
+
+
+{\ttfamily \#include $<$motion\-\_\-update.\-h$>$}
+
+Inheritance diagram for Motion\-Update\-:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=2.000000cm]{classMotionUpdate}
+\end{center}
+\end{figure}
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+virtual \\*
+geometry\-\_\-msgs\-::\-Pose\-With\-Covariance\-Stamped \hyperlink{classMotionUpdate_a86e028d43981218ddf6e354e8f201e75}{predict} (geometry\-\_\-msgs\-::\-Pose\-With\-Covariance\-Stamped pose, const nav\-\_\-msgs\-::\-Odometry\-::\-Const\-Ptr \&old\-\_\-msg, const nav\-\_\-msgs\-::\-Odometry\-::\-Const\-Ptr \&new\-\_\-msg)=0
+\begin{DoxyCompactList}\small\item\em Virtual Deconstructor. \end{DoxyCompactList}\item 
+std\-::string \hyperlink{classMotionUpdate_aaf0a65c8acbc92f8f199e874f596db13}{get\-\_\-name} ()
+\item 
+void \hyperlink{classMotionUpdate_a26584d87c8360faedc8522bd163da49b}{set\-\_\-variance} (std\-::vector$<$ double $>$ variance)
+\end{DoxyCompactItemize}
+\subsection*{Protected Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\hypertarget{classMotionUpdate_abbc6aa3b84948633b9f78457a8b8c350}{std\-::string \hyperlink{classMotionUpdate_abbc6aa3b84948633b9f78457a8b8c350}{\-\_\-name}}\label{classMotionUpdate_abbc6aa3b84948633b9f78457a8b8c350}
+
+\begin{DoxyCompactList}\small\item\em algorithm name. \end{DoxyCompactList}\item 
+\hypertarget{classMotionUpdate_afd6ec5a2d192392fd23a0d637cce71be}{std\-::vector$<$ double $>$ \hyperlink{classMotionUpdate_afd6ec5a2d192392fd23a0d637cce71be}{\-\_\-variance}}\label{classMotionUpdate_afd6ec5a2d192392fd23a0d637cce71be}
+
+\begin{DoxyCompactList}\small\item\em prediction variance. \end{DoxyCompactList}\item 
+\hypertarget{classMotionUpdate_aad51f40e81e60f672035f0a43bb352ad}{std\-::random\-\_\-device \hyperlink{classMotionUpdate_aad51f40e81e60f672035f0a43bb352ad}{rd}}\label{classMotionUpdate_aad51f40e81e60f672035f0a43bb352ad}
+
+\begin{DoxyCompactList}\small\item\em random device \end{DoxyCompactList}\item 
+\hypertarget{classMotionUpdate_ae69a23e3978d216c73c296984eb82ad0}{std\-::mt19937 \hyperlink{classMotionUpdate_ae69a23e3978d216c73c296984eb82ad0}{\-\_\-gen}}\label{classMotionUpdate_ae69a23e3978d216c73c296984eb82ad0}
+
+\begin{DoxyCompactList}\small\item\em random generator. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+Abstract class for implementing the motion update strategy pattern. 
+
+\subsection{Member Function Documentation}
+\hypertarget{classMotionUpdate_aaf0a65c8acbc92f8f199e874f596db13}{\index{Motion\-Update@{Motion\-Update}!get\-\_\-name@{get\-\_\-name}}
+\index{get\-\_\-name@{get\-\_\-name}!MotionUpdate@{Motion\-Update}}
+\subsubsection[{get\-\_\-name}]{\setlength{\rightskip}{0pt plus 5cm}std\-::string Motion\-Update\-::get\-\_\-name (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)}}\label{classMotionUpdate_aaf0a65c8acbc92f8f199e874f596db13}
+Get algorithm's name \begin{DoxyReturn}{Returns}
+
+\end{DoxyReturn}
+\hypertarget{classMotionUpdate_a86e028d43981218ddf6e354e8f201e75}{\index{Motion\-Update@{Motion\-Update}!predict@{predict}}
+\index{predict@{predict}!MotionUpdate@{Motion\-Update}}
+\subsubsection[{predict}]{\setlength{\rightskip}{0pt plus 5cm}virtual geometry\-\_\-msgs\-::\-Pose\-With\-Covariance\-Stamped Motion\-Update\-::predict (
+\begin{DoxyParamCaption}
+\item[{geometry\-\_\-msgs\-::\-Pose\-With\-Covariance\-Stamped}]{pose, }
+\item[{const nav\-\_\-msgs\-::\-Odometry\-::\-Const\-Ptr \&}]{old\-\_\-msg, }
+\item[{const nav\-\_\-msgs\-::\-Odometry\-::\-Const\-Ptr \&}]{new\-\_\-msg}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [pure virtual]}}}\label{classMotionUpdate_a86e028d43981218ddf6e354e8f201e75}
+
+
+Virtual Deconstructor. 
+
+Predict the new pose. 
+\begin{DoxyParams}{Parameters}
+{\em pose} & current pose. \\
+\hline
+{\em old\-\_\-msg} & last odometry msg. \\
+\hline
+{\em new\-\_\-msg} & new odometry msg. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+
+\end{DoxyReturn}
+
+
+Implemented in \hyperlink{classOdometryMotionUpdate_aae9430006166324a62f4f7fbbd510841}{Odometry\-Motion\-Update}, and \hyperlink{classVelocityMotionUpdate_a1b532d900fd3393e70f7a70f153c3e08}{Velocity\-Motion\-Update}.
+
+\hypertarget{classMotionUpdate_a26584d87c8360faedc8522bd163da49b}{\index{Motion\-Update@{Motion\-Update}!set\-\_\-variance@{set\-\_\-variance}}
+\index{set\-\_\-variance@{set\-\_\-variance}!MotionUpdate@{Motion\-Update}}
+\subsubsection[{set\-\_\-variance}]{\setlength{\rightskip}{0pt plus 5cm}void Motion\-Update\-::set\-\_\-variance (
+\begin{DoxyParamCaption}
+\item[{std\-::vector$<$ double $>$}]{variance}
+\end{DoxyParamCaption}
+)}}\label{classMotionUpdate_a26584d87c8360faedc8522bd163da49b}
+Set prediction variance. 
+\begin{DoxyParams}{Parameters}
+{\em variance} & \\
+\hline
+\end{DoxyParams}
+
+
+The documentation for this class was generated from the following file\-:\begin{DoxyCompactItemize}
+\item 
+include/localization/motion\-\_\-update\-\_\-strategies/\hyperlink{motion__update_8h}{motion\-\_\-update.\-h}\end{DoxyCompactItemize}

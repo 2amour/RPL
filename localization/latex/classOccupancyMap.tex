@@ -1,0 +1,160 @@
+\hypertarget{classOccupancyMap}{\section{Occupancy\-Map Class Reference}
+\label{classOccupancyMap}\index{Occupancy\-Map@{Occupancy\-Map}}
+}
+
+
+Map class for creating, modifying or finding statistics from graphs.  
+
+
+
+
+{\ttfamily \#include $<$occupancy\-\_\-map.\-h$>$}
+
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\hypertarget{classOccupancyMap_ada3a7ee4c7039ae8a8eeb6f8b59df2a9}{\hyperlink{classOccupancyMap_ada3a7ee4c7039ae8a8eeb6f8b59df2a9}{Occupancy\-Map} ()}\label{classOccupancyMap_ada3a7ee4c7039ae8a8eeb6f8b59df2a9}
+
+\begin{DoxyCompactList}\small\item\em Default Constructor. \end{DoxyCompactList}\item 
+\hyperlink{classOccupancyMap_a29d5ee8d5c52daf99c9295e0e1a93233}{Occupancy\-Map} (const nav\-\_\-msgs\-::\-Occupancy\-Grid\-::\-Const\-Ptr \&map)
+\item 
+\hypertarget{classOccupancyMap_a16b23a3ba25e6d9b138d663cafbb4703}{nav\-\_\-msgs\-::\-Occupancy\-Grid \hyperlink{classOccupancyMap_a16b23a3ba25e6d9b138d663cafbb4703}{get\-\_\-map} ()}\label{classOccupancyMap_a16b23a3ba25e6d9b138d663cafbb4703}
+
+\begin{DoxyCompactList}\small\item\em Get copy of local map. \end{DoxyCompactList}\item 
+void \hyperlink{classOccupancyMap_a5a9f9ce31d25abb53a9cf6b2a045479e}{set\-\_\-map} (const nav\-\_\-msgs\-::\-Occupancy\-Grid\-::\-Const\-Ptr \&map)
+\item 
+void \hyperlink{classOccupancyMap_abb7b3ce1c12f73ab28bcb7e595d053d8}{create\-\_\-map} (int width, int height, double resolution)
+\item 
+void \hyperlink{classOccupancyMap_abcfb41a41d6d19bd90efc11b2536a14d}{set\-\_\-value} (int index, double value)
+\item 
+void \hyperlink{classOccupancyMap_aed3bec0b57e4a30f252486d4a6eef24c}{set\-\_\-value} (std\-::pair$<$ double, double $>$ point, double value)
+\item 
+\hypertarget{classOccupancyMap_a063bb55cb8e561c18f519697a77beeea}{void \hyperlink{classOccupancyMap_a063bb55cb8e561c18f519697a77beeea}{reset} ()}\label{classOccupancyMap_a063bb55cb8e561c18f519697a77beeea}
+
+\begin{DoxyCompactList}\small\item\em Reset to zero all values in the map. \end{DoxyCompactList}\item 
+\hypertarget{classOccupancyMap_ae8e17e86a7e2a6027423c96d50c77ce0}{std\-::string \hyperlink{classOccupancyMap_ae8e17e86a7e2a6027423c96d50c77ce0}{get\-\_\-reference\-\_\-frame} ()}\label{classOccupancyMap_ae8e17e86a7e2a6027423c96d50c77ce0}
+
+\begin{DoxyCompactList}\small\item\em Get graph reference frame. \end{DoxyCompactList}\item 
+\hypertarget{classOccupancyMap_a035ee26fd9e9558d1734f575ec56bd97}{double \hyperlink{classOccupancyMap_a035ee26fd9e9558d1734f575ec56bd97}{get\-\_\-resolution} ()}\label{classOccupancyMap_a035ee26fd9e9558d1734f575ec56bd97}
+
+\begin{DoxyCompactList}\small\item\em Get graph resolution. \end{DoxyCompactList}\item 
+\hypertarget{classOccupancyMap_a41a987b616235accab1afd4e355c2676}{double \hyperlink{classOccupancyMap_a41a987b616235accab1afd4e355c2676}{get\-\_\-x\-\_\-min} ()}\label{classOccupancyMap_a41a987b616235accab1afd4e355c2676}
+
+\begin{DoxyCompactList}\small\item\em Get graph minimum x coordinate. \end{DoxyCompactList}\item 
+\hypertarget{classOccupancyMap_a65bb2ea829416aae83c9080d21dc100c}{double \hyperlink{classOccupancyMap_a65bb2ea829416aae83c9080d21dc100c}{get\-\_\-y\-\_\-min} ()}\label{classOccupancyMap_a65bb2ea829416aae83c9080d21dc100c}
+
+\begin{DoxyCompactList}\small\item\em Get graph minimum y coordinate. \end{DoxyCompactList}\item 
+\hypertarget{classOccupancyMap_a2fb4e84e0e0b877b3e88a144897658a0}{double \hyperlink{classOccupancyMap_a2fb4e84e0e0b877b3e88a144897658a0}{get\-\_\-x\-\_\-max} ()}\label{classOccupancyMap_a2fb4e84e0e0b877b3e88a144897658a0}
+
+\begin{DoxyCompactList}\small\item\em Get graph maximum x coordinate. \end{DoxyCompactList}\item 
+\hypertarget{classOccupancyMap_a70c8902bc846542c284408360c98902e}{double \hyperlink{classOccupancyMap_a70c8902bc846542c284408360c98902e}{get\-\_\-y\-\_\-max} ()}\label{classOccupancyMap_a70c8902bc846542c284408360c98902e}
+
+\begin{DoxyCompactList}\small\item\em Get graph maximum y coordinate. \end{DoxyCompactList}\item 
+\hypertarget{classOccupancyMap_a78dd91852c73cb6fd9522d1f19d552e1}{double \hyperlink{classOccupancyMap_a78dd91852c73cb6fd9522d1f19d552e1}{get\-\_\-height} ()}\label{classOccupancyMap_a78dd91852c73cb6fd9522d1f19d552e1}
+
+\begin{DoxyCompactList}\small\item\em Get graph number of vertical cells. \end{DoxyCompactList}\item 
+\hypertarget{classOccupancyMap_a54dab21733516cd0717d9131f0c40998}{double \hyperlink{classOccupancyMap_a54dab21733516cd0717d9131f0c40998}{get\-\_\-width} ()}\label{classOccupancyMap_a54dab21733516cd0717d9131f0c40998}
+
+\begin{DoxyCompactList}\small\item\em Get graph number of horizontal cells. \end{DoxyCompactList}\item 
+\hypertarget{classOccupancyMap_a9de8893bf75ccfbc1bb28ce748c2c908}{std\-::vector$<$ std\-::pair$<$ double, \\*
+double $>$ $>$ \hyperlink{classOccupancyMap_a9de8893bf75ccfbc1bb28ce748c2c908}{get\-\_\-obstacle\-\_\-list} ()}\label{classOccupancyMap_a9de8893bf75ccfbc1bb28ce748c2c908}
+
+\begin{DoxyCompactList}\small\item\em Get list of coordinates (x, y) where there are obstacles. \end{DoxyCompactList}\item 
+\hypertarget{classOccupancyMap_a6bf5d0995c39b532fe7ca8ee0e364945}{double \hyperlink{classOccupancyMap_a6bf5d0995c39b532fe7ca8ee0e364945}{get\-\_\-distance\-\_\-to\-\_\-closest\-\_\-obstacle} (std\-::pair$<$ double, double $>$ point)}\label{classOccupancyMap_a6bf5d0995c39b532fe7ca8ee0e364945}
+
+\begin{DoxyCompactList}\small\item\em Get distance between a point and the closest obstacle to it. \end{DoxyCompactList}\item 
+\hypertarget{classOccupancyMap_a90e20a6f32633c276ece4849c8e9e79c}{int \hyperlink{classOccupancyMap_a90e20a6f32633c276ece4849c8e9e79c}{get\-\_\-index\-\_\-from\-\_\-point} (std\-::pair$<$ double, double $>$ point)}\label{classOccupancyMap_a90e20a6f32633c276ece4849c8e9e79c}
+
+\begin{DoxyCompactList}\small\item\em Get index where a point (x, y) falls in the graph. \end{DoxyCompactList}\item 
+\hypertarget{classOccupancyMap_afe1a23a75038f4b92fffdfcd79aa683a}{std\-::pair$<$ double, double $>$ \hyperlink{classOccupancyMap_afe1a23a75038f4b92fffdfcd79aa683a}{get\-\_\-coordinates\-\_\-from\-\_\-index} (int index)}\label{classOccupancyMap_afe1a23a75038f4b92fffdfcd79aa683a}
+
+\begin{DoxyCompactList}\small\item\em Get coordinates (x, y) of a given index. \end{DoxyCompactList}\item 
+\hypertarget{classOccupancyMap_a341be2d2b5bdb75975e9977260db9838}{double \hyperlink{classOccupancyMap_a341be2d2b5bdb75975e9977260db9838}{correlation} (\hyperlink{classOccupancyMap}{Occupancy\-Map} other)}\label{classOccupancyMap_a341be2d2b5bdb75975e9977260db9838}
+
+\begin{DoxyCompactList}\small\item\em Calculate cross correlation between this and another map. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+Map class for creating, modifying or finding statistics from graphs. 
+
+\subsection{Constructor \& Destructor Documentation}
+\hypertarget{classOccupancyMap_a29d5ee8d5c52daf99c9295e0e1a93233}{\index{Occupancy\-Map@{Occupancy\-Map}!Occupancy\-Map@{Occupancy\-Map}}
+\index{Occupancy\-Map@{Occupancy\-Map}!OccupancyMap@{Occupancy\-Map}}
+\subsubsection[{Occupancy\-Map}]{\setlength{\rightskip}{0pt plus 5cm}Occupancy\-Map\-::\-Occupancy\-Map (
+\begin{DoxyParamCaption}
+\item[{const nav\-\_\-msgs\-::\-Occupancy\-Grid\-::\-Const\-Ptr \&}]{map}
+\end{DoxyParamCaption}
+)}}\label{classOccupancyMap_a29d5ee8d5c52daf99c9295e0e1a93233}
+Class constructor from R\-O\-S occupancy grid msg. 
+\begin{DoxyParams}{Parameters}
+{\em map} & occupancy grid msg pointer. \\
+\hline
+\end{DoxyParams}
+
+
+\subsection{Member Function Documentation}
+\hypertarget{classOccupancyMap_abb7b3ce1c12f73ab28bcb7e595d053d8}{\index{Occupancy\-Map@{Occupancy\-Map}!create\-\_\-map@{create\-\_\-map}}
+\index{create\-\_\-map@{create\-\_\-map}!OccupancyMap@{Occupancy\-Map}}
+\subsubsection[{create\-\_\-map}]{\setlength{\rightskip}{0pt plus 5cm}void Occupancy\-Map\-::create\-\_\-map (
+\begin{DoxyParamCaption}
+\item[{int}]{width, }
+\item[{int}]{height, }
+\item[{double}]{resolution}
+\end{DoxyParamCaption}
+)}}\label{classOccupancyMap_abb7b3ce1c12f73ab28bcb7e595d053d8}
+Create an empty graph with given values 
+\begin{DoxyParams}{Parameters}
+{\em width} & number of horizontal cells \\
+\hline
+{\em height} & number of vertical cells \\
+\hline
+{\em resolution} & distance per cell \\
+\hline
+\end{DoxyParams}
+\hypertarget{classOccupancyMap_a5a9f9ce31d25abb53a9cf6b2a045479e}{\index{Occupancy\-Map@{Occupancy\-Map}!set\-\_\-map@{set\-\_\-map}}
+\index{set\-\_\-map@{set\-\_\-map}!OccupancyMap@{Occupancy\-Map}}
+\subsubsection[{set\-\_\-map}]{\setlength{\rightskip}{0pt plus 5cm}void Occupancy\-Map\-::set\-\_\-map (
+\begin{DoxyParamCaption}
+\item[{const nav\-\_\-msgs\-::\-Occupancy\-Grid\-::\-Const\-Ptr \&}]{map}
+\end{DoxyParamCaption}
+)}}\label{classOccupancyMap_a5a9f9ce31d25abb53a9cf6b2a045479e}
+Set the map from R\-O\-S occupancy grid msg 
+\begin{DoxyParams}{Parameters}
+{\em map} & map occupancy grid msg pointer \\
+\hline
+\end{DoxyParams}
+\hypertarget{classOccupancyMap_abcfb41a41d6d19bd90efc11b2536a14d}{\index{Occupancy\-Map@{Occupancy\-Map}!set\-\_\-value@{set\-\_\-value}}
+\index{set\-\_\-value@{set\-\_\-value}!OccupancyMap@{Occupancy\-Map}}
+\subsubsection[{set\-\_\-value}]{\setlength{\rightskip}{0pt plus 5cm}void Occupancy\-Map\-::set\-\_\-value (
+\begin{DoxyParamCaption}
+\item[{int}]{index, }
+\item[{double}]{value}
+\end{DoxyParamCaption}
+)}}\label{classOccupancyMap_abcfb41a41d6d19bd90efc11b2536a14d}
+Set value at a given index of the map. 
+\begin{DoxyParams}{Parameters}
+{\em index} & index to access map. \\
+\hline
+{\em value} & value to be set. \\
+\hline
+\end{DoxyParams}
+\hypertarget{classOccupancyMap_aed3bec0b57e4a30f252486d4a6eef24c}{\index{Occupancy\-Map@{Occupancy\-Map}!set\-\_\-value@{set\-\_\-value}}
+\index{set\-\_\-value@{set\-\_\-value}!OccupancyMap@{Occupancy\-Map}}
+\subsubsection[{set\-\_\-value}]{\setlength{\rightskip}{0pt plus 5cm}void Occupancy\-Map\-::set\-\_\-value (
+\begin{DoxyParamCaption}
+\item[{std\-::pair$<$ double, double $>$}]{point, }
+\item[{double}]{value}
+\end{DoxyParamCaption}
+)}}\label{classOccupancyMap_aed3bec0b57e4a30f252486d4a6eef24c}
+Set value at a given point of the map 
+\begin{DoxyParams}{Parameters}
+{\em point} & point(x, y) of the map. \\
+\hline
+{\em value} & value to be set. \\
+\hline
+\end{DoxyParams}
+
+
+The documentation for this class was generated from the following file\-:\begin{DoxyCompactItemize}
+\item 
+include/localization/util/\hyperlink{occupancy__map_8h}{occupancy\-\_\-map.\-h}\end{DoxyCompactItemize}

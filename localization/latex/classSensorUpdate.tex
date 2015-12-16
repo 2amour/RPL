@@ -1,0 +1,113 @@
+\hypertarget{classSensorUpdate}{\section{Sensor\-Update Class Reference}
+\label{classSensorUpdate}\index{Sensor\-Update@{Sensor\-Update}}
+}
+
+
+Abstract class for implementing the sensor update strategy pattern.  
+
+
+
+
+{\ttfamily \#include $<$sensor\-\_\-update.\-h$>$}
+
+Inheritance diagram for Sensor\-Update\-:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=2.000000cm]{classSensorUpdate}
+\end{center}
+\end{figure}
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+virtual double \hyperlink{classSensorUpdate_a9bd0792d09b9425b854c6220b6712a52}{a\-\_\-posteriori} (double a\-\_\-priori, \hyperlink{occupancy__map_8h_aea86d1b633e7d9b44b660a39fa9b50f7}{Occupancy\-Map\-Ptr} a\-\_\-priori\-\_\-map, geometry\-\_\-msgs\-::\-Pose\-With\-Covariance\-Stamped pose, const sensor\-\_\-msgs\-::\-Laser\-Scan\-::\-Const\-Ptr \&msg)=0
+\begin{DoxyCompactList}\small\item\em Virtual Deconstructor. \end{DoxyCompactList}\item 
+void \hyperlink{classSensorUpdate_a01586f280eb8dbad45283696f3301221}{set\-\_\-map} (const nav\-\_\-msgs\-::\-Occupancy\-Grid\-::\-Const\-Ptr \&map)
+\item 
+std\-::string \hyperlink{classSensorUpdate_a0686226d99e3578bce52920fcb46577b}{get\-\_\-name} ()
+\item 
+std\-::string \hyperlink{classSensorUpdate_aa7b11255fd04d98eae6d265de84552df}{get\-\_\-reference\-\_\-frame} ()
+\end{DoxyCompactItemize}
+\subsection*{Protected Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\hypertarget{classSensorUpdate_a7e999f7c8092407e8df50c533cc50d72}{std\-::string \hyperlink{classSensorUpdate_a7e999f7c8092407e8df50c533cc50d72}{\-\_\-name}}\label{classSensorUpdate_a7e999f7c8092407e8df50c533cc50d72}
+
+\begin{DoxyCompactList}\small\item\em algorithm name. \end{DoxyCompactList}\item 
+\hypertarget{classSensorUpdate_a1b19df70d6264e226ace9ce4634fb9fa}{\hyperlink{classOccupancyMap}{Occupancy\-Map} \hyperlink{classSensorUpdate_a1b19df70d6264e226ace9ce4634fb9fa}{\-\_\-map}}\label{classSensorUpdate_a1b19df70d6264e226ace9ce4634fb9fa}
+
+\begin{DoxyCompactList}\small\item\em global map. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+Abstract class for implementing the sensor update strategy pattern. 
+
+\subsection{Member Function Documentation}
+\hypertarget{classSensorUpdate_a9bd0792d09b9425b854c6220b6712a52}{\index{Sensor\-Update@{Sensor\-Update}!a\-\_\-posteriori@{a\-\_\-posteriori}}
+\index{a\-\_\-posteriori@{a\-\_\-posteriori}!SensorUpdate@{Sensor\-Update}}
+\subsubsection[{a\-\_\-posteriori}]{\setlength{\rightskip}{0pt plus 5cm}virtual double Sensor\-Update\-::a\-\_\-posteriori (
+\begin{DoxyParamCaption}
+\item[{double}]{a\-\_\-priori, }
+\item[{{\bf Occupancy\-Map\-Ptr}}]{a\-\_\-priori\-\_\-map, }
+\item[{geometry\-\_\-msgs\-::\-Pose\-With\-Covariance\-Stamped}]{pose, }
+\item[{const sensor\-\_\-msgs\-::\-Laser\-Scan\-::\-Const\-Ptr \&}]{msg}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [pure virtual]}}}\label{classSensorUpdate_a9bd0792d09b9425b854c6220b6712a52}
+
+
+Virtual Deconstructor. 
+
+Get a posteriori probability of being in a pose given the msg. 
+\begin{DoxyParams}{Parameters}
+{\em a\-\_\-priori} & a priori probability of being in a pose. \\
+\hline
+{\em a\-\_\-priori\-\_\-map} & a priori pointer to believed map. \\
+\hline
+{\em pose} & believed pose. \\
+\hline
+{\em msg} & recieved scan msg. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+a posteriori probability 
+\end{DoxyReturn}
+
+
+Implemented in \hyperlink{classLikelihoodSensorUpdate_aa7a4eaae56fb86af98f428b598f46962}{Likelihood\-Sensor\-Update}, and \hyperlink{classCorrelationSensorUpdate_a72b2bd8daa21b7c76de0eb306e579906}{Correlation\-Sensor\-Update}.
+
+\hypertarget{classSensorUpdate_a0686226d99e3578bce52920fcb46577b}{\index{Sensor\-Update@{Sensor\-Update}!get\-\_\-name@{get\-\_\-name}}
+\index{get\-\_\-name@{get\-\_\-name}!SensorUpdate@{Sensor\-Update}}
+\subsubsection[{get\-\_\-name}]{\setlength{\rightskip}{0pt plus 5cm}std\-::string Sensor\-Update\-::get\-\_\-name (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)}}\label{classSensorUpdate_a0686226d99e3578bce52920fcb46577b}
+Get algorithm name. \begin{DoxyReturn}{Returns}
+
+\end{DoxyReturn}
+\hypertarget{classSensorUpdate_aa7b11255fd04d98eae6d265de84552df}{\index{Sensor\-Update@{Sensor\-Update}!get\-\_\-reference\-\_\-frame@{get\-\_\-reference\-\_\-frame}}
+\index{get\-\_\-reference\-\_\-frame@{get\-\_\-reference\-\_\-frame}!SensorUpdate@{Sensor\-Update}}
+\subsubsection[{get\-\_\-reference\-\_\-frame}]{\setlength{\rightskip}{0pt plus 5cm}std\-::string Sensor\-Update\-::get\-\_\-reference\-\_\-frame (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)}}\label{classSensorUpdate_aa7b11255fd04d98eae6d265de84552df}
+Get reference frame of update step. \begin{DoxyReturn}{Returns}
+
+\end{DoxyReturn}
+\hypertarget{classSensorUpdate_a01586f280eb8dbad45283696f3301221}{\index{Sensor\-Update@{Sensor\-Update}!set\-\_\-map@{set\-\_\-map}}
+\index{set\-\_\-map@{set\-\_\-map}!SensorUpdate@{Sensor\-Update}}
+\subsubsection[{set\-\_\-map}]{\setlength{\rightskip}{0pt plus 5cm}void Sensor\-Update\-::set\-\_\-map (
+\begin{DoxyParamCaption}
+\item[{const nav\-\_\-msgs\-::\-Occupancy\-Grid\-::\-Const\-Ptr \&}]{map}
+\end{DoxyParamCaption}
+)}}\label{classSensorUpdate_a01586f280eb8dbad45283696f3301221}
+Set global map to the update algorithm. 
+\begin{DoxyParams}{Parameters}
+{\em map} & Occupancy grid msg pointer. \\
+\hline
+\end{DoxyParams}
+
+
+The documentation for this class was generated from the following file\-:\begin{DoxyCompactItemize}
+\item 
+include/localization/sensor\-\_\-update\-\_\-strategies/\hyperlink{sensor__update_8h}{sensor\-\_\-update.\-h}\end{DoxyCompactItemize}

@@ -1,0 +1,100 @@
+\hypertarget{classParticle}{\section{Particle Class Reference}
+\label{classParticle}\index{Particle@{Particle}}
+}
+
+
+Class that implements a particle for a S\-L\-A\-M algorithm.  
+
+
+
+
+{\ttfamily \#include $<$particle.\-h$>$}
+
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\hypertarget{classParticle_a40f4c7e248029d72e7714b7802d5e5e1}{\hyperlink{classParticle_a40f4c7e248029d72e7714b7802d5e5e1}{Particle} ()}\label{classParticle_a40f4c7e248029d72e7714b7802d5e5e1}
+
+\begin{DoxyCompactList}\small\item\em Default Constructor. \end{DoxyCompactList}\item 
+\hyperlink{classParticle_ada5f546ca4314231550c84f4c80f58f1}{Particle} (double weight, geometry\-\_\-msgs\-::\-Pose\-With\-Covariance\-Stamped pose)
+\item 
+\hypertarget{classParticle_a2be6a5d2890263085642eff4b168fbbf}{double \hyperlink{classParticle_a2be6a5d2890263085642eff4b168fbbf}{get\-\_\-weight} ()}\label{classParticle_a2be6a5d2890263085642eff4b168fbbf}
+
+\begin{DoxyCompactList}\small\item\em get particle belief \end{DoxyCompactList}\item 
+\hypertarget{classParticle_ab6d40cebe007ecf4b4a979920e5b6812}{geometry\-\_\-msgs\-::\-Pose\-With\-Covariance\-Stamped \hyperlink{classParticle_ab6d40cebe007ecf4b4a979920e5b6812}{get\-\_\-pose} ()}\label{classParticle_ab6d40cebe007ecf4b4a979920e5b6812}
+
+\begin{DoxyCompactList}\small\item\em get particle pose \end{DoxyCompactList}\item 
+\hypertarget{classParticle_a59175592f7420c93a4d3e89da546473b}{\hyperlink{occupancy__map_8h_aea86d1b633e7d9b44b660a39fa9b50f7}{Occupancy\-Map\-Ptr} \hyperlink{classParticle_a59175592f7420c93a4d3e89da546473b}{get\-\_\-map} ()}\label{classParticle_a59175592f7420c93a4d3e89da546473b}
+
+\begin{DoxyCompactList}\small\item\em get particle local map. \end{DoxyCompactList}\item 
+void \hyperlink{classParticle_acd97e9df836f3f66f5a08a089a643c9a}{set\-\_\-weight} (double weight)
+\item 
+void \hyperlink{classParticle_a56f36d075622aa149afb833ded8dba51}{set\-\_\-pose} (geometry\-\_\-msgs\-::\-Pose\-With\-Covariance\-Stamped pose)
+\item 
+void \hyperlink{classParticle_a370b7228f1f7508cc1e768b1360c989e}{set\-\_\-map} (\hyperlink{occupancy__map_8h_aea86d1b633e7d9b44b660a39fa9b50f7}{Occupancy\-Map\-Ptr} map)
+\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+Class that implements a particle for a S\-L\-A\-M algorithm. 
+
+\subsection{Constructor \& Destructor Documentation}
+\hypertarget{classParticle_ada5f546ca4314231550c84f4c80f58f1}{\index{Particle@{Particle}!Particle@{Particle}}
+\index{Particle@{Particle}!Particle@{Particle}}
+\subsubsection[{Particle}]{\setlength{\rightskip}{0pt plus 5cm}Particle\-::\-Particle (
+\begin{DoxyParamCaption}
+\item[{double}]{weight, }
+\item[{geometry\-\_\-msgs\-::\-Pose\-With\-Covariance\-Stamped}]{pose}
+\end{DoxyParamCaption}
+)}}\label{classParticle_ada5f546ca4314231550c84f4c80f58f1}
+Class constructor. 
+\begin{DoxyParams}{Parameters}
+{\em weight} & particle belief. \\
+\hline
+{\em pose} & particle pose. \\
+\hline
+\end{DoxyParams}
+
+
+\subsection{Member Function Documentation}
+\hypertarget{classParticle_a370b7228f1f7508cc1e768b1360c989e}{\index{Particle@{Particle}!set\-\_\-map@{set\-\_\-map}}
+\index{set\-\_\-map@{set\-\_\-map}!Particle@{Particle}}
+\subsubsection[{set\-\_\-map}]{\setlength{\rightskip}{0pt plus 5cm}void Particle\-::set\-\_\-map (
+\begin{DoxyParamCaption}
+\item[{{\bf Occupancy\-Map\-Ptr}}]{map}
+\end{DoxyParamCaption}
+)}}\label{classParticle_a370b7228f1f7508cc1e768b1360c989e}
+Set particle map 
+\begin{DoxyParams}{Parameters}
+{\em map} & \\
+\hline
+\end{DoxyParams}
+\hypertarget{classParticle_a56f36d075622aa149afb833ded8dba51}{\index{Particle@{Particle}!set\-\_\-pose@{set\-\_\-pose}}
+\index{set\-\_\-pose@{set\-\_\-pose}!Particle@{Particle}}
+\subsubsection[{set\-\_\-pose}]{\setlength{\rightskip}{0pt plus 5cm}void Particle\-::set\-\_\-pose (
+\begin{DoxyParamCaption}
+\item[{geometry\-\_\-msgs\-::\-Pose\-With\-Covariance\-Stamped}]{pose}
+\end{DoxyParamCaption}
+)}}\label{classParticle_a56f36d075622aa149afb833ded8dba51}
+Set particle pose 
+\begin{DoxyParams}{Parameters}
+{\em pose} & \\
+\hline
+\end{DoxyParams}
+\hypertarget{classParticle_acd97e9df836f3f66f5a08a089a643c9a}{\index{Particle@{Particle}!set\-\_\-weight@{set\-\_\-weight}}
+\index{set\-\_\-weight@{set\-\_\-weight}!Particle@{Particle}}
+\subsubsection[{set\-\_\-weight}]{\setlength{\rightskip}{0pt plus 5cm}void Particle\-::set\-\_\-weight (
+\begin{DoxyParamCaption}
+\item[{double}]{weight}
+\end{DoxyParamCaption}
+)}}\label{classParticle_acd97e9df836f3f66f5a08a089a643c9a}
+Set particle belief 
+\begin{DoxyParams}{Parameters}
+{\em weight} & \\
+\hline
+\end{DoxyParams}
+
+
+The documentation for this class was generated from the following file\-:\begin{DoxyCompactItemize}
+\item 
+include/localization/util/\hyperlink{particle_8h}{particle.\-h}\end{DoxyCompactItemize}

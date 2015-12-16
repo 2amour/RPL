@@ -1,0 +1,12 @@
+filter:
+   name: "particle_filter"
+   particles: 200
+   random_samples: 10
+   weight_threshold: 0.5
+motion_update:
+   name: "odometry_model"
+   variance: [0.001, 0.001, 0.001, 0.001]
+sensor_update:
+   name: "correlation"
+sampling_strategy:
+   name: "roulette"

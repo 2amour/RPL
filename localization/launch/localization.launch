@@ -1,0 +1,24 @@
+<launch>	
+	<arg name="output" default="screen" />
+	<arg name="rviz" default="false" />
+	
+	<rosparam> use_sim_time: true </rosparam>
+	<rosparam command="load" file="$(find localization)/parameters/topics.yaml" />
+	<rosparam command="load" file="$(find localization)/parameters/filter_parameters.yaml" />
+	
+	
+	<node pkg="tf" type="static_transform_publisher" name="baseorigin" args="1.56 0.26 0 2.125 0 0 map odometry_link 100" />
+	<arg name="rviz_file" default="$(find localization)/config/localization.rviz" />
+
+	<arg name="rosbag_file" default="$(find localization)/bagfiles/localization.bag" />
+	<node pkg="rosbag" type="play" name="player" output="screen" args="--clock $(arg rosbag_file)" />
+
+	<node pkg="localization" type="localization" name="localization" output="screen" />
+	<node pkg="localization" type="scan_remapper" name="scan_remapper" output="screen" />
+
+	<group if="$(arg rviz)">
+		<node name="rviz" pkg="rviz" type="rviz" args="-d $(arg rviz_file)"/>
+	</group>	
+	
+	
+</launch>

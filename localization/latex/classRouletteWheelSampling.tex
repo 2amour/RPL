@@ -1,0 +1,63 @@
+\hypertarget{classRouletteWheelSampling}{\section{Roulette\-Wheel\-Sampling Class Reference}
+\label{classRouletteWheelSampling}\index{Roulette\-Wheel\-Sampling@{Roulette\-Wheel\-Sampling}}
+}
+
+
+Roulette wheel implementation of sampling strategy pattern for particles.  
+
+
+
+
+{\ttfamily \#include $<$roulette\-\_\-wheel\-\_\-sampling.\-h$>$}
+
+Inheritance diagram for Roulette\-Wheel\-Sampling\-:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=2.000000cm]{classRouletteWheelSampling}
+\end{center}
+\end{figure}
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\hypertarget{classRouletteWheelSampling_ae9f93de1a052e204198887e0a47a5a1c}{\hyperlink{classRouletteWheelSampling_ae9f93de1a052e204198887e0a47a5a1c}{Roulette\-Wheel\-Sampling} ()}\label{classRouletteWheelSampling_ae9f93de1a052e204198887e0a47a5a1c}
+
+\begin{DoxyCompactList}\small\item\em Default Constructor. \end{DoxyCompactList}\item 
+std\-::vector$<$ \hyperlink{classParticle}{Particle} $>$ \hyperlink{classRouletteWheelSampling_ad9634cbe5aa5b112c823d252a1497313}{resample} (std\-::vector$<$ \hyperlink{classParticle}{Particle} $>$ particles, int number\-\_\-of\-\_\-particles, nav\-\_\-msgs\-::\-Occupancy\-Grid map)
+\end{DoxyCompactItemize}
+\subsection*{Additional Inherited Members}
+
+
+\subsection{Detailed Description}
+Roulette wheel implementation of sampling strategy pattern for particles. 
+
+\subsection{Member Function Documentation}
+\hypertarget{classRouletteWheelSampling_ad9634cbe5aa5b112c823d252a1497313}{\index{Roulette\-Wheel\-Sampling@{Roulette\-Wheel\-Sampling}!resample@{resample}}
+\index{resample@{resample}!RouletteWheelSampling@{Roulette\-Wheel\-Sampling}}
+\subsubsection[{resample}]{\setlength{\rightskip}{0pt plus 5cm}std\-::vector$<${\bf Particle}$>$ Roulette\-Wheel\-Sampling\-::resample (
+\begin{DoxyParamCaption}
+\item[{std\-::vector$<$ {\bf Particle} $>$}]{particles, }
+\item[{int}]{number\-\_\-of\-\_\-particles, }
+\item[{nav\-\_\-msgs\-::\-Occupancy\-Grid}]{map}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [virtual]}}}\label{classRouletteWheelSampling_ad9634cbe5aa5b112c823d252a1497313}
+Resampling according to strategy. 
+\begin{DoxyParams}{Parameters}
+{\em particles} & initial vector of particles. \\
+\hline
+{\em number\-\_\-of\-\_\-particles} & number of output particles. \\
+\hline
+{\em map} & map where particles should be sampled. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+output resampled particles. 
+\end{DoxyReturn}
+
+
+Implements \hyperlink{classSampling_ae9a5648926dda0a5d5ed4b55b9d96436}{Sampling}.
+
+
+
+The documentation for this class was generated from the following file\-:\begin{DoxyCompactItemize}
+\item 
+include/localization/sampling\-\_\-strategies/\hyperlink{roulette__wheel__sampling_8h}{roulette\-\_\-wheel\-\_\-sampling.\-h}\end{DoxyCompactItemize}

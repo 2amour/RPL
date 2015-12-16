@@ -1,0 +1,150 @@
+\hypertarget{classLocalizationBehaviour}{\section{Localization\-Behaviour Class Reference}
+\label{classLocalizationBehaviour}\index{Localization\-Behaviour@{Localization\-Behaviour}}
+}
+
+
+Class that sequences the pose filter algorithm from ros msgs and publishes the result.  
+
+
+
+
+{\ttfamily \#include $<$localization\-\_\-behaviour.\-h$>$}
+
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\hypertarget{classLocalizationBehaviour_a8fbdf12412fc69f2eed036a3d003c808}{\hyperlink{classLocalizationBehaviour_a8fbdf12412fc69f2eed036a3d003c808}{Localization\-Behaviour} ()}\label{classLocalizationBehaviour_a8fbdf12412fc69f2eed036a3d003c808}
+
+\begin{DoxyCompactList}\small\item\em Default Constructor. \end{DoxyCompactList}\item 
+\hyperlink{classLocalizationBehaviour_a4214dad5f0576a7d4d386476c35a00cc}{Localization\-Behaviour} (\hyperlink{pose__filter_8h_a9df59d7c2f322f00bdd8eccab6d3fd73}{Pose\-Filter\-Ptr} filter)
+\item 
+void \hyperlink{classLocalizationBehaviour_a3f7e87ea9de49757cf61624d3cb38289}{set\-\_\-filter} (\hyperlink{pose__filter_8h_a9df59d7c2f322f00bdd8eccab6d3fd73}{Pose\-Filter\-Ptr} filter)
+\item 
+void \hyperlink{classLocalizationBehaviour_a71f26956851efb42ec0d41f67d5fb744}{map\-\_\-callback} (const nav\-\_\-msgs\-::\-Occupancy\-Grid\-::\-Const\-Ptr \&msg)
+\item 
+void \hyperlink{classLocalizationBehaviour_a6d66815f5aaf22643a4b6ddc2a406f7d}{odometry\-\_\-callback} (const nav\-\_\-msgs\-::\-Odometry\-::\-Const\-Ptr \&msg)
+\item 
+void \hyperlink{classLocalizationBehaviour_aca2be6938ff49e7c2d6701fabe8612f3}{laserscan\-\_\-callback} (const sensor\-\_\-msgs\-::\-Laser\-Scan\-::\-Const\-Ptr \&msg)
+\item 
+void \hyperlink{classLocalizationBehaviour_aeba3e969c5065fbdaa8358b697a125d8}{publish\-\_\-array} (std\-::vector$<$ geometry\-\_\-msgs\-::\-Pose\-With\-Covariance\-Stamped $>$ arrays, std\-\_\-msgs\-::\-Header header)
+\item 
+void \hyperlink{classLocalizationBehaviour_aef0b0f4bd1c23b8dd7ce8bb544b2a9d8}{publish\-\_\-estimated\-\_\-tf} (geometry\-\_\-msgs\-::\-Pose\-With\-Covariance\-Stamped pose, std\-\_\-msgs\-::\-Header header)
+\item 
+void \hyperlink{classLocalizationBehaviour_ac6180e3b8ac4fc8497d92d99acb8726f}{set\-\_\-array\-\_\-publisher} (ros\-::\-Publisher pose\-\_\-array\-\_\-pub)
+\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+Class that sequences the pose filter algorithm from ros msgs and publishes the result. 
+
+\subsection{Constructor \& Destructor Documentation}
+\hypertarget{classLocalizationBehaviour_a4214dad5f0576a7d4d386476c35a00cc}{\index{Localization\-Behaviour@{Localization\-Behaviour}!Localization\-Behaviour@{Localization\-Behaviour}}
+\index{Localization\-Behaviour@{Localization\-Behaviour}!LocalizationBehaviour@{Localization\-Behaviour}}
+\subsubsection[{Localization\-Behaviour}]{\setlength{\rightskip}{0pt plus 5cm}Localization\-Behaviour\-::\-Localization\-Behaviour (
+\begin{DoxyParamCaption}
+\item[{{\bf Pose\-Filter\-Ptr}}]{filter}
+\end{DoxyParamCaption}
+)}}\label{classLocalizationBehaviour_a4214dad5f0576a7d4d386476c35a00cc}
+Class constructor from pose filter 
+\begin{DoxyParams}{Parameters}
+{\em filter} & filter implementation \\
+\hline
+\end{DoxyParams}
+
+
+\subsection{Member Function Documentation}
+\hypertarget{classLocalizationBehaviour_aca2be6938ff49e7c2d6701fabe8612f3}{\index{Localization\-Behaviour@{Localization\-Behaviour}!laserscan\-\_\-callback@{laserscan\-\_\-callback}}
+\index{laserscan\-\_\-callback@{laserscan\-\_\-callback}!LocalizationBehaviour@{Localization\-Behaviour}}
+\subsubsection[{laserscan\-\_\-callback}]{\setlength{\rightskip}{0pt plus 5cm}void Localization\-Behaviour\-::laserscan\-\_\-callback (
+\begin{DoxyParamCaption}
+\item[{const sensor\-\_\-msgs\-::\-Laser\-Scan\-::\-Const\-Ptr \&}]{msg}
+\end{DoxyParamCaption}
+)}}\label{classLocalizationBehaviour_aca2be6938ff49e7c2d6701fabe8612f3}
+Callback method when the laser msg is recieved. The sensor update is called from within. 
+\begin{DoxyParams}{Parameters}
+{\em msg} & sensor msg pointer. \\
+\hline
+\end{DoxyParams}
+\hypertarget{classLocalizationBehaviour_a71f26956851efb42ec0d41f67d5fb744}{\index{Localization\-Behaviour@{Localization\-Behaviour}!map\-\_\-callback@{map\-\_\-callback}}
+\index{map\-\_\-callback@{map\-\_\-callback}!LocalizationBehaviour@{Localization\-Behaviour}}
+\subsubsection[{map\-\_\-callback}]{\setlength{\rightskip}{0pt plus 5cm}void Localization\-Behaviour\-::map\-\_\-callback (
+\begin{DoxyParamCaption}
+\item[{const nav\-\_\-msgs\-::\-Occupancy\-Grid\-::\-Const\-Ptr \&}]{msg}
+\end{DoxyParamCaption}
+)}}\label{classLocalizationBehaviour_a71f26956851efb42ec0d41f67d5fb744}
+Callback method when the map is recieved or updated. 
+\begin{DoxyParams}{Parameters}
+{\em msg} & map msg pointer. \\
+\hline
+\end{DoxyParams}
+\hypertarget{classLocalizationBehaviour_a6d66815f5aaf22643a4b6ddc2a406f7d}{\index{Localization\-Behaviour@{Localization\-Behaviour}!odometry\-\_\-callback@{odometry\-\_\-callback}}
+\index{odometry\-\_\-callback@{odometry\-\_\-callback}!LocalizationBehaviour@{Localization\-Behaviour}}
+\subsubsection[{odometry\-\_\-callback}]{\setlength{\rightskip}{0pt plus 5cm}void Localization\-Behaviour\-::odometry\-\_\-callback (
+\begin{DoxyParamCaption}
+\item[{const nav\-\_\-msgs\-::\-Odometry\-::\-Const\-Ptr \&}]{msg}
+\end{DoxyParamCaption}
+)}}\label{classLocalizationBehaviour_a6d66815f5aaf22643a4b6ddc2a406f7d}
+Callback method when the odometry msg is recieved. The motion update is called from within. 
+\begin{DoxyParams}{Parameters}
+{\em msg} & odometry msg pointer. \\
+\hline
+\end{DoxyParams}
+\hypertarget{classLocalizationBehaviour_aeba3e969c5065fbdaa8358b697a125d8}{\index{Localization\-Behaviour@{Localization\-Behaviour}!publish\-\_\-array@{publish\-\_\-array}}
+\index{publish\-\_\-array@{publish\-\_\-array}!LocalizationBehaviour@{Localization\-Behaviour}}
+\subsubsection[{publish\-\_\-array}]{\setlength{\rightskip}{0pt plus 5cm}void Localization\-Behaviour\-::publish\-\_\-array (
+\begin{DoxyParamCaption}
+\item[{std\-::vector$<$ geometry\-\_\-msgs\-::\-Pose\-With\-Covariance\-Stamped $>$}]{arrays, }
+\item[{std\-\_\-msgs\-::\-Header}]{header}
+\end{DoxyParamCaption}
+)}}\label{classLocalizationBehaviour_aeba3e969c5065fbdaa8358b697a125d8}
+Publish an array of poses. 
+\begin{DoxyParams}{Parameters}
+{\em arrays} & Array of poses to publish. \\
+\hline
+{\em header} & Header with time and frame id of the arrays. \\
+\hline
+\end{DoxyParams}
+\hypertarget{classLocalizationBehaviour_aef0b0f4bd1c23b8dd7ce8bb544b2a9d8}{\index{Localization\-Behaviour@{Localization\-Behaviour}!publish\-\_\-estimated\-\_\-tf@{publish\-\_\-estimated\-\_\-tf}}
+\index{publish\-\_\-estimated\-\_\-tf@{publish\-\_\-estimated\-\_\-tf}!LocalizationBehaviour@{Localization\-Behaviour}}
+\subsubsection[{publish\-\_\-estimated\-\_\-tf}]{\setlength{\rightskip}{0pt plus 5cm}void Localization\-Behaviour\-::publish\-\_\-estimated\-\_\-tf (
+\begin{DoxyParamCaption}
+\item[{geometry\-\_\-msgs\-::\-Pose\-With\-Covariance\-Stamped}]{pose, }
+\item[{std\-\_\-msgs\-::\-Header}]{header}
+\end{DoxyParamCaption}
+)}}\label{classLocalizationBehaviour_aef0b0f4bd1c23b8dd7ce8bb544b2a9d8}
+Publish a tf between the map and the estimated pose. 
+\begin{DoxyParams}{Parameters}
+{\em pose} & estimated pose. \\
+\hline
+{\em header} & Header with time and frame id of the pose. \\
+\hline
+\end{DoxyParams}
+\hypertarget{classLocalizationBehaviour_ac6180e3b8ac4fc8497d92d99acb8726f}{\index{Localization\-Behaviour@{Localization\-Behaviour}!set\-\_\-array\-\_\-publisher@{set\-\_\-array\-\_\-publisher}}
+\index{set\-\_\-array\-\_\-publisher@{set\-\_\-array\-\_\-publisher}!LocalizationBehaviour@{Localization\-Behaviour}}
+\subsubsection[{set\-\_\-array\-\_\-publisher}]{\setlength{\rightskip}{0pt plus 5cm}void Localization\-Behaviour\-::set\-\_\-array\-\_\-publisher (
+\begin{DoxyParamCaption}
+\item[{ros\-::\-Publisher}]{pose\-\_\-array\-\_\-pub}
+\end{DoxyParamCaption}
+)}}\label{classLocalizationBehaviour_ac6180e3b8ac4fc8497d92d99acb8726f}
+Setter of the array publisher. 
+\begin{DoxyParams}{Parameters}
+{\em pose\-\_\-array\-\_\-pub} & \\
+\hline
+\end{DoxyParams}
+\hypertarget{classLocalizationBehaviour_a3f7e87ea9de49757cf61624d3cb38289}{\index{Localization\-Behaviour@{Localization\-Behaviour}!set\-\_\-filter@{set\-\_\-filter}}
+\index{set\-\_\-filter@{set\-\_\-filter}!LocalizationBehaviour@{Localization\-Behaviour}}
+\subsubsection[{set\-\_\-filter}]{\setlength{\rightskip}{0pt plus 5cm}void Localization\-Behaviour\-::set\-\_\-filter (
+\begin{DoxyParamCaption}
+\item[{{\bf Pose\-Filter\-Ptr}}]{filter}
+\end{DoxyParamCaption}
+)}}\label{classLocalizationBehaviour_a3f7e87ea9de49757cf61624d3cb38289}
+Set the filter implementation 
+\begin{DoxyParams}{Parameters}
+{\em filter} & pose filter implementation. \\
+\hline
+\end{DoxyParams}
+
+
+The documentation for this class was generated from the following file\-:\begin{DoxyCompactItemize}
+\item 
+include/localization/behaviour/\hyperlink{localization__behaviour_8h}{localization\-\_\-behaviour.\-h}\end{DoxyCompactItemize}

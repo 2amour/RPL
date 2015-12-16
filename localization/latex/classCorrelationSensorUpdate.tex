@@ -1,0 +1,66 @@
+\hypertarget{classCorrelationSensorUpdate}{\section{Correlation\-Sensor\-Update Class Reference}
+\label{classCorrelationSensorUpdate}\index{Correlation\-Sensor\-Update@{Correlation\-Sensor\-Update}}
+}
+
+
+Cross correlation model implementation of sensor update algorithm.  
+
+
+
+
+{\ttfamily \#include $<$correlation\-\_\-sensor\-\_\-update.\-h$>$}
+
+Inheritance diagram for Correlation\-Sensor\-Update\-:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=2.000000cm]{classCorrelationSensorUpdate}
+\end{center}
+\end{figure}
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\hypertarget{classCorrelationSensorUpdate_a0f43ac21ac425802edb523f5f065a0b0}{\hyperlink{classCorrelationSensorUpdate_a0f43ac21ac425802edb523f5f065a0b0}{Correlation\-Sensor\-Update} ()}\label{classCorrelationSensorUpdate_a0f43ac21ac425802edb523f5f065a0b0}
+
+\begin{DoxyCompactList}\small\item\em Default Constructor. \end{DoxyCompactList}\item 
+double \hyperlink{classCorrelationSensorUpdate_a72b2bd8daa21b7c76de0eb306e579906}{a\-\_\-posteriori} (double a\-\_\-priori, \hyperlink{occupancy__map_8h_aea86d1b633e7d9b44b660a39fa9b50f7}{Occupancy\-Map\-Ptr} a\-\_\-priori\-\_\-map, geometry\-\_\-msgs\-::\-Pose\-With\-Covariance\-Stamped pose, const sensor\-\_\-msgs\-::\-Laser\-Scan\-::\-Const\-Ptr \&msg)
+\end{DoxyCompactItemize}
+\subsection*{Additional Inherited Members}
+
+
+\subsection{Detailed Description}
+Cross correlation model implementation of sensor update algorithm. 
+
+\subsection{Member Function Documentation}
+\hypertarget{classCorrelationSensorUpdate_a72b2bd8daa21b7c76de0eb306e579906}{\index{Correlation\-Sensor\-Update@{Correlation\-Sensor\-Update}!a\-\_\-posteriori@{a\-\_\-posteriori}}
+\index{a\-\_\-posteriori@{a\-\_\-posteriori}!CorrelationSensorUpdate@{Correlation\-Sensor\-Update}}
+\subsubsection[{a\-\_\-posteriori}]{\setlength{\rightskip}{0pt plus 5cm}double Correlation\-Sensor\-Update\-::a\-\_\-posteriori (
+\begin{DoxyParamCaption}
+\item[{double}]{a\-\_\-priori, }
+\item[{{\bf Occupancy\-Map\-Ptr}}]{a\-\_\-priori\-\_\-map, }
+\item[{geometry\-\_\-msgs\-::\-Pose\-With\-Covariance\-Stamped}]{pose, }
+\item[{const sensor\-\_\-msgs\-::\-Laser\-Scan\-::\-Const\-Ptr \&}]{msg}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [virtual]}}}\label{classCorrelationSensorUpdate_a72b2bd8daa21b7c76de0eb306e579906}
+Get a posteriori probability of being in a pose given the msg. 
+\begin{DoxyParams}{Parameters}
+{\em a\-\_\-priori} & a priori probability of being in a pose. \\
+\hline
+{\em a\-\_\-priori\-\_\-map} & a priori pointer to believed map. \\
+\hline
+{\em pose} & believed pose. \\
+\hline
+{\em msg} & recieved scan msg. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+a posteriori probability 
+\end{DoxyReturn}
+
+
+Implements \hyperlink{classSensorUpdate_a9bd0792d09b9425b854c6220b6712a52}{Sensor\-Update}.
+
+
+
+The documentation for this class was generated from the following file\-:\begin{DoxyCompactItemize}
+\item 
+include/localization/sensor\-\_\-update\-\_\-strategies/\hyperlink{correlation__sensor__update_8h}{correlation\-\_\-sensor\-\_\-update.\-h}\end{DoxyCompactItemize}

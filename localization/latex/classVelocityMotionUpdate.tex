@@ -1,0 +1,63 @@
+\hypertarget{classVelocityMotionUpdate}{\section{Velocity\-Motion\-Update Class Reference}
+\label{classVelocityMotionUpdate}\index{Velocity\-Motion\-Update@{Velocity\-Motion\-Update}}
+}
+
+
+Velocity model implementation of motion update algorithm.  
+
+
+
+
+{\ttfamily \#include $<$velocity\-\_\-motion\-\_\-update.\-h$>$}
+
+Inheritance diagram for Velocity\-Motion\-Update\-:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=2.000000cm]{classVelocityMotionUpdate}
+\end{center}
+\end{figure}
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\hypertarget{classVelocityMotionUpdate_a7a9a88ec65e09028cdcfd2c821b4c1bd}{\hyperlink{classVelocityMotionUpdate_a7a9a88ec65e09028cdcfd2c821b4c1bd}{Velocity\-Motion\-Update} ()}\label{classVelocityMotionUpdate_a7a9a88ec65e09028cdcfd2c821b4c1bd}
+
+\begin{DoxyCompactList}\small\item\em Default Constructor. \end{DoxyCompactList}\item 
+geometry\-\_\-msgs\-::\-Pose\-With\-Covariance\-Stamped \hyperlink{classVelocityMotionUpdate_a1b532d900fd3393e70f7a70f153c3e08}{predict} (geometry\-\_\-msgs\-::\-Pose\-With\-Covariance\-Stamped pose, const nav\-\_\-msgs\-::\-Odometry\-::\-Const\-Ptr \&old\-\_\-msg, const nav\-\_\-msgs\-::\-Odometry\-::\-Const\-Ptr \&new\-\_\-msg)
+\end{DoxyCompactItemize}
+\subsection*{Additional Inherited Members}
+
+
+\subsection{Detailed Description}
+Velocity model implementation of motion update algorithm. 
+
+\subsection{Member Function Documentation}
+\hypertarget{classVelocityMotionUpdate_a1b532d900fd3393e70f7a70f153c3e08}{\index{Velocity\-Motion\-Update@{Velocity\-Motion\-Update}!predict@{predict}}
+\index{predict@{predict}!VelocityMotionUpdate@{Velocity\-Motion\-Update}}
+\subsubsection[{predict}]{\setlength{\rightskip}{0pt plus 5cm}geometry\-\_\-msgs\-::\-Pose\-With\-Covariance\-Stamped Velocity\-Motion\-Update\-::predict (
+\begin{DoxyParamCaption}
+\item[{geometry\-\_\-msgs\-::\-Pose\-With\-Covariance\-Stamped}]{pose, }
+\item[{const nav\-\_\-msgs\-::\-Odometry\-::\-Const\-Ptr \&}]{old\-\_\-msg, }
+\item[{const nav\-\_\-msgs\-::\-Odometry\-::\-Const\-Ptr \&}]{new\-\_\-msg}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [virtual]}}}\label{classVelocityMotionUpdate_a1b532d900fd3393e70f7a70f153c3e08}
+Predict the new pose. 
+\begin{DoxyParams}{Parameters}
+{\em pose} & current pose. \\
+\hline
+{\em old\-\_\-msg} & last odometry msg. \\
+\hline
+{\em new\-\_\-msg} & new odometry msg. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+
+\end{DoxyReturn}
+
+
+Implements \hyperlink{classMotionUpdate_a86e028d43981218ddf6e354e8f201e75}{Motion\-Update}.
+
+
+
+The documentation for this class was generated from the following file\-:\begin{DoxyCompactItemize}
+\item 
+include/localization/motion\-\_\-update\-\_\-strategies/\hyperlink{velocity__motion__update_8h}{velocity\-\_\-motion\-\_\-update.\-h}\end{DoxyCompactItemize}

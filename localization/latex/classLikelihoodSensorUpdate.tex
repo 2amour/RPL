@@ -1,0 +1,86 @@
+\hypertarget{classLikelihoodSensorUpdate}{\section{Likelihood\-Sensor\-Update Class Reference}
+\label{classLikelihoodSensorUpdate}\index{Likelihood\-Sensor\-Update@{Likelihood\-Sensor\-Update}}
+}
+
+
+Gaussian likelihood model implementation of sensor update algorithm.  
+
+
+
+
+{\ttfamily \#include $<$likelihood\-\_\-sensor\-\_\-update.\-h$>$}
+
+Inheritance diagram for Likelihood\-Sensor\-Update\-:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=2.000000cm]{classLikelihoodSensorUpdate}
+\end{center}
+\end{figure}
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\hypertarget{classLikelihoodSensorUpdate_a60424de72efee82d70d13061dcb65ae2}{\hyperlink{classLikelihoodSensorUpdate_a60424de72efee82d70d13061dcb65ae2}{Likelihood\-Sensor\-Update} ()}\label{classLikelihoodSensorUpdate_a60424de72efee82d70d13061dcb65ae2}
+
+\begin{DoxyCompactList}\small\item\em Default Constructor. \end{DoxyCompactList}\item 
+\hyperlink{classLikelihoodSensorUpdate_a342698e21192ccbab6cfbdec8fae0e46}{Likelihood\-Sensor\-Update} (double z\-\_\-rand, double z\-\_\-var)
+\item 
+double \hyperlink{classLikelihoodSensorUpdate_aa7a4eaae56fb86af98f428b598f46962}{a\-\_\-posteriori} (double a\-\_\-priori, \hyperlink{occupancy__map_8h_aea86d1b633e7d9b44b660a39fa9b50f7}{Occupancy\-Map\-Ptr} a\-\_\-priori\-\_\-map, geometry\-\_\-msgs\-::\-Pose\-With\-Covariance\-Stamped pose, const sensor\-\_\-msgs\-::\-Laser\-Scan\-::\-Const\-Ptr \&msg)
+\end{DoxyCompactItemize}
+\subsection*{Additional Inherited Members}
+
+
+\subsection{Detailed Description}
+Gaussian likelihood model implementation of sensor update algorithm. 
+
+\subsection{Constructor \& Destructor Documentation}
+\hypertarget{classLikelihoodSensorUpdate_a342698e21192ccbab6cfbdec8fae0e46}{\index{Likelihood\-Sensor\-Update@{Likelihood\-Sensor\-Update}!Likelihood\-Sensor\-Update@{Likelihood\-Sensor\-Update}}
+\index{Likelihood\-Sensor\-Update@{Likelihood\-Sensor\-Update}!LikelihoodSensorUpdate@{Likelihood\-Sensor\-Update}}
+\subsubsection[{Likelihood\-Sensor\-Update}]{\setlength{\rightskip}{0pt plus 5cm}Likelihood\-Sensor\-Update\-::\-Likelihood\-Sensor\-Update (
+\begin{DoxyParamCaption}
+\item[{double}]{z\-\_\-rand, }
+\item[{double}]{z\-\_\-var}
+\end{DoxyParamCaption}
+)}}\label{classLikelihoodSensorUpdate_a342698e21192ccbab6cfbdec8fae0e46}
+Class constructor 
+\begin{DoxyParams}{Parameters}
+{\em z\-\_\-rand} & measurement bias. \\
+\hline
+{\em z\-\_\-var} & measurement variance . \\
+\hline
+\end{DoxyParams}
+
+
+\subsection{Member Function Documentation}
+\hypertarget{classLikelihoodSensorUpdate_aa7a4eaae56fb86af98f428b598f46962}{\index{Likelihood\-Sensor\-Update@{Likelihood\-Sensor\-Update}!a\-\_\-posteriori@{a\-\_\-posteriori}}
+\index{a\-\_\-posteriori@{a\-\_\-posteriori}!LikelihoodSensorUpdate@{Likelihood\-Sensor\-Update}}
+\subsubsection[{a\-\_\-posteriori}]{\setlength{\rightskip}{0pt plus 5cm}double Likelihood\-Sensor\-Update\-::a\-\_\-posteriori (
+\begin{DoxyParamCaption}
+\item[{double}]{a\-\_\-priori, }
+\item[{{\bf Occupancy\-Map\-Ptr}}]{a\-\_\-priori\-\_\-map, }
+\item[{geometry\-\_\-msgs\-::\-Pose\-With\-Covariance\-Stamped}]{pose, }
+\item[{const sensor\-\_\-msgs\-::\-Laser\-Scan\-::\-Const\-Ptr \&}]{msg}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [virtual]}}}\label{classLikelihoodSensorUpdate_aa7a4eaae56fb86af98f428b598f46962}
+Get a posteriori probability of being in a pose given the msg. 
+\begin{DoxyParams}{Parameters}
+{\em a\-\_\-priori} & a priori probability of being in a pose. \\
+\hline
+{\em a\-\_\-priori\-\_\-map} & a priori pointer to believed map. \\
+\hline
+{\em pose} & believed pose. \\
+\hline
+{\em msg} & recieved scan msg. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+a posteriori probability 
+\end{DoxyReturn}
+
+
+Implements \hyperlink{classSensorUpdate_a9bd0792d09b9425b854c6220b6712a52}{Sensor\-Update}.
+
+
+
+The documentation for this class was generated from the following file\-:\begin{DoxyCompactItemize}
+\item 
+include/localization/sensor\-\_\-update\-\_\-strategies/\hyperlink{likelihood__sensor__update_8h}{likelihood\-\_\-sensor\-\_\-update.\-h}\end{DoxyCompactItemize}

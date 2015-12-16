@@ -1,0 +1,36 @@
+\hypertarget{pose__filter_8h}{\section{include/localization/filtering\-\_\-strategies/pose\-\_\-filter.h File Reference}
+\label{pose__filter_8h}\index{include/localization/filtering\-\_\-strategies/pose\-\_\-filter.\-h@{include/localization/filtering\-\_\-strategies/pose\-\_\-filter.\-h}}
+}
+{\ttfamily \#include $<$sensor\-\_\-msgs/\-Laser\-Scan.\-h$>$}\\*
+{\ttfamily \#include $<$nav\-\_\-msgs/\-Odometry.\-h$>$}\\*
+{\ttfamily \#include $<$geometry\-\_\-msgs/\-Pose\-With\-Covariance\-Stamped.\-h$>$}\\*
+{\ttfamily \#include $<$string$>$}\\*
+{\ttfamily \#include \char`\"{}localization/sensor\-\_\-update\-\_\-strategies/sensor\-\_\-update.\-h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}localization/motion\-\_\-update\-\_\-strategies/motion\-\_\-update.\-h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}localization/sampling\-\_\-strategies/sampling.\-h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}pose\-\_\-filter.\-hpp\char`\"{}}\\*
+\subsection*{Classes}
+\begin{DoxyCompactItemize}
+\item 
+class \hyperlink{classPoseFilter}{Pose\-Filter}
+\begin{DoxyCompactList}\small\item\em Abstract class for implementing the pose filter strategy pattern. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Typedefs}
+\begin{DoxyCompactItemize}
+\item 
+\hypertarget{pose__filter_8h_a9df59d7c2f322f00bdd8eccab6d3fd73}{typedef boost\-::shared\-\_\-ptr\\*
+$<$ \hyperlink{classPoseFilter}{Pose\-Filter} $>$ \hyperlink{pose__filter_8h_a9df59d7c2f322f00bdd8eccab6d3fd73}{Pose\-Filter\-Ptr}}\label{pose__filter_8h_a9df59d7c2f322f00bdd8eccab6d3fd73}
+
+\begin{DoxyCompactList}\small\item\em Shared pointer to Pose filter class. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+This is an abstract class for implementing a localization filter algorithm using a strategy pattern.
+
+\begin{DoxyDate}{Date}
+Dec 4, 2015 
+\end{DoxyDate}
+\begin{DoxyAuthor}{Author}
+Sebastian Curi 
+\end{DoxyAuthor}
+\begin{DoxyRefDesc}{Bug}
+\item[\hyperlink{bug__bug000003}{Bug}]No known bug. \end{DoxyRefDesc}
