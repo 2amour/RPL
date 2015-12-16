@@ -76,7 +76,6 @@ LocalizationSequencer::start ()
 void
 LocalizationSequencer::updateOdometry (const MsgOdometry::ConstPtr& motion)
 {
-	std::cout << "Odometry" << std::endl;
 	// Create Pose.
 	boost::shared_ptr<Pose<float> > ptr_x_t (new Pose<float>());
 
@@ -122,7 +121,6 @@ LocalizationSequencer::updatedMap (const MsgMap::ConstPtr& map_input)
 void
 LocalizationSequencer::updateScan (const MsgLaserScan::ConstPtr& sensor)
 {
-	std::cout << "scan" << std::endl;
 		// Check whether it is requested to localize.
 		if (is_on)
 			{
