@@ -97,6 +97,7 @@ feature {NONE} -- Implementation
 			io.put_string ("%N Parameters: %N")
 			io.put_string ("%T Frame: " + parameters.frame + "%N")
 			io.put_string ("%T Threhsold: " + parameters.way_point_threshold.out + "%N")
+			io.put_string ("%T Angular Threhsold: " + parameters.angle_threshold.out + "%N")
 			io.put_string ("%T Open Loop Offset: " + parameters.open_loop_offset.out + "%N")
 
 			from

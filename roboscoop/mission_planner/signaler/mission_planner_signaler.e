@@ -11,7 +11,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make_with_attributes (a_frame: separate STRING; wp: separate ARRAYED_LIST[separate POSE]; thresh, ol_offset: REAL_64)
+	make_with_attributes (a_frame: separate STRING; wp: separate ARRAYED_LIST[separate POSE]; a_thresh, thresh, ol_offset: REAL_64)
 			-- Make `Current' and assign its attributes.
 		local
 			i: INTEGER_32
@@ -26,6 +26,7 @@ feature {NONE} -- Initialization
 			end
 			way_points.start
 
+			angle_threshold := a_thresh
 			goal_threshold := thresh
 			open_loop_offset := ol_offset
 
@@ -67,6 +68,9 @@ feature {ANY} -- Access
 
 	goal_threshold: REAL_64
 			-- Threshold to switch way_points in path.
+
+	angle_threshold: REAL_64
+			-- Angular threshold to switch way_points in path.
 
 	open_loop_offset: REAL_64
 			-- Angle offset in radians to put in open loop.
@@ -141,13 +145,14 @@ feature {ANY} -- Access
 			discovered_obstacle := a_val
 		end
 
-	at_ith_way_point (test_point: separate POINT; way_point_idx: INTEGER): BOOLEAN
+	at_ith_way_point (test_pose: separate POSE; way_point_idx: INTEGER): BOOLEAN
 			-- Check if the point is at one of the way points.
 		do
-			Result := way_points.at (way_point_idx).position.euclidean_distance (test_point) < goal_threshold
+			Result := way_points.at (way_point_idx).euclidean_distance (test_pose) < goal_threshold
+			Result := Result and {DOUBLE_MATH}.dabs (way_points.at (way_point_idx).get_angle (test_pose)) < angle_threshold
 		end
 
-	at_a_way_point (test_point: separate POINT): BOOLEAN
+	at_a_way_point (test_pose: separate POSE): BOOLEAN
 			-- Check if the point is at one of the way points.
 		local
 			i: INTEGER
@@ -157,7 +162,7 @@ feature {ANY} -- Access
 			until i > way_points.count
 			loop
 				if not Result then
-					Result := at_ith_way_point(test_point, i)
+					Result := at_ith_way_point(test_pose, i)
 				end
 				i := i + 1
 			end

@@ -59,15 +59,17 @@ feature {MISSION_PLANNER_BEHAVIOUR} -- Execute algorithm
 			not mission_sig.is_obj_recognition_requested
 		local
 			current_point: POINT
+			current_pose: POSE
 		do
 			if not s_sig.is_stop_requested then
 				create current_point.make_from_msg (odometry_sig.data.pose.pose.position)
+				create current_pose.make_from_unstamped_msg (odometry_sig.data.pose.pose, mission_sig.frame)
 				mission_sig.set_localized_handled (False)
 
 
 				if localization_sig.data then
 					-- SEQUENTIAL FLAGS
-					if mission_sig.at_a_way_point (current_point) then
+					if mission_sig.at_a_way_point (current_pose) then
 						if mission_sig.is_waypoint_reached then
 							mission_sig.request_localization (False)
 							mission_sig.request_object_recognition (True)
