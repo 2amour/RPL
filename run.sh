@@ -1,9 +1,9 @@
 #! /bin/bash
 
 # Executables
-ROBOT_CONTROLLER_EXECUTABLE=roboscoop/robot_controller/EIFGENs/robot_controller/W_code/robot_controller
-PATH_PLANNER_EXECUTABLE=roboscoop/path_planner/EIFGENs/path_planner/W_code/path_planner
-MISSION_PLANNER_EXECUTABLE=roboscoop/mission_planner/EIFGENs/mission_planner/W_code/mission_planner
+ROBOT_CONTROLLER_EXECUTABLE=roboscoop/robot_controller/EIFGENs/robot_controller/F_code/robot_controller
+PATH_PLANNER_EXECUTABLE=roboscoop/path_planner/EIFGENs/path_planner/F_code/path_planner
+MISSION_PLANNER_EXECUTABLE=roboscoop/mission_planner/EIFGENs/mission_planner/F_code/mission_planner
 
 # Arguments
 ROBOT_CONTROLLER_ARGS_DIR=roboscoop/robot_controller/execution_parameters_files
@@ -29,10 +29,6 @@ hupexit() {
 
 trap hupexit HUP
 trap intexit INT
-
-$ROS_LAUNCH_COMMAND &
-
-sleep 1
 
 $ROBOT_CONTROLLER_EXECUTABLE $ROBOT_CONTROLLER_ARGS &
 
