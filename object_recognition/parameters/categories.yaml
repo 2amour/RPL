@@ -1,10 +1,7 @@
 categories:
-    names: ["human", "duck", "unknown"]
+    names: ["human", "unknown"]
     human:
         path: ["/home/parallels/catkin_groupgit_ws/src/RPL/object_recognition/image_classes/human.pcd"]
         color: [0.0, 1.0, 0.0]
-    duck:
-        path: ["/home/parallels/catkin_groupgit_ws/src/RPL/object_recognition/image_classes/duck.pcd"]
-        color: [0.0, 0.0, 1.0]
     unknown:
         color: [1.0, 0.0, 0.0]
