@@ -1,3 +1,3 @@
 Turning_angular_speed           1.00
 Reached_point_threshold         0.05
-Reached_orientation_threshold   5.00
+Reached_orientation_threshold   1.00

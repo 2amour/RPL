@@ -1,0 +1,7 @@
+# Topics parameters
+publisher: /localization/odometry # Topic name of publisher for retrieving result of the recognition
+map: /map # Topic name of subscriber to get map
+odometry: /thymio_driver/odometry # Topic name of subscriber for retrieving odometry
+sensor: /scan # Topic name of subscirber for retrieving laser scan
+tf: /tf # Topic name of publisher for retrieving constant transform between camera and robot
+onOff: /localization/request # Topic for receiving the enable disable localization flag
