@@ -216,11 +216,15 @@ parseParticleFilterParams(ParticleFilterParameters& particle_filter_params_outpu
 	}
 
   // Parse other needed parameters.
+	double val;
   nh.param<int>("localizer/others/cells_jumped", particle_filter_params.cells_jumped, 1); // Parse cells_jumped parameter.
-  nh.param<float>("localizer/others/delta_theta", particle_filter_params.delta_theta, 0.15); // Parse delta_theta parameter.
-  nh.param<float>("localizer/others/position_threshold", particle_filter_params.position_threshold, 1); // Parse position_threshold parameter.
-  nh.param<float>("localizer/others/angle_threshold", particle_filter_params.angle_threshold, 1); // Parse angle threshold parameter.
+  nh.param<double>("localizer/others/delta_theta", val, 0.15);// Parse delta_theta parameter.
 
+  particle_filter_params.delta_theta = val;
+  nh.param<double>("localizer/others/position_threshold", val, 1.0); // Parse position_threshold parameter.
+  particle_filter_params.position_threshold = val;
+  nh.param<double>("localizer/others/angle_threshold", val, 1.0); // Parse angle threshold parameter.
+  particle_filter_params.angle_threshold = val;
   // Resolve type of motion updater and create an instance.
   if (motion_updater == "Sample_odometry_motion_model")
 	{
@@ -337,7 +341,7 @@ parseOdometryMotionModelParams(OdometryMotionModelParams& odo_params_output)
 {
 	// Parameters
 	OdometryMotionModelParams odo_params;
-	float a1, a2, a3, a4;
+	double a1, a2, a3, a4;
 
 	// Error flag.
 	bool error;
