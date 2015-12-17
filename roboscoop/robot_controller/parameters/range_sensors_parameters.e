@@ -68,7 +68,7 @@ feature -- Access
 	set_close_obstacle_threshold (range_sensors_close_obstacle_threshold: REAL_64)
 			-- Setter for `close_obstacle_threshold'.
 		do
-
+			close_obstacle_threshold := range_sensors_close_obstacle_threshold
 		end
 
 end
