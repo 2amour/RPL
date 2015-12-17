@@ -149,7 +149,6 @@ feature {ANY} -- Access
 			-- Check if the point is at one of the way points.
 		do
 			Result := way_points.at (way_point_idx).euclidean_distance (test_pose) < goal_threshold
-			Result := Result and {DOUBLE_MATH}.dabs (way_points.at (way_point_idx).get_angle (test_pose)) < angle_threshold
 		end
 
 	at_a_way_point (test_pose: separate POSE): BOOLEAN
