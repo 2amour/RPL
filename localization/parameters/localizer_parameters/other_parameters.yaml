@@ -1,5 +1,5 @@
 # Other parameters for localizer algorithm
-cells_jumped: 15 # Number of cells of the map to be jumped when doing the first set of particles
+cells_jumped: 13 # Number of cells of the map to be jumped when doing the first set of particles
 delta_theta: 0.15 # Angle steps between particles' orientations.
 angle_threshold: 0.5 # Angle threshold for deciding whether the robot is localized or not.
-position_threshold: 0.2 # Position threshold for deciding whether the robot is localized or not.
+position_threshold: 0.07 # Position threshold for deciding whether the robot is localized or not.
